@@ -1656,10 +1656,10 @@ class ApplicationController extends ControllerCore
                   ->select('departments.dept_ro as id', 'loginname')
                   ->first();
 
-      $ro_email = ModelFactory::getInstance('User')
-                  ->where('users.idsrc_login', $dept_ro->id)
-                  ->select('loginname', 'emailadd')
-                  ->first();
+      // $ro_email = ModelFactory::getInstance('User')
+      //             ->where('users.idsrc_login', $dept_ro->id)
+      //             ->select('loginname', 'emailadd')
+      //             ->first();
 
       $approverpersonToReceiveEmail = $this->selectUserBy($dept_ro->id, array('loginname','emailadd'));
 
@@ -1671,7 +1671,7 @@ class ApplicationController extends ControllerCore
       // dd($setEmail);
 
       $mailData = [
-        'receiver_name' => $dept_ro->loginname,
+        'receiver_name' => $approverpersonToReceiveEmail->loginname,
         'sender_name' => "RO",
         'date' => date('d/m/Y h:i A'),
         'feedback' => $feedback
