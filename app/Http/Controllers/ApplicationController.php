@@ -1635,6 +1635,7 @@ class ApplicationController extends ControllerCore
 
     public function sendMailToRO($input)
     {
+      dd($input);
       $result = ModelFactory::getInstance('QuestionnaireDetail')
                     ->where('questionnaire_id','=',$input['questionnaire_id'])
                     ->select('question', 'answer_input_type')
