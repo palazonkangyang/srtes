@@ -1647,7 +1647,7 @@ class ApplicationController extends ControllerCore
       }
 
       $feedback['questions'] = $input['questions'];
-      $feedback['answers'] = $input['answers'];
+      $feedback['answers'] = $input['answer'];
       $feedback['answer_input_type'] = $input['answer_input_type'];
 
       $dept_ro = ModelFactory::getInstance('User')
