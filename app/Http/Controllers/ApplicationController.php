@@ -1661,10 +1661,14 @@ class ApplicationController extends ControllerCore
                   ->select('loginname', 'emailadd')
                   ->first();
 
+      $approverpersonToReceiveEmail = $this->selectUserBy($dept_ro->id, array('loginname','emailadd'));
+
       $setEmail = LibraryFactory::getInstance('Email');
-      $setEmail->personToReceive = $ro_email->emailadd;
+      $setEmail->personToReceive = $approverpersonToReceiveEmail;
       $setEmail->subject = "Summary of Questionnaire";
       $setEmail->layout = 'mail.mail_summary';
+
+      // dd($setEmail);
 
       $mailData = [
         'receiver_name' => $dept_ro->loginname,
