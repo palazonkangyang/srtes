@@ -1,0 +1,106 @@
+<?php $__env->startSection('title', $title); ?>
+<?php $__env->startSection('content'); ?>
+
+<script type="text/javascript">
+    $(function() {
+        $('.filter-select').change(function() {
+            this.form.submit();
+        });
+    });
+</script>
+
+<div class="row pos-rel">
+    <div class="col-md-12"><h4 class="page-head-line">Saved Drafts</h4></div>
+</div>
+
+
+<div class="wrap-content">
+
+<?php echo Form::open(['class'=>'form-horizontal filter_field fontsizing']); ?> 
+<div class="form-group">
+  <label class="col-md-1 control-label" for="textinput">Filter</label>  
+  <div class="col-md-10">
+      <div class="form-inline">
+        <?php echo Form::select('department', $departmentFilter->getOptions(), $departmentFilter->getValue(), ['class'=>'form-control filter-select']  ); ?>
+
+        <?php echo Form::select('typeofrequest', $tofFilter->getOptions(), $tofFilter->getValue(), ['class'=>'form-control filter-select'] ); ?>
+
+        <?php echo Form::select('urgency', $urgencyFilter->getOptions(), $urgencyFilter->getValue(), ['class'=>'form-control filter-select'] ); ?>
+
+       
+      </div>
+</div>
+</div>
+<div class="form-group">
+<label class="col-md-1 control-label" for="textinput">Date: </label>  
+<div class="col-md-3">
+    <div class="input-daterange input-group" id="datepicker">
+        <input class="input-sm form-control from_date" name="startdate" value="<?php echo e($fromtoFilter->getfrom()); ?>" type="text">
+        <span class="input-group-addon">to</span>
+        <input class="input-sm form-control to_date" name="startdate_to" value="<?php echo e($fromtoFilter->getto()); ?>" type="text">
+    </div>
+</div>
+<label class="col-md-3 control-label" for="search_field">Keyword: </label>
+  <div class="col-md-5"> 
+    <?php echo Form::text('search',$searchFilter->getValue(),['class'=>'form-control','id'=>'search_field']); ?>
+
+    <?php echo Form::submit('Search',['class'=>'btn btn-default btn-cs search_btn']); ?> 
+    <a href="" class="btn btn-default btn-cs">Clear</a>
+  </div>
+</div>
+<?php echo Form::close(); ?>  
+
+
+<?php if(count($myapplist)): ?>
+<div class="row">
+<div id="no-more-tables">
+ <table class="col-md-12 table-bordered table-striped table-condensed cf" id="xls-table">
+    <thead class="cf">
+        <th>Date</th>
+        <th><?php echo $myapplist->sortColumn('case_number','S/N'); ?></th>
+        <th><?php echo $myapplist->sortColumn('type_request','Type'); ?></th>
+        <th><?php echo $myapplist->sortColumn('title','Title'); ?></th>
+        <th>Urgency</th>
+        <th>Department</th>
+       
+    </thead>
+
+    <tbody>
+        <?php foreach($myapplist as $myapp): ?>
+        <tr class="clickable-row" data-href="<?php echo e(url('history/edit/savedrafts').'/'.$myapp->id); ?>">
+
+            <td data-title="Date"><?php echo e(date('d/m/Y', strtotime($myapp->created_at))); ?></td>
+            <td data-title="S/N"><?php echo e($myapp->case_number); ?></td>
+            <td data-title="Type"><?php echo e($myapp->type_request); ?></td>
+            <td data-title="Title"><a href="<?php echo e(url('history/edit/savedrafts').'/'.$myapp->id); ?>"><?php echo e($myapp->title); ?></a></td>
+            <td data-title="Urgency">
+                    <?php if($myapp->urgency == 1): ?> 
+                        Normal
+                    <?php else: ?> 
+                        Urgent
+                    <?php endif; ?>
+            </td>
+            <td data-title="Department"><?php echo e($myapp->department); ?></td>
+            
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+</div>
+</div>
+
+<span style="display:none">
+    <?php echo $myapplist->sortColumn('',''); ?>
+
+</span>
+<?php echo $myapplist->paginate(); ?>
+
+<?php else: ?>
+    <span class="no-data-display">No data to display.</span>
+<?php endif; ?>
+
+</div>
+
+
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

@@ -1,0 +1,83 @@
+<div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Request Type</div>
+  <div class="col-md-10 bg-ff">
+    <?php if($forminfo->request_type == 1): ?>
+     Normal
+    <?php elseif($forminfo->request_type == 2): ?>
+     Facilities Maintenance and Cashcard
+ 
+    <?php endif; ?>
+   
+  </div>
+  </div>
+
+ <div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Account Code</div>
+  <div class="col-md-10 bg-ff">
+    <?php echo $forminfo->amount_code; ?>
+
+  </div>
+  </div>
+
+<?php if($forminfo->optional_code): ?>
+
+
+<div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Cost Centre </div>
+  <div class="col-md-10 bg-ff">
+    <span title="<?php echo e($forminfo->p_optionalcode_desc); ?>"><?php echo $forminfo->optional_code; ?></span>
+  </div>
+  </div>
+<?php endif; ?>
+
+
+  <div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Cheque Payable </div>
+  <div class="col-md-10 bg-ff">
+    <?php echo e($forminfo->cheque_payable_to); ?>
+
+  </div>
+  </div>
+
+  <div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Project Name</div>
+  <div class="col-md-10 bg-ff">
+    <?php echo $forminfo->project_name; ?>
+
+  </div>
+  </div>
+  
+  <div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Amount</div>
+  <div class="col-md-10 bg-ff">
+    <?php echo $forminfo->amount; ?>
+
+  </div>
+  </div>
+
+
+
+ <div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Date Required</div>
+  <div class="col-md-10 bg-ff">
+    <?php echo $forminfo->date_required; ?>
+
+  </div>
+  </div>
+<?php if($forminfo->reasons != ""): ?>
+<div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Reasons</div>
+  <div class="col-md-10 bg-ff">
+    <?php echo $forminfo->reasons; ?>
+
+  </div>
+  </div>
+<?php endif; ?>
+
+<div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Description</div>
+  <div class="col-md-10 bg-ff">
+    <?php echo $forminfo->description; ?>
+
+  </div>
+  </div>

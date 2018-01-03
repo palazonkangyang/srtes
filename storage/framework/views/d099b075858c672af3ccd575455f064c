@@ -1,0 +1,88 @@
+<?php $__env->startSection('title',$title); ?>
+<?php $__env->startSection('content'); ?>
+
+
+<?php if(Session::has('success')): ?>
+<div class="container">
+<div class="alert alert-success alert-dismissible fade in fixed-error">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+    <strong> <?php echo e(Session::get('success')); ?></strong>
+</div>
+</div>
+<?php endif; ?>
+
+<div class="row">
+    <div class="col-md-12"><h4 class="page-head-line">GL Code Management</h4></div>
+</div>
+<div class="wrap-content">
+
+<?php echo Form::open(['class'=>'form-horizontal filter_field']); ?> 
+<div class="form-group">
+  <label class="col-md-1 control-label" for="search_field">Search</label>
+  <div class="col-md-5"> 
+    <?php echo Form::text('search','',['class'=>'form-control','id'=>'search_field']); ?>
+
+    <?php echo Form::submit('Search',['class'=>'btn btn-default btn-cs search_btn']); ?> 
+  </div>
+
+  <div class="col-md-6">
+    <span class="pull-right">
+      <a href="/accountcode/createaccountcode" id="add-button" class="btn btn-default">Create GL Code</a>
+    </span>
+  </div>
+</div>
+<?php echo Form::close(); ?>
+
+
+<?php if(count($accountcodelist)): ?>
+<div class="row">
+<div id="no-more-tables">
+ <table class="col-md-12 table-bordered table-striped table-condensed cf">
+    <thead class="cf">
+        <th>ID</th>
+        <th><?php echo $accountcodelist->sortColumn('name','Name'); ?></th>
+        <th><?php echo $accountcodelist->sortColumn('is3alpha','Has Cost Centre'); ?></th>
+         <th><?php echo $accountcodelist->sortColumn('description','Description'); ?></th>
+         <th>Example</th>
+    </thead>
+
+    <tbody>
+        <?php foreach($accountcodelist as $accountcode): ?>
+        <tr class="clickable-row" data-href="/accountcode/editaccountcode/<?php echo e($accountcode->id); ?>">
+             <td data-title="id"><?php echo e($accountcode->id); ?></td>
+            <td data-title="name"><?php echo e($accountcode->name); ?></td>
+            <td data-title="is3alpha">
+                <?php if($accountcode->is3alpha  ==1): ?>
+                
+                Yes 
+                <?php else: ?>
+                 No 
+                <?php endif; ?>
+                
+            </td>
+            <td data-title="description"><?php echo e($accountcode->description); ?></td>
+              <td ><?php echo $accountcode->example; ?></td>
+           
+                
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+</div>
+</div>
+
+<span style="display:none">
+    <?php echo $accountcodelist->sortColumn('',''); ?>
+
+</span>
+
+<?php echo $accountcodelist->paginate(); ?>
+
+<?php else: ?>
+    <span class="no-data-display">No data to display.</span>
+<?php endif; ?>
+
+</div>
+
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

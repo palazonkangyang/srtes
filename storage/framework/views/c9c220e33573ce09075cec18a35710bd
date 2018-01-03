@@ -1,0 +1,147 @@
+  <?php if($myapplist[0]->status == 0 && $mark == 'creator'): ?>  
+   <div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Date(s) and Time of booking</div>
+  <div class="col-md-10 bg-ff">
+        &nbsp;From
+      <?php echo Form::text('booking_date_start',$forminfo->booking_date_start,['class'=>'form-control width-40 start_date_nh']); ?>
+
+         &nbsp;To
+      <?php echo Form::text('booking_date_end',$forminfo->booking_date_end,['class'=>'form-control width-40 end_date_nh']); ?>
+
+      </div>
+    </div>  
+  
+  
+  <div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Purpose of Use</div>
+  <div class="col-md-10 bg-ff">
+    <?php echo Form::text('purpose_of_use',$forminfo->purpose_of_use,['class'=>'form-control', 'id'=>'purpose_of_use']); ?>
+
+  </div>
+  </div>
+  
+    <div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Layout Arrangement required</div>
+  <div class="col-md-10 bg-ff">
+   <ol>
+      <li>Theatre room style refers to 5 seats in a row and without tables</li>
+      <li>Classroom style refers to 2 tables a row with 2 chairs each</li>
+      <li>Sound system refers to the existing Haw Par Hall sound system</li>
+      <li>Please inform Admin Dept at least 3 working days in advance for the request of booking</li>
+      <li>Requesting Department is to check availability and place their reservation on the Google Calendar</li>
+    </ol>
+  </div>
+  </div>
+  
+  <div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Layout Arrangement</div>
+  <div class="col-md-10 bg-ff">
+     <div class="radio">
+    <?php if($forminfo->layout_arrangement == '1'): ?>
+        <label>
+                <?php echo Form::radio('layout_arrangement', 1,True); ?> Theatre Room Style
+            </label>
+           <label>
+                <?php echo Form::radio('layout_arrangement', 2); ?> Classroom Style
+            </label>
+              <label>
+                <?php echo Form::radio('layout_arrangement', 3); ?>  Others
+            </label>
+    <?php elseif($forminfo->layout_arrangement == '2'): ?>
+        <label>
+                <?php echo Form::radio('layout_arrangement', 1); ?>     Classroom Style
+            </label>
+           <label>
+                <?php echo Form::radio('layout_arrangement', 2,True); ?>     Theatre Room Style
+            </label>
+           <label>
+                <?php echo Form::radio('layout_arrangement', 2); ?>      Others
+            </label>
+    <?php else: ?>
+       <label>
+                <?php echo Form::radio('layout_arrangement', 1); ?>     Classroom Style
+            </label>
+           <label>
+                <?php echo Form::radio('layout_arrangement', 2); ?>     Theatre Room Style
+            </label>
+           <label>
+                <?php echo Form::radio('layout_arrangement', 3,True); ?>      Others
+            </label>
+    <?php endif; ?>
+    <br />
+    </div>
+  </div>
+  </div>
+
+  <div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Sound System</div>
+  <div class="col-md-10 bg-ff">
+    <?php if($forminfo->sound_system == 1): ?>
+       <?php echo Form::checkbox('sound_system', 1,True); ?> 
+    <?php else: ?>
+      <?php echo Form::checkbox('sound_system', 1); ?> 
+    <?php endif; ?>
+  </div>
+  </div>
+
+  <div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Number of Seating </div>
+  <div class="col-md-10 bg-ff">
+     <?php echo Form::text('number_of_pax',$forminfo->number_of_pax,['class'=>'form-control width-20', 'id'=>'number_of_pax']); ?>
+
+  </div>
+  </div>
+  <?php else: ?>
+  <div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Date(s) and Time of booking</div>
+  <div class="col-md-10 bg-ff">
+    <strong>&nbsp;From:&nbsp;</strong>
+    <?php echo date('j F Y, g:i a', strtotime($forminfo->booking_date_start)); ?>
+
+    <strong>&nbsp;To:&nbsp;</strong>
+    <?php echo date('j F Y, g:i a', strtotime($forminfo->booking_date_end)); ?>
+
+    <br /> &nbsp;
+  </div>
+  </div>
+
+  <div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Purpose of Use</div>
+  <div class="col-md-10 bg-ff">
+    <?php echo e($forminfo->purpose_of_use); ?>
+
+  </div>
+  </div>
+
+  <div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Layout Arrangement</div>
+  <div class="col-md-10 bg-ff">
+    <?php if($forminfo->layout_arrangement == 1): ?>
+       Theatre Room Style
+    <?php elseif($forminfo->layout_arrangement == 2): ?>
+       Classroom Style
+    <?php elseif($forminfo->layout_arrangement == 3): ?>
+       Others (<?php echo e($forminfo->others); ?>)
+    <?php endif; ?>
+  </div>
+  </div>
+
+  <div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Sound System</div>
+  <div class="col-md-10 bg-ff">
+    <?php if($forminfo->sound_system == 1): ?>
+       With Sound System
+    <?php else: ?>
+      None
+    <?php endif; ?>
+  </div>
+  </div>
+
+  <div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Number of Seating </div>
+  <div class="col-md-10 bg-ff">
+    <?php echo e($forminfo->number_of_pax); ?>
+
+  </div>
+  </div>
+  <?php endif; ?>

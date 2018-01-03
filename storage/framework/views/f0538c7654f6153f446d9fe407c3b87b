@@ -1,0 +1,90 @@
+<?php $__env->startSection('title',$title); ?>
+<?php $__env->startSection('content'); ?>
+
+
+<?php if(Session::has('success')): ?>
+<div class="container">
+<div class="alert alert-success alert-dismissible fade in fixed-error">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+    <strong> <?php echo e(Session::get('success')); ?></strong>
+</div>
+</div>
+<?php endif; ?>
+
+<div class="row">
+    <div class="col-md-12"><h4 class="page-head-line">User Management</h4></div>
+</div>
+<div class="wrap-content">
+
+<?php echo Form::open(['class'=>'form-horizontal filter_field']); ?> 
+<div class="form-group">
+  <label class="col-md-1 control-label" for="search_field">Search</label>
+  <div class="col-md-5"> 
+    <?php echo Form::text('search','',['class'=>'form-control','id'=>'search_field']); ?>
+
+    <?php echo Form::submit('Search',['class'=>'btn btn-default btn-cs search_btn']); ?> 
+  </div>
+
+  <div class="col-md-6">
+    <span class="pull-right">
+      <a href="/management/adduser" id="add-button" class="btn btn-default">Add User</a>
+    </span>
+  </div>
+</div>
+<?php echo Form::close(); ?>
+
+
+<?php if(count($userlist)): ?>
+<div class="row">
+<div id="no-more-tables">
+ <table class="col-md-12 table-bordered table-striped table-condensed cf">
+    <thead class="cf">
+        <th>ID</th>
+        <th><?php echo $userlist->sortColumn('loginid','Login ID'); ?></th>
+        <th><?php echo $userlist->sortColumn('employeeid','Employee ID'); ?></th>
+        <th><?php echo $userlist->sortColumn('emailadd','Email Address'); ?></th>
+        <th><?php echo $userlist->sortColumn('loginname','Full Name'); ?></th>
+        <th>Department</th>
+        <th>Status</th>
+    </thead>
+
+    <tbody>
+        <?php foreach($userlist as $users): ?>
+        <tr class="clickable-row" data-href="/management/edituser/<?php echo e($users->idsrc_login); ?>">
+
+            <td data-title="loginid"><?php echo e($users->idsrc_login); ?></td>
+            <td data-title="loginid"><?php echo e($users->loginid); ?></td>
+            <td data-title="employeeid"><?php echo e($users->employeeid); ?></td>
+            <td data-title="emailadd"><?php echo e($users->emailadd); ?></td>
+            <td data-title="loginname"><?php echo e($users->loginname); ?></td>
+
+            <td data-title="loginname"><?php echo e($users->deptdesc); ?> (<?php echo e($users->department); ?>)</td>
+            <td data-title="isactive">
+                    <?php if($users->isactive == 1): ?> 
+                        Active
+                    <?php else: ?> 
+                        <span class="text-danger">Inactive</span>
+                    <?php endif; ?>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+</div>
+</div>
+
+<span style="display:none">
+    <?php echo $userlist->sortColumn('',''); ?>
+
+</span>
+
+<?php echo $userlist->paginate(); ?>
+
+<?php else: ?>
+    <span class="no-data-display">No data to display.</span>
+<?php endif; ?>
+
+</div>
+
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

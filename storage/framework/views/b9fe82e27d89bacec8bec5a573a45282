@@ -1,0 +1,34 @@
+<!doctype html>
+<!--[if lt IE 8]><html class="no-js lt-ie8"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>" />
+        <?php echo $__env->make('layout.assets.head', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+        <?php echo $__env->make('layout.assets.css', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+        <?php echo $__env->make('layout.assets.js', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
+        <!--[if lt IE 9]>
+        	<script src="<?php echo e(URL::asset('js/common/html5shiv.js')); ?>"></script>
+        	<script src="<?php echo e(URL::asset('js/common/respond.min.js')); ?>"></script>
+        <![endif]-->
+
+    </head>
+    <body>
+    <!--[if lt IE 9]>
+        <div class="lt-ie9-bg">
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser.</p>
+            <p>Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        </div>
+    <![endif]-->
+
+        <?php echo $__env->make('layout.header', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>        
+                <div class="main-content">
+                    <?php echo $__env->yieldContent('content'); ?> 
+                </div>
+        <?php echo $__env->make('layout.footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+    </body>
+</html>

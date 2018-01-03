@@ -1,0 +1,141 @@
+<?php $__env->startSection('title',$title); ?>
+<?php $__env->startSection('content'); ?>
+<div class="row">
+	<div class="col-md-12">
+		<h4 class="page-head-line">Edit Course</h4>
+	</div>
+</div>
+<div class="wrap-content">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4>Edit course form</h4>
+					<span class="pos-add-back pull-right">
+						<a href="/tes/course/course-list">Back to Course List</a>
+					</span>
+				</div>
+				<div class="panel-body">
+
+<?php if(Session::has('success')): ?>
+					<div class="alert-success" style="margin-bottom:20px;">
+						<div class="success-msg">
+							<span class="glyphicon glyphicon-ok"></span> <?php echo e(Session::get('success')); ?>
+
+						</div>
+					</div>
+<?php elseif($errors->all()): ?>
+					<div class="alert-danger padding" style="margin-bottom:20px;">
+<?php foreach($errors->all() as $error): ?>
+						<div class="error-list">
+							<span class="glyphicon glyphicon-remove"></span> <?php echo $error; ?>
+
+						</div>
+<?php endforeach; ?>
+					</div>
+<?php endif; ?>
+
+<?php echo Form::open(['url'=>'/controller/tes/course/course-list/edit-course/'.$selected_course_list->id,'class'=>'course-list',]); ?>
+
+					<div class="form-group row">
+						<label for="course-name" class="col-sm-2 form-control-label">Name</label>
+						<div class="col-sm-9">
+              <?php echo Form::input('text','name', $selected_course_list->name, array('placeholder' => 'Course Name', 'id' => 'name', 'class' => 'form-control')); ?>
+
+            </div>
+					</div>
+
+					<div class="form-group row">
+						<label for="course-name" class="col-sm-2 form-control-label">Code</label>
+						<div class="col-sm-9">
+              <?php echo Form::input('text','code', $selected_course_list->code, array('placeholder' => 'Course Code, e.g. MT001', 'id' => 'code', 'class' => 'form-control')); ?>
+
+            </div>
+					</div>
+
+          <div class="form-group row">
+						<label for="course-name" class="col-sm-2 form-control-label">Type</label>
+						<div class="col-sm-9">
+              <?php echo Form::select('course_type_id',$course_type_list,$selected_course_list->course_type_id,array('id' => 'course_type_id', 'class' => 'form-control')); ?>
+
+            </div>
+					</div>
+
+
+          <div class="form-group row">
+						<label for="course-name" class="col-sm-2 form-control-label">Duration</label>
+						<div class="col-sm-9">
+              <?php echo Form::select('duration',['15'=>'15 minutes','30'=>'30 minutes','45'=>'45 minutes','60'=>'60 minutes','75'=>'75 minutes','90'=>'90 minutes','105'=>'105 minutes','120'=>'120 minutes'],$selected_course_list->duration,array('id' => 'duration', 'class' => 'form-control')); ?>
+
+            </div>
+					</div>
+
+          <div class="form-group row">
+						<label for="course-name" class="col-sm-2 form-control-label">Minimum Attendee</label>
+						<div class="col-sm-9">
+              <?php echo Form::number('minimum_attendee',$selected_course_list->minimum_attendee, array('placeholder' => 'Minimum number of attendee required', 'id' => 'minimum_attendee', 'class' => 'form-control', 'min' => 1,'max' => 99)); ?>
+
+            </div>
+          </div>
+
+          <div class="form-group row">
+						<label for="course-name" class="col-sm-2 form-control-label">Maximum Attendee</label>
+						<div class="col-sm-9">
+              <?php echo Form::number('maximum_attendee',$selected_course_list->maximum_attendee, array('placeholder' => 'Maximum number of attendee allowed', 'id' => 'maximum_attendee', 'class' => 'form-control', 'min' => 1,'max' => 99)); ?>
+
+            </div>
+					</div>
+
+					<div class="form-group row">
+						<label for="course-name" class="col-sm-2 form-control-label">Description</label>
+						<div class="col-sm-9">
+							<?php echo Form::textarea('description', $selected_course_list->description, array('placeholder' => 'Course Description', 'id' => 'description', 'class' => 'form-control')); ?>
+
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<div class="col-sm-12" style="text-align:center">
+							<button type="submit" class="btn btn-default">Save Changes</button>
+							 &nbsp;
+							 <a href="#" class="btn btn-danger"  data-href="/tes/course/course-list/remove-course/<?php echo e($selected_course_list->id); ?>" data-toggle="modal" data-target="#confirm-delete">Remove Course</a>
+						</div>
+					</div>
+
+
+<?php echo Form::close(); ?>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Confirm Delete</h4>
+            </div>
+            <div class="modal-body">
+                <p>You are about to delete <strong><?php echo e($selected_course_list->name); ?></strong>, this procedure is irreversible.</p>
+                <p>Do you want to proceed?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-danger btn-ok">Remove</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#confirm-delete').on('show.bs.modal', function(e) {
+        $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+    });
+  });
+</script>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layout.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

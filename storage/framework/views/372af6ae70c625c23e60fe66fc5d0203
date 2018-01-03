@@ -1,0 +1,594 @@
+<?php $__env->startSection('title', $title); ?>
+<?php $__env->startSection('content'); ?>
+
+
+<?php if(Session::has('success')): ?>
+
+<div class="container">
+	<div class="alert alert-success alert-dismissible fade in fixed-error">
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">×</span>
+		</button>
+		<strong> <?php echo e(Session::get('success')); ?></strong>
+	</div>
+</div>
+<?php endif; ?>
+
+
+<div class="row pos-rel">
+	<div class="col-md-12">
+		<h4 class="page-head-line"><?php echo e($title); ?></h4>
+	</div>
+	<div class="print-table">
+		<?php if(count($questionnaire_list)): ?>
+			<a download="reports.xls" href="#" onclick="return ExcellentExport.excel(this, 'xls-table', 'Report');" class="btn btn-default">export to Excel</a>
+			<a download="reports.csv" href="#" onclick="return ExcellentExport.csv(this, 'xls-table');" class="btn btn-default">export to CSV</a>
+			<a href="javascript:window.print()" id="print-page" class="btn btn-default">print</a>
+		<?php endif; ?>
+	</div>
+
+</div>
+<div class="wrap-content">
+
+<?php echo Form::open(['class'=>'form-horizontal filter_field']); ?>
+
+
+	<div class="form-group">
+		<label class="col-md-1 control-label" for="search_field">Search</label>
+		<div class="col-md-5">
+<?php echo Form::text('search','',['class'=>'form-control','id'=>'search_field']); ?>
+
+<?php echo Form::submit('Search',['class'=>'btn btn-default btn-cs search_btn']); ?>
+
+</div>
+
+	</div>
+<?php echo Form::close(); ?>
+
+	<?php   $x = 0; ?>
+<?php if(count($questionnaire_list)): ?>
+
+	<div class="row">
+		<div id="no-more-tables">
+			<table class="col-md-12 table-bordered table-striped table-condensed cf" id="xls-table">
+				<thead class="cf">
+					<th ><?php echo $questionnaire_list->sortColumn('id','App ID'); ?></th>
+					<th ><?php echo $questionnaire_list->sortColumn('loginname','Login Name'); ?></th>
+					<th ><?php echo $questionnaire_list->sortColumn('department','Department'); ?></th>
+					<th ><?php echo $questionnaire_list->sortColumn('case_number','Case Number'); ?></th>
+					<th >Status</th>
+
+					<?php if(isset($QuestionnaireDetailList)): ?>
+	 					<?php foreach($QuestionnaireDetailList as $QuestionnaireDetail): ?>
+			 				<th><?php echo $QuestionnaireDetail->question; ?></th>
+			 			<?php endforeach; ?>
+				 	<?php endif; ?>
+				</thead>
+				<tbody>
+
+					<?php foreach($questionnaire_list as $questionnaire): ?>
+
+					<tr class="clickable-row" data-href="/tes/course/course-list/edit-course/<?php echo e($questionnaire->id); ?>">
+						<td data-title="id"><?php echo e($questionnaire->id); ?></td>
+						<td data-title="loginname"><?php echo e($questionnaire->loginname); ?></td>
+						<td data-title="Department"><?php echo e($questionnaire->department); ?></td>
+						<td data-title="S/N"><?php echo e($questionnaire->case_number); ?></td>
+						<td data-title="Status">
+              <?php if($questionnaire->status == 0): ?>
+                <span class="alert-black">Pending</span>
+              <?php elseif($questionnaire->status == 1): ?>
+                <span class="alert-black">Approved</span>
+              <?php elseif($questionnaire->status == 2): ?>
+                <span class="alert-black">Rejected</span>
+              <?php elseif($questionnaire->status == 3): ?>
+              	<span class="alert-black">Cancelled</span>
+              <?php elseif($questionnaire->status == 4): ?>
+                <span class="alert-black">Forwarded</span>
+              <?php elseif($questionnaire->status == 6): ?>
+                <span class="alert-black">Review Required</span>
+              <?php elseif($questionnaire->status == 7): ?>
+                <span class="alert-black">Review Given</span>
+              <?php endif; ?>
+            </td>
+					<?php $setvaluez1 = 1; ?>
+          <?php $setvaluez2 = 1; ?>
+          <?php $setvaluez3 = 1; ?>
+          <?php $setvaluez4 = 1; ?>
+          <?php $setvaluez5 = 1; ?>
+          <?php $setvaluez6 = 1; ?>
+          <?php $setvaluez7 = 1; ?>
+          <?php $setvaluez8 = 1; ?>
+          <?php $setvaluez9 = 1; ?>
+          <?php $setvaluez10 = 1; ?>
+          <!-- start of questionnaire  -->
+
+					<?php if(isset($QuestionnaireDetailList)): ?>
+
+						<?php for($z = 0; $z < count($QuestionnaireDetailList); $z++): ?>
+
+               <?php if($z == 0): ?>
+
+	               <?php for($questionrow1 = 0; $questionrow1 < count($answerReport1); $questionrow1++): ?>
+		               <?php if( $questionnaire_list[$x]->id == $answerReport1[$questionrow1]->app_id ): ?>
+									 <?php if($answerReport1[$questionrow1]->answer_input_type == 5): ?>
+
+									 <td>
+
+										 <table class="table table-bordered">
+
+											 <?php /* */ $description_title = explode(",", $answerReport1[$questionrow1]->description_title); /* */ ?>
+
+											 <tr>
+												 <?php for($i = 1; $i <= count($description_title); $i++): ?>
+												 <th>Q <?php echo $i; ?></th>
+												 <?php endfor; ?>
+											 </tr>
+
+											 <tr>
+												 <?php /* */ $answers = explode(",", $answerReport1[$questionrow1]->answer); /* */ ?>
+
+												 <?php foreach($answers as $answer=>$value): ?>
+
+												 <td><?php echo e($value); ?></td>
+
+												 <?php endforeach; ?>
+											 </tr>
+										 </table>
+
+									 </td>
+
+									 <?php else: ?>
+										 <td><?php echo $answerReport1[$questionrow1]->answer; ?></td>
+									 <?php endif; ?>
+		            		<?php $setvaluez1 = 0; ?>
+		              	<?php endif; ?>
+	               <?php endfor; ?>
+
+									<?php if($setvaluez1 == 1): ?>
+		                <td>-</td>
+		              <?php endif; ?>
+
+								<?php endif; ?>
+
+								<?php if($z == 1): ?>
+
+									<?php for($questionrow2 = 0; $questionrow2 < count($answerReport2); $questionrow2++): ?>
+										<?php if( $questionnaire_list[$x]->id == $answerReport2[$questionrow2]->app_id ): ?>
+										<?php if($answerReport2[$questionrow2]->answer_input_type == 5): ?>
+
+										<td>
+
+											<table class="table table-bordered">
+
+												<?php /* */ $description_title = explode(",", $answerReport2[$questionrow2]->description_title); /* */ ?>
+
+												<tr>
+													<?php for($i = 1; $i <= count($description_title); $i++): ?>
+													<th>Q <?php echo $i; ?></th>
+													<?php endfor; ?>
+												</tr>
+
+												<tr>
+													<?php /* */ $answers = explode(",", $answerReport2[$questionrow2]->answer); /* */ ?>
+
+													<?php foreach($answers as $answer=>$value): ?>
+
+													<td><?php echo e($value); ?></td>
+
+													<?php endforeach; ?>
+												</tr>
+											</table>
+
+										</td>
+
+										<?php else: ?>
+											<td><?php echo $answerReport2[$questionrow2]->answer; ?></td>
+										<?php endif; ?>
+								 	 	 <?php $setvaluez2 = 0; ?>
+									 	<?php endif; ?>
+									<?php endfor; ?>
+
+								 <?php if($setvaluez2 == 1): ?>
+								 <td>-</td>
+								 <?php endif; ?>
+
+							 <?php endif; ?>
+
+							 <?php if($z == 2): ?>
+
+								 <?php for($questionrow3 = 0; $questionrow3 < count($answerReport3); $questionrow3++): ?>
+									 	<?php if( $questionnaire_list[$x]->id == $answerReport3[$questionrow3]->app_id ): ?>
+										<?php if($answerReport3[$questionrow3]->answer_input_type == 5): ?>
+
+									 <td>
+
+										 <table class="table table-bordered">
+
+											 <?php /* */ $description_title = explode(",", $answerReport3[$questionrow3]->description_title); /* */ ?>
+
+											 <tr>
+												 <?php for($i = 1; $i <= count($description_title); $i++): ?>
+												 <th>Q <?php echo $i; ?></th>
+												 <?php endfor; ?>
+											 </tr>
+
+											 <tr>
+												 <?php /* */ $answers = explode(",", $answerReport3[$questionrow3]->answer); /* */ ?>
+
+												 <?php foreach($answers as $answer=>$value): ?>
+
+												 <td><?php echo e($value); ?></td>
+
+												 <?php endforeach; ?>
+											 </tr>
+										 </table>
+
+									 </td>
+
+									 <?php else: ?>
+										 <td><?php echo $answerReport3[$questionrow3]->answer; ?></td>
+									 <?php endif; ?>
+											<?php $setvaluez3 = 0; ?>
+										<?php endif; ?>
+								 <?php endfor; ?>
+
+								<?php if($setvaluez3 == 1): ?>
+									<td>-</td>
+								<?php endif; ?>
+
+							<?php endif; ?>
+
+							<?php if($z == 3): ?>
+
+								<?php for($questionrow4 = 0; $questionrow4 < count($answerReport4); $questionrow4++): ?>
+									<?php if( $questionnaire_list[$x]->id == $answerReport4[$questionrow4]->app_id ): ?>
+									<?php if($answerReport4[$questionrow4]->answer_input_type == 5): ?>
+
+									<td>
+
+										<table class="table table-bordered">
+
+											<?php /* */ $description_title = explode(",", $answerReport4[$questionrow4]->description_title); /* */ ?>
+
+											<tr>
+												<?php for($i = 1; $i <= count($description_title); $i++): ?>
+												<th>Q <?php echo $i; ?></th>
+												<?php endfor; ?>
+											</tr>
+
+											<tr>
+												<?php /* */ $answers = explode(",", $answerReport4[$questionrow4]->answer); /* */ ?>
+
+												<?php foreach($answers as $answer=>$value): ?>
+
+												<td><?php echo e($value); ?></td>
+
+												<?php endforeach; ?>
+											</tr>
+										</table>
+
+									</td>
+
+									<?php else: ?>
+										<td><?php echo $answerReport4[$questionrow4]->answer; ?></td>
+									<?php endif; ?>
+							 	 	 <?php $setvaluez4 = 0; ?>
+									 <?php endif; ?>
+								<?php endfor; ?>
+
+							 <?php if($setvaluez4 == 1): ?>
+							 <td>-</td>
+							 <?php endif; ?>
+
+						 <?php endif; ?>
+
+						 <?php if($z == 4): ?>
+
+							 <?php for($questionrow5 = 0; $questionrow5 < count($answerReport5); $questionrow5++): ?>
+								 <?php if($questionnaire_list[$x]->id == $answerReport5[$questionrow5]->app_id): ?>
+								 <?php if($answerReport5[$questionrow5]->answer_input_type == 5): ?>
+
+								 <td>
+
+									 <table class="table table-bordered">
+
+										 <?php /* */ $description_title = explode(",", $answerReport5[$questionrow5]->description_title); /* */ ?>
+
+										 <tr>
+											 <?php for($i = 1; $i <= count($description_title); $i++): ?>
+											 <th>Q <?php echo $i; ?></th>
+											 <?php endfor; ?>
+										 </tr>
+
+										 <tr>
+											 <?php /* */ $answers = explode(",", $answerReport5[$questionrow5]->answer); /* */ ?>
+
+											 <?php foreach($answers as $answer=>$value): ?>
+
+											 <td><?php echo e($value); ?></td>
+
+											 <?php endforeach; ?>
+										 </tr>
+									 </table>
+
+								 </td>
+
+								 <?php else: ?>
+									 <td><?php echo $answerReport5[$questionrow5]->answer; ?></td>
+								 <?php endif; ?>
+								 	<?php  $setvaluez5 = 0; ?>
+								 <?php endif; ?>
+							 <?php endfor; ?>
+
+							<?php if($setvaluez5 == 1): ?>
+							<td>-</td>
+							<?php endif; ?>
+
+						<?php endif; ?>
+
+						<?php if($z == 5): ?>
+
+							<?php for($questionrow6 = 0; $questionrow6 < count($answerReport6); $questionrow6++): ?>
+								<?php if( $questionnaire_list[$x]->id == $answerReport6[$questionrow6]->app_id ): ?>
+								<?php if($answerReport6[$questionrow6]->answer_input_type == 5): ?>
+
+								<td>
+
+									<table class="table table-bordered">
+
+										<?php /* */ $description_title = explode(",", $answerReport6[$questionrow6]->description_title); /* */ ?>
+
+										<tr>
+											<?php for($i = 1; $i <= count($description_title); $i++): ?>
+											<th>Q <?php echo $i; ?></th>
+											<?php endfor; ?>
+										</tr>
+
+										<tr>
+											<?php /* */ $answers = explode(",", $answerReport6[$questionrow6]->answer); /* */ ?>
+
+											<?php foreach($answers as $answer=>$value): ?>
+
+											<td><?php echo e($value); ?></td>
+
+											<?php endforeach; ?>
+										</tr>
+									</table>
+
+								</td>
+
+								<?php else: ?>
+									<td><?php echo $answerReport6[$questionrow6]->answer; ?></td>
+								<?php endif; ?>
+						 	 	 <?php $setvaluez6 = 0; ?>
+								<?php endif; ?>
+							<?php endfor; ?>
+
+						 <?php if($setvaluez6 == 1): ?>
+						 <td>-</td>
+						 <?php endif; ?>
+
+					 <?php endif; ?>
+
+					 <?php if($z == 6): ?>
+
+						 <?php for($questionrow7 = 0; $questionrow7 < count($answerReport7); $questionrow7++): ?>
+							 <?php if( $questionnaire_list[$x]->id == $answerReport7[$questionrow7]->app_id ): ?>
+							 <?php if($answerReport7[$questionrow7]->answer_input_type == 5): ?>
+
+							 <td>
+
+								 <table class="table table-bordered">
+
+									 <?php /* */ $description_title = explode(",", $answerReport7[$questionrow7]->description_title); /* */ ?>
+
+									 <tr>
+										 <?php for($i = 1; $i <= count($description_title); $i++): ?>
+										 <th>Q <?php echo $i; ?></th>
+										 <?php endfor; ?>
+									 </tr>
+
+									 <tr>
+										 <?php /* */ $answers = explode(",", $answerReport7[$questionrow7]->answer); /* */ ?>
+
+										 <?php foreach($answers as $answer=>$value): ?>
+
+										 <td><?php echo e($value); ?></td>
+
+										 <?php endforeach; ?>
+									 </tr>
+								 </table>
+
+							 </td>
+
+							 <?php else: ?>
+								 <td><?php echo $answerReport7[$questionrow7]->answer; ?></td>
+							 <?php endif; ?>
+								<?php $setvaluez7 = 0; ?>
+							 <?php endif; ?>
+						 <?php endfor; ?>
+
+						<?php if($setvaluez7 == 1): ?>
+							<td>-</td>
+						<?php endif; ?>
+
+					<?php endif; ?>
+
+					<?php if($z == 7): ?>
+
+						<?php for($questionrow8 = 0; $questionrow8 < count($answerReport8); $questionrow8++): ?>
+							<?php if( $questionnaire_list[$x]->id == $answerReport8[$questionrow8]->app_id ): ?>
+							<?php if($answerReport8[$questionrow8]->answer_input_type == 5): ?>
+
+							<td>
+
+								<table class="table table-bordered">
+
+									<?php /* */ $description_title = explode(",", $answerReport8[$questionrow8]->description_title); /* */ ?>
+
+									<tr>
+										<?php for($i = 1; $i <= count($description_title); $i++): ?>
+										<th>Q <?php echo $i; ?></th>
+										<?php endfor; ?>
+									</tr>
+
+									<tr>
+										<?php /* */ $answers = explode(",", $answerReport8[$questionrow8]->answer); /* */ ?>
+
+										<?php foreach($answers as $answer=>$value): ?>
+
+										<td><?php echo e($value); ?></td>
+
+										<?php endforeach; ?>
+									</tr>
+								</table>
+
+							</td>
+
+							<?php else: ?>
+								<td><?php echo $answerReport8[$questionrow8]->answer; ?></td>
+							<?php endif; ?>
+					 	 		<?php $setvaluez8 = 0; ?>
+							 <?php endif; ?>
+						<?php endfor; ?>
+
+					 <?php if($setvaluez8 == 1): ?>
+					 <td>-</td>
+					 <?php endif; ?>
+
+				 <?php endif; ?>
+
+				 <?php if($z == 8): ?>
+
+					 <?php for($questionrow9 = 0; $questionrow9 < count($answerReport9); $questionrow9++): ?>
+						 <?php if($questionnaire_list[$x]->id == $answerReport9[$questionrow9]->app_id): ?>
+						 <?php if($answerReport9[$questionrow9]->answer_input_type == 5): ?>
+
+						 <td>
+
+							 <table class="table table-bordered">
+
+								 <?php /* */ $description_title = explode(",", $answerReport9[$questionrow9]->description_title); /* */ ?>
+
+								 <tr>
+									 <?php for($i = 1; $i <= count($description_title); $i++): ?>
+									 <th>Q <?php echo $i; ?></th>
+									 <?php endfor; ?>
+								 </tr>
+
+								 <tr>
+									 <?php /* */ $answers = explode(",", $answerReport9[$questionrow9]->answer); /* */ ?>
+
+									 <?php foreach($answers as $answer=>$value): ?>
+
+									 <td><?php echo e($value); ?></td>
+
+									 <?php endforeach; ?>
+								 </tr>
+							 </table>
+
+						 </td>
+
+						 <?php else: ?>
+							 <td><?php echo $answerReport9[$questionrow9]->answer; ?></td>
+						 <?php endif; ?>
+							<?php $setvaluez9 = 0; ?>
+							<?php endif; ?>
+					 <?php endfor; ?>
+
+					<?php if($setvaluez9 == 1): ?>
+					<td>-</td>
+					<?php endif; ?>
+
+				<?php endif; ?>
+
+				<?php if($z == 9): ?>
+					<?php for($questionrow10 = 0; $questionrow10 < count($answerReport10); $questionrow10++): ?>
+						<?php if( $questionnaire_list[$x]->id == $answerReport10[$questionrow10]->app_id ): ?>
+						<?php if($answerReport10[$questionrow10]->answer_input_type == 5): ?>
+
+						<td>
+
+							<table class="table table-bordered">
+
+								<?php /* */ $description_title = explode(",", $answerReport10[$questionrow10]->description_title); /* */ ?>
+
+								<tr>
+									<?php for($i = 1; $i <= count($description_title); $i++): ?>
+									<th>Q <?php echo $i; ?></th>
+									<?php endfor; ?>
+								</tr>
+
+								<tr>
+									<?php /* */ $answers = explode(",", $answerReport10[$questionrow10]->answer); /* */ ?>
+
+									<?php foreach($answers as $answer=>$value): ?>
+
+									<td><?php echo e($value); ?></td>
+
+									<?php endforeach; ?>
+								</tr>
+							</table>
+
+						</td>
+
+						<?php else: ?>
+							<td><?php echo $answerReport10[$questionrow10]->answer; ?></td>
+						<?php endif; ?>
+				 	 	 <?php $setvaluez10 = 0; ?>
+						 <?php endif; ?>
+					<?php endfor; ?>
+
+				 <?php if($setvaluez10 == 1): ?>
+				 <td>-</td>
+				 <?php endif; ?>
+
+			 <?php endif; ?>
+
+  	 <?php endfor; ?>
+  	<?php endif; ?>
+	</tr>
+
+	<?php $x = $x+1; ?>
+	<?php endforeach; ?>
+
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<span style="display:none">
+		<?php echo $questionnaire_list->sortColumn('',''); ?>
+
+	</span>
+
+	<?php echo $questionnaire_list->paginate(); ?>
+
+
+<?php else: ?>
+	<span class="no-data-display">No data to display.</span>
+<?php endif; ?>
+
+</div>
+
+<script type="text/javascript">
+
+	$(document).ready(function(){
+		$('.clickable-row').on('hover', 'td:not(.special-td)', function(){
+	    //get the link from data attribute
+	    var the_link = $(this).parent().attr("data-href");
+
+	    //do we have a valid link
+	    if (the_link == '' || typeof the_link === 'undefined') {
+	      //do nothing for now
+	    }
+	    else {
+	      //open the page
+	      window.location = the_link;
+	    }
+		});
+	});
+</script>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layout.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

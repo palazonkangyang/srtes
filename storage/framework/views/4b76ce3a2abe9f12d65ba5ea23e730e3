@@ -1,0 +1,16 @@
+<?php $__env->startSection('title','Error'); ?>
+<?php $__env->startSection('content'); ?>
+
+<div class="row">
+    <div class="col-md-12"><h4 class="page-head-line">Page Error</h4></div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-danger">
+            <strong>Error Page</strong> Cannot find page you requested!
+        </div>
+    </div>
+</div>
+
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

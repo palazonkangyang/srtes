@@ -1,0 +1,63 @@
+  <div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Title </div>
+  <div class="col-md-10 bg-ff">
+    <?php echo $forminfo->title; ?>
+
+  </div>
+  </div>
+
+
+<div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Project </div>
+  <div class="col-md-10 bg-ff">
+    <?php echo $forminfo->project; ?>
+
+  </div>
+  </div>
+
+
+<div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Form Detail Table </div>
+  <div class="col-md-10 bg-ff">
+        <table class="table table-striped table-condensed" id="itemsTable">
+
+  <thead>
+            <tr>
+               
+                <th style="width: 10%">S/N</th>
+                <th style="width: 15%">Date of Expenditure</th>
+                <th style="width: 35%">Description of Expense</th>
+                 <th style="width: 15%">Account Code</th>
+                   <th style="width: 15%"> Cost Centre </th>
+                <th style="width: 15%">Total</th>		
+               
+            </tr>
+            </thead>
+       <tbody >
+        <?php if(count($formlineitem) > 0): ?>
+                  
+                    <?php foreach($formlineitem as $lineitem): ?>
+                    <tr>
+                        <td><?php echo $lineitem->item_note; ?> </td>
+                          <td><?php echo date('Y-m-d', strtotime($lineitem->item_date)); ?> </td>
+                          <td><?php echo $lineitem->item_desc; ?> </td>
+                          <td><span title="<?php echo e($lineitem->p_accountcode_desc); ?>"><?php echo $lineitem->account_code; ?></span></td>
+                          <td><span title="<?php echo e($lineitem->p_optionalcode_desc); ?>"><?php echo $lineitem->optional_code; ?></span></td>
+                             <td><?php echo $lineitem->item_total; ?> </td>
+                    </tr>
+                       <?php endforeach; ?>
+                    <?php endif; ?>
+                   
+                      </tbody >
+                       </table>
+  </div>
+    </div>
+
+
+<div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Total </div>
+  <div class="col-md-10 bg-ff">
+    <?php echo $forminfo->total; ?>
+
+  </div>
+  </div>

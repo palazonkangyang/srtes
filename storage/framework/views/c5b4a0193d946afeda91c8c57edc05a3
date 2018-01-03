@@ -1,0 +1,42 @@
+<?php $__env->startSection('title', $title); ?>
+<?php $__env->startSection('content'); ?>
+
+<div class="row">
+    <div class="col-md-12"><h4 class="page-head-line">Set Urgency</h4></div>
+</div>
+
+
+<div class="wrap-content">
+
+<?php echo Form::open(['url'=>'/controller/settings/urgencystore','class'=>'form-horizontal filter_field']); ?> 
+<div class="form-group">
+  <label class="col-md-1 control-label"></label>
+  <div class="col-md-3">
+    <?php if(Session::has('rmsg')): ?> <div class="alert alert-success"> <?php echo e(Session::get('rmsg')); ?> </div> <?php endif; ?>
+    <?php foreach($errors->all() as $error): ?>
+      <div class="error-list alert-danger alert"><?php echo $error; ?></div>
+    <?php endforeach; ?>
+  </div>
+</div>
+<?php foreach($urgency as $urg): ?>
+<div class="form-group">
+  <label class="col-md-2 control-label"><?php echo e($urg->urgency_name); ?></label>
+  <div class="col-md-2"> 
+    <?php echo Form::text($urg->urgency_id,$urg->set_time,['class'=>'form-control width-control-hour']); ?> Hour(s)
+  </div>
+</div>
+<?php endforeach; ?>
+
+<div class="form-group">
+  <label class="col-md-2 control-label"></label>
+  <div class="col-md-2"> 
+    <?php echo Form::submit('Set Time',['class'=>'btn btn-default btn-cs search_btn']); ?>
+
+    <a href="" class="btn btn-default btn-cs">Refresh</a>
+  </div>
+</div>
+<?php echo Form::close(); ?>  
+</div>
+
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

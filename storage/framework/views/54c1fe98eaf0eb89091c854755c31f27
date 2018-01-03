@@ -1,0 +1,36 @@
+<?php $__env->startSection('title',$title); ?>
+<?php $__env->startSection('content'); ?>
+
+<div class="row">
+    <div class="col-md-12"><h4 class="page-head-line">Account Settings</h4></div>
+</div>
+
+<div class="wrap-content">
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-heading"><h4>SETTINGS</h4></div>
+        <div class="panel-body">
+
+            <?php echo Form::open(['url'=>'/controller/accountsettings','class'=>'accountsettings',]); ?> 
+
+                <div class="form-group">   
+                  <div class="col-md-2 col-sm-2"><?php echo Form::label('ooo', 'Out of Office (Settings)'); ?></div>
+                  <div class="col-md-2 col-sm-2 success-settings">
+                    <div class="btn-group btn-toggle"> 
+                        <button class="btn btn-default <?php if(!empty($user['0']['inoffice'])): ?> active <?php endif; ?>">ON</button>
+                        <button class="btn btn-default <?php if(empty($user['0']['inoffice'])): ?> active <?php endif; ?>">OFF</button>
+                    </div>
+                    <span class="ooo-value"><input type="hidden" class="ooo" name="ooo" value="<?php if(!empty($user['0']['inoffice'])): ?>1 <?php endif; ?>" /></span>
+                  </div>
+                </div>
+             
+            <?php echo Form::close(); ?>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

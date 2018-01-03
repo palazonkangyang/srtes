@@ -1,0 +1,94 @@
+<?php $__env->startSection('title',$title); ?>
+<?php $__env->startSection('content'); ?>
+
+
+<?php if(Session::has('success')): ?>
+<div class="container">
+<div class="alert alert-success alert-dismissible fade in fixed-error">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+    <strong> <?php echo e(Session::get('success')); ?></strong>
+</div>
+</div>
+<?php endif; ?>
+
+<div class="row">
+    <div class="col-md-12"><h4 class="page-head-line">Department Management</h4></div>
+</div>
+<div class="wrap-content">
+
+<?php echo Form::open(['class'=>'form-horizontal filter_field']); ?> 
+<div class="form-group">
+  <label class="col-md-1 control-label" for="search_field">Search</label>
+  <div class="col-md-5"> 
+    <?php echo Form::text('search','',['class'=>'form-control','id'=>'search_field']); ?>
+
+    <?php echo Form::submit('Search',['class'=>'btn btn-default btn-cs search_btn']); ?> 
+  </div>
+
+  <div class="col-md-6">
+    <span class="pull-right">
+      <a href="/department/createdepartment" id="add-button" class="btn btn-default">Create Department</a>
+    </span>
+  </div>
+</div>
+<?php echo Form::close(); ?>
+
+
+<?php if(count($departmentlist)): ?>
+<div class="row">
+<div id="no-more-tables">
+ <table class="col-md-12 table-bordered table-striped table-condensed cf">
+    <thead class="cf">
+        <th>ID</th>
+        <th><?php echo $departmentlist->sortColumn('department','Department Name'); ?></th>
+        <th><?php echo $departmentlist->sortColumn('deptdesc','Department Description'); ?></th>
+          
+        <th>Department Head</th>
+         <th>Reporting Officer</th>
+    </thead>
+
+    <tbody>
+        <?php foreach($departmentlist as $departments): ?>
+        <tr class="clickable-row" data-href="/department/editdepartment/<?php echo e($departments->idsrc_departments); ?>">
+
+            <td data-title="idsrc_departments"><?php echo e($departments->idsrc_departments); ?></td>
+            <td data-title="department"><?php echo e($departments->department); ?></td>
+            <td data-title="deptdesc"><?php echo e($departments->deptdesc); ?></td>
+            <td data-title="deptdesc">
+            	<?php if(isset($departments->hod->loginname)): ?>
+            		<?php echo e($departments->hod->loginname); ?>
+
+            	<?php else: ?>
+            		<span class="alert-danger">No Department Head set</span>
+            	<?php endif; ?>
+            </td>    
+                <td data-title="deptdesc">
+            	<?php if(isset($departments->ro->loginname)): ?>
+            		<?php echo e($departments->ro->loginname); ?>
+
+            	<?php else: ?>
+            		<span class="alert-danger">No Reporting Officer set</span>
+            	<?php endif; ?>
+            </td>    
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+</div>
+</div>
+
+<span style="display:none">
+    <?php echo $departmentlist->sortColumn('',''); ?>
+
+</span>
+
+<?php echo $departmentlist->paginate(); ?>
+
+<?php else: ?>
+    <span class="no-data-display">No data to display.</span>
+<?php endif; ?>
+
+</div>
+
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

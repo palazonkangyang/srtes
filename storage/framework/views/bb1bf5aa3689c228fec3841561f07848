@@ -1,0 +1,70 @@
+<?php $__env->startSection('title', $title); ?>
+<?php $__env->startSection('content'); ?>
+
+<div class="row pos-rel">
+    <div class="col-md-12"><h4 class="page-head-line">Pending Task</h4></div>
+    <?php if(count($pendinglist)): ?><div class="print-table"><a href="javascript:window.print()" id="print-page" class="btn btn-default">print</a></div><?php endif; ?>
+</div>
+
+<div class="wrap-content"> 
+<?php if(count($pendinglist)): ?>
+<div class="row">
+<div id="no-more-tables">
+ <table class="col-md-12 table-bordered table-striped table-condensed cf">
+    <thead class="cf">
+      
+            <th>Date</th>
+     
+        <th>S/N</th>
+        <th>Type of Request</th>
+        <th>Title</th>
+        <th>Creator</th>
+        <th>Urgency</th>
+            <th>Department</th>
+    
+        <th>Status</th>
+    </thead>
+
+    <tbody>
+        <?php foreach($pendinglist as $pending): ?>
+        <tr class="clickable-row" data-href="/application/view_details/<?php echo e($pending->id); ?>">
+
+            <td data-title="Date"><?php echo e(date('d/m/Y', strtotime($pending->created_at))); ?></td>
+            <td data-title="S/N"><?php echo e($pending->case_number); ?></td>
+            <td data-title="Type of request"><?php echo e($pending->type_request); ?></td>
+            <td data-title="Title"><?php if($pending->title): ?><?php echo e($pending->title); ?> <?php else: ?> <?php echo e($pending->form_name); ?> <?php endif; ?></td>
+            <td data-title="Creator"><?php echo e($pending->name); ?></td>
+            <td data-title="Type">
+                    <?php if($pending->urgency == 1): ?> 
+                        Normal
+                    <?php else: ?> 
+                        Urgent
+                    <?php endif; ?>
+            </td>
+            <td data-title="Department"><?php echo e($pending->department); ?></td>
+            <td data-title="Status">
+                <?php if($pending->status == 0): ?> 
+                    <span class="alert-black">Pending</span>
+                <?php elseif($pending->status == 1): ?>
+                    <span class="alert-black">Approved</span>
+                <?php elseif($pending->status == 2): ?>
+                    <span class="alert-black">Rejected</span>
+                <?php elseif($pending->status == 3): ?>
+                    <span class="alert-black">Cancelled</span>
+                 <?php elseif($pending->status == 4): ?>
+                    <span class="alert-black">Forwarded</span>
+                <?php endif; ?>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+</div>
+</div>
+
+<?php else: ?>
+    <span class="no-data-display">No data to display.</span>
+<?php endif; ?>
+</div>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

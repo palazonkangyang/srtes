@@ -1,0 +1,121 @@
+<?php $__env->startSection('title', $title); ?>
+<?php $__env->startSection('content'); ?>
+
+<script type="text/javascript">
+    $(function() {
+        $('.filter-select').change(function() {
+            this.form.submit();
+        });
+    });
+</script>
+
+<div class="row pos-rel">
+    <div class="col-md-12"><h4 class="page-head-line">Approver History</h4></div>
+    <?php if(count($approverhistorylist)): ?><div class="print-table"><a href="javascript:window.print()" id="print-page" class="btn btn-default">print</a></div><?php endif; ?>
+</div>
+
+<div class="wrap-content"> 
+
+<?php echo Form::open(['class'=>'form-horizontal filter_field fontsizing']); ?> 
+<div class="form-group">
+  <label class="col-md-1 control-label" for="textinput">Filter</label>  
+  <div class="col-md-10">
+      <div class="form-inline">
+        <?php echo Form::select('department', $departmentFilter->getOptions(), $departmentFilter->getValue(), ['class'=>'form-control filter-select']  ); ?>
+
+        <?php echo Form::select('typeofrequest', $tofFilter->getOptions(), $tofFilter->getValue(), ['class'=>'form-control filter-select'] ); ?>
+
+        <?php echo Form::select('urgency', $urgencyFilter->getOptions(), $urgencyFilter->getValue(), ['class'=>'form-control filter-select'] ); ?>
+
+        <?php echo Form::select('status', $statusFilter->getOptions(), $statusFilter->getValue(), ['class'=>'form-control filter-select'] ); ?>
+
+      </div>
+</div>
+</div>
+<div class="form-group">
+<label class="col-md-1 control-label" for="textinput">Date: </label>  
+<div class="col-md-3">
+    <div class="input-daterange input-group" id="datepicker">
+        <input class="input-sm form-control from_date" name="startdate" value="<?php echo e($fromtoFilter->getfrom()); ?>" type="text">
+        <span class="input-group-addon">to</span>
+        <input class="input-sm form-control to_date" name="startdate_to" value="<?php echo e($fromtoFilter->getto()); ?>" type="text">
+    </div>
+</div>
+<label class="col-md-3 control-label" for="search_field">Keyword: </label>
+  <div class="col-md-5"> 
+    <?php echo Form::text('search',$searchFilter->getValue(),['class'=>'form-control','id'=>'search_field']); ?>
+
+    <?php echo Form::submit('Search',['class'=>'btn btn-default btn-cs search_btn']); ?> 
+    <a href="" class="btn btn-default btn-cs">Clear</a>
+  </div>
+</div>
+<?php echo Form::close(); ?>
+
+
+<?php if(count($approverhistorylist)): ?>
+<div class="row">
+<div id="no-more-tables">
+ <table class="col-md-12 table-bordered table-striped table-condensed cf">
+    <thead class="cf">
+        <th>Date</th>
+        <th><?php echo $approverhistorylist->sortColumn('case_number','S/N'); ?></th>
+        <th><?php echo $approverhistorylist->sortColumn('type_request','Type of Request'); ?></th>
+        <th>Title</th>
+        <th>Creator</th>
+        <th>Urgency</th>
+        <th>Department</th>
+        <th>Status</th>
+    </thead>
+
+    <tbody>
+        <?php foreach($approverhistorylist as $approverhistory): ?>
+        <tr class="clickable-row" data-href="/application/view_details/<?php echo e($approverhistory->id); ?>">
+
+            <td data-title="Date"><?php echo e(date('d/m/Y', strtotime($approverhistory->created_at))); ?></td>
+            <td data-title="S/N"><?php echo e($approverhistory->case_number); ?></td>
+            <td data-title="Type of Request"><?php echo e($approverhistory->type_request); ?></td>
+            <td data-title="Title"><?php if($approverhistory->title): ?><?php echo e($approverhistory->title); ?> <?php else: ?> <?php echo e($approverhistory->form_name); ?> <?php endif; ?></td>
+            <td data-title="Creator"><?php echo e($approverhistory->name); ?></td>
+            <td data-title="Type">
+                    <?php if($approverhistory->urgency == 1): ?> 
+                        Normal
+                    <?php else: ?> 
+                        Urgent
+                    <?php endif; ?>
+            </td>
+            <td data-title="Department"><?php echo e($approverhistory->department); ?></td>
+            <td data-title="Status">
+                <?php if($approverhistory->status == 0): ?> 
+                    <span class="alert-black">approverhistory</span>
+                <?php elseif($approverhistory->status == 1): ?>
+                    <span class="alert-black">Approved</span>
+                <?php elseif($approverhistory->status == 2): ?>
+                    <span class="alert-black">Rejected</span>
+                <?php elseif($approverhistory->status == 3): ?>
+                    <span class="alert-black">Cancelled</span>
+                 <?php elseif($approverhistory->status == 4): ?>
+                    <span class="alert-black">Forwarded</span>
+                <?php endif; ?>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+</div>
+</div>
+
+<span style="display:none">
+    <?php echo $approverhistorylist->sortColumn('',''); ?>
+
+</span>
+<?php echo $approverhistorylist->paginate(); ?>
+
+<?php else: ?>
+    <span class="no-data-display">No data to display.</span>
+<?php endif; ?>
+
+</div>
+
+
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

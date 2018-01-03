@@ -1,0 +1,12 @@
+<div style="width:500px; margin:0 auto; border:1px solid black; padding:20px;">
+
+  <?php for($i = 0; $i < count($questions['title']); $i++): ?>
+
+  <div style="font-family: Arial, sans-serif; font-size:13px; line-height:22px;">
+    <p>Q: $questions['title'][$i]</p>
+    <p>A: $questions['answer'][$i]</p>
+  </div>
+
+  <?php endfor; ?>
+
+</div>

@@ -1,0 +1,71 @@
+<?php $__env->startSection('title', $title); ?>
+<?php $__env->startSection('content'); ?>
+
+<?php if(Session::has('success')): ?>
+
+<div class="container">
+	<div class="alert alert-success alert-dismissible fade in fixed-error">
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">×</span>
+		</button>
+		<strong> <?php echo e(Session::get('success')); ?></strong>
+	</div>
+</div>
+<?php endif; ?>
+
+
+<div class="row">
+	<div class="col-md-12">
+		<h4 class="page-head-line">Course List</h4>
+	</div>
+</div>
+<div class="wrap-content">
+
+  <span class="pos-add-back pull-right">
+    <a href="/tes/course/course-list">Back to Course List</a>
+  </span>
+
+<?php if(count($course_list)): ?>
+
+	<div class="row">
+		<div id="no-more-tables">
+			<table class="col-md-12 table-bordered table-striped table-condensed cf">
+				<thead class="cf">
+					<th><?php echo $course_list->sortColumn('name','Name'); ?></th>
+          <th>Number of batch</th>
+          <th>Number of attendee</th>
+          <th>Completion Status</th>
+				</thead>
+				<tbody>
+<?php foreach($course_list as $course): ?>
+					<tr>
+						<td data-title="name" class="clickable-row" data-href="/tes/course/course-list/edit-course/<?php echo e($course->id); ?>"><?php echo e($course->name); ?></td>
+            <td data-title="name" class="clickable-row" data-href="/tes/course/course-completion-status/course/<?php echo e($course->id); ?>">hc</td>
+            <td data-title="name" class="clickable-row" data-href="/tes/course/course-completion-status/course/<?php echo e($course->id); ?>">hc</td>
+            <td data-title="name" class="clickable-row" data-href="/tes/course/course-completion-status/course/<?php echo e($course->id); ?>">hc</td>
+					</tr>
+<?php endforeach; ?>
+
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<span style="display:none">
+	    <?php echo $course_list->sortColumn('',''); ?>
+
+	</span>
+
+	<?php echo $course_list->paginate(); ?>
+
+
+<?php else: ?>
+
+	<span class="no-data-display">No data to display.</span>
+<?php endif; ?>
+
+</div>
+
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layout.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

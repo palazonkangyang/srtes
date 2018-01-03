@@ -1,0 +1,144 @@
+<div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Request Type</div>
+  <div class="col-md-10 bg-ff">
+    <?php if($forminfo->request_type == 1): ?>
+     Normal
+    <?php elseif($forminfo->request_type == 2): ?>
+     Overseas Travel
+ 
+    <?php endif; ?>
+   
+  </div>
+  </div>
+
+<div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Account Code </div>
+  <div class="col-md-10 bg-ff">
+
+<span title="<?php echo e($forminfo->p_accountcode_desc); ?>"><?php echo $forminfo->account_code; ?></span>
+  </div>
+  </div>
+
+<?php if($forminfo->optional_code): ?>
+
+<div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Cost Centre </div>
+  <div class="col-md-10 bg-ff">
+    <span title="<?php echo e($forminfo->p_optionalcode_desc); ?>"><?php echo $forminfo->optional_code; ?></span>
+  </div>
+  </div>
+<?php endif; ?>
+
+
+
+<div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Cheque Payable To </div>
+  <div class="col-md-10 bg-ff">
+    <?php echo $forminfo->cheque_payable_to; ?>
+
+  </div>
+  </div>
+
+<div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Project Name </div>
+  <div class="col-md-10 bg-ff">
+    <?php echo $forminfo->project_name; ?>
+
+  </div>
+  </div>
+
+
+ <div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Form Detail Table </div>
+  <div class="col-md-10 bg-ff">
+        <table class="table table-striped table-condensed" id="itemsTable">
+
+  <thead>
+            <tr>
+               
+                <th style="width: 20%">Date</th>
+                <th style="width: 30%">Company</th>
+                <th style="width: 30%">Description</th>
+                <th style="width: 10%">Note</th>		
+                 <th style="width: 10%">Total</th>
+               
+            </tr>
+            </thead>
+       <tbody >
+        <?php if(count($formlineitem) > 0): ?>
+                  
+                    <?php foreach($formlineitem as $lineitem): ?>
+                    <tr>
+                        <td><?php echo date('Y-m-d', strtotime($lineitem->item_date)); ?> </td>
+                         <td><?php echo $lineitem->item_company; ?> </td>
+                          <td><?php echo $lineitem->item_desc; ?> </td>
+                             <td><?php echo $lineitem->item_note; ?> </td>
+                                  <td><?php echo $lineitem->item_total; ?> </td>
+                    </tr>
+                       <?php endforeach; ?>
+                    <?php endif; ?>
+                   
+                      </tbody >
+                       </table>
+  </div>
+    </div>
+
+
+<div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Total </div>
+  <div class="col-md-10 bg-ff">
+    <?php echo $forminfo->total; ?>
+
+  </div>
+  </div>
+
+<div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Advanced Received </div>
+  <div class="col-md-10 bg-ff">
+    <?php echo $forminfo->advance_received; ?>
+
+  </div>
+  </div>
+
+<div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Balance </div>
+  <div class="col-md-10 bg-ff">
+    <?php echo $forminfo->balance; ?>
+
+  </div>
+  </div>
+
+<div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Budget Code </div>
+  <div class="col-md-10 bg-ff">
+    <?php echo $forminfo->budget_code; ?>
+
+  </div>
+  </div>
+
+
+<div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Date Event</div>
+  <div class="col-md-10 bg-ff">  
+    <?php echo date('j F Y', strtotime($forminfo->date_event)); ?>
+
+  </div>
+  </div>
+
+<?php if($forminfo->reasons != ""): ?>
+<div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Reasons</div>
+  <div class="col-md-10 bg-ff">
+    <?php echo $forminfo->reasons; ?>
+
+  </div>
+  </div>
+<?php endif; ?>
+
+<div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Description </div>
+  <div class="col-md-10 bg-ff">
+    <?php echo $forminfo->description; ?>
+
+  </div>
+  </div>

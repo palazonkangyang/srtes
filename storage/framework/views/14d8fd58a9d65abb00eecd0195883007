@@ -1,0 +1,126 @@
+<?php $__env->startSection('title',$title); ?>
+
+
+<?php $__env->startSection('content'); ?>
+<div class="row">
+    <div class="col-md-12"><h4 class="page-head-line align-center">New Application</h4></div>
+</div>
+
+
+
+<div class="wrap-content"> 
+	<div class="row">
+		<div class="col-md-12">
+		<?php if(Session::has('error_message')): ?>
+		  <div class="alert alert-danger alert-dismissible fade in fixed-error">
+		        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+		        <strong><?php echo e(Session::get('error_message')); ?></strong>
+		  </div>
+  		<?php endif; ?>
+			<div class="panel panel-default">
+				<div class="panel-heading"><h4 class="align-center">CHOOSE TYPE OF REQUEST AND FORMS</h4></div>
+				<div class="panel-body">
+				
+				<?php if(isset($errors) && count($errors)): ?>
+				<div class="alert alert-danger margin-bottom-20"> 
+				      <?php foreach($errors->all() as $error): ?>
+				          <div class="error-list"><?php echo $error; ?></div>
+				      <?php endforeach; ?>
+				</div>
+				<?php endif; ?>
+				
+				<?php echo Form::open(['method'=>'GET', 'class'=>'submit_now', 'files'=>true]); ?> 
+				<div class="row clear-left request-form">
+				<div>
+					<div class="form-group align-center">
+					   <?php echo Form::select('type_of_request',  $request, NULL, ['class'=>'form-control margin-bottom-20', 'id'=>'type_of_request']  );; ?>
+
+					   
+					   <div class="form-selected margin-bottom-20">
+					   		<select class="form-control forms-area hide" name="forms">
+					   		</select>
+					   </div>
+					   <button type="submit" class="btn btn-default hide" id="submit">Submit</button>
+					</div>
+				</div>
+				</div>
+				<?php echo Form::close(); ?> 
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+
+		$('select[name=forms]').on('change', function(){
+			getVal = $(this).val();
+
+			if(getVal != ''){
+				$('#submit').removeClass('hide').addClass('show');
+			} else {
+				$('#submit').removeClass('show').addClass('hide');
+			}
+		});
+		
+		$('select[name=type_of_request]').on('change',function(){
+			getValue = $(this).val();
+			token = $('input[name=_token]').val();
+			
+			if(getValue != ''){
+				
+				$.ajax({
+		            type: 'GET',
+		            data: {
+		            	_token: token,
+			            request_id: getValue
+		            },
+		            url:  domain + 'controller/settings/getforms',
+		            beforeSend:function(){
+		                
+		            },
+		            error: function(xhr, textStatus, errorThrown) {
+
+		                /*for (var key in xhr.responseJSON.errors) {
+		                    if (key === 'length' || !xhr.responseJSON.errors.hasOwnProperty(key)) continue;
+		                    var value = xhr.responseJSON.errors[key];
+		                    $('#'+key).after('<div class="alert alert-danger error-list">'+value+'</div>')
+		                }*/
+		            },
+
+		            success : function ( response ) {
+			            //console.log(response.forms);
+			            
+		            	$('.forms-area').html('');
+		            	$('.forms-area').addClass('show');
+		            	
+						for(var i = 0; i < response.forms.length; i++){
+							options = '<option value="'+response.forms[i].id+'">'+response.forms[i].name+'</option>';
+							$('.forms-area').append(options);
+						}
+
+						var valOfform = $('.forms-area').val();
+						
+						if(valOfform != ''){
+							$('#submit').removeClass('hide').addClass('show');
+						} else {
+							$('#submit').removeClass('show').addClass('hide');
+						}
+		            },
+
+		            complete : function (){
+		                 
+		            }
+		        });
+		        
+			}else {
+				$('.forms-area').html('')
+					.removeClass('show')
+						.addClass('hide');
+			}
+		})
+	});
+</script>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

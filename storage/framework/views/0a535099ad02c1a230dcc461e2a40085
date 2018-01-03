@@ -1,0 +1,124 @@
+<?php $__env->startSection('title', $title); ?>
+<?php $__env->startSection('content'); ?>
+
+
+<?php if(Session::has('success')): ?>
+
+<div class="container">
+	<div class="alert alert-success alert-dismissible fade in fixed-error">
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">×</span>
+		</button>
+		<strong> <?php echo e(Session::get('success')); ?></strong>
+	</div>
+</div>
+<?php endif; ?>
+
+
+<div class="row">
+	<div class="col-md-12">
+		<h4 class="page-head-line">Course List</h4>
+	</div>
+</div>
+<div class="wrap-content">
+
+<?php echo Form::open(['class'=>'form-horizontal filter_field']); ?>
+
+
+	<div class="form-group">
+		<label class="col-md-1 control-label" for="search_field">Search</label>
+		<div class="col-md-5">
+<?php echo Form::text('search','',['class'=>'form-control','id'=>'search_field']); ?>
+
+<?php echo Form::submit('Search',['class'=>'btn btn-default btn-cs search_btn']); ?>
+
+</div>
+		<div class="col-md-6">
+			<span class="pull-right">
+				<a href="/tes/course/course-list/add-course" id="add-button" class="btn btn-default">Add Course</a>
+			</span>
+		</div>
+	</div>
+<?php echo Form::close(); ?>
+
+
+<?php if(count($course_list)): ?>
+
+	<div class="row">
+		<div id="no-more-tables">
+			<table class="col-md-12 table-bordered table-striped table-condensed cf">
+				<thead class="cf">
+					<th><?php echo $course_list->sortColumn('id','ID'); ?></th>
+					<th><?php echo $course_list->sortColumn('name','Name'); ?></th>
+					<th><?php echo $course_list->sortColumn('description','Description'); ?></th>
+					<th><?php echo $course_list->sortColumn('course_type_id','Type'); ?></th>
+					<th><?php echo $course_list->sortColumn('code','Code'); ?></th>
+					<th><?php echo $course_list->sortColumn('duration','Duration'); ?></th>
+					<th><?php echo $course_list->sortColumn('minimum_attendee','Minimum Attendee'); ?></th>
+					<th><?php echo $course_list->sortColumn('maximum_attendee','Maximum Attendee'); ?></th>
+					<th>Action</th>
+				</thead>
+				<tbody>
+<?php foreach($course_list as $course): ?>
+
+					<tr class="clickable-row" data-href="/tes/course/course-list/edit-course/<?php echo e($course->id); ?>">
+						<td data-title="id"><?php echo e($course->id); ?></td>
+						<td data-title="name"><?php echo e($course->name); ?></td>
+						<td data-title="description"><?php echo e($course->description); ?></td>
+						<td data-title="course_type_id"><?php echo e($course->course_type_name); ?></td>
+						<td data-title="code"><?php echo e($course->code); ?></td>
+						<td data-title="duration"><?php echo e($course->duration); ?></td>
+						<td data-title="minimum_attendee"><?php echo e($course->minimum_attendee); ?></td>
+						<td data-title="maximum_attendee"><?php echo e($course->maximum_attendee); ?></td>
+						<td class="special-td" >     <a title='Edit' href="/tes/course/course-list/edit-questionnaire/<?php echo e($course->questionnaire_id); ?>" class='btn btn-default btn-xs'><i class="glyphicon glyphicon-edit"></i></a>
+							 <a title='Report' href="/tes/course/course-list/questionnaire_report/<?php echo e($course->questionnaire_id); ?>" class='btn btn-default btn-xs'><i class="glyphicon glyphicon-list"></i></a>
+                </td>
+					</tr>
+<?php endforeach; ?>
+
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<span style="display:none">
+	    <?php echo $course_list->sortColumn('',''); ?>
+
+	</span>
+
+	<?php echo $course_list->paginate(); ?>
+
+
+<?php else: ?>
+
+	<span class="no-data-display">No data to display.</span>
+<?php endif; ?>
+
+
+
+
+
+
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+$('.clickable-row').on('hover', 'td:not(.special-td)', function(){
+
+
+    //get the link from data attribute
+    var the_link = $(this).parent().attr("data-href");
+
+    //do we have a valid link
+    if (the_link == '' || typeof the_link === 'undefined') {
+        //do nothing for now
+    }
+    else {
+        //open the page
+        window.location = the_link;
+    }
+});
+});
+</script>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layout.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
