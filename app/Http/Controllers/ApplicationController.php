@@ -1637,18 +1637,39 @@ class ApplicationController extends ControllerCore
     {
       $result = ModelFactory::getInstance('QuestionnaireDetail')
                     ->where('questionnaire_id','=',$input['questionnaire_id'])
-                    ->select('question', 'answer_input_type')
+                    ->select('question', 'answer_input_type', 'description_title')
                     ->get();
 
       foreach($result as $data)
       {
         $input['questions'][] = $data->question;
         $input['answer_input_type'][] = $data->answer_input_type;
+        $input['description_title'][] = $data->description_title;
       }
 
+      $feedback['answer_input_type'] = $input['answer_input_type'];
       $feedback['questions'] = $input['questions'];
       $feedback['answers'] = $input['answer'];
-      $feedback['answer_input_type'] = $input['answer_input_type'];
+      $feedback['description_title'] = $input['description_title'];
+
+      for($i = 0; $i < count($feedback['answers']); $i ++)
+      {
+        if($feedback['answer_input_type'][$i] != 5)
+        {
+          if(is_array($feedback['answers'][$i]))
+          {
+            $feedback['answers'][$i] = implode(",", $feedback['answers'][$i]);
+          }
+        }
+
+        if($feedback['answer_input_type'][$i] == 5)
+        {
+          if(isset($feedback['description_title'][$i]))
+          {
+            $feedback['description_title'][$i] = explode(",", $feedback['description_title'][$i]);
+          }
+        }
+      }
 
       // Get Respective RO Email
       $dept_ro = ModelFactory::getInstance('User')
@@ -1658,11 +1679,11 @@ class ApplicationController extends ControllerCore
                   ->first();
 
       $approverpersonToReceiveEmail = $this->selectUserBy($dept_ro->id, array('loginname','emailadd'));
-
-      $setEmail = LibraryFactory::getInstance('Email');
-      $setEmail->personToReceive = $approverpersonToReceiveEmail;
-      $setEmail->subject = "Summary of Questionnaire";
-      $setEmail->layout = 'mail.mail_summary';
+      //
+      // $setEmail = LibraryFactory::getInstance('Email');
+      // $setEmail->personToReceive = $approverpersonToReceiveEmail;
+      // $setEmail->subject = "Summary of Questionnaire";
+      // $setEmail->layout = 'mail.mail_summary';
 
       $mailData = [
         'receiver_name' => $approverpersonToReceiveEmail->loginname,
@@ -1671,6 +1692,12 @@ class ApplicationController extends ControllerCore
         'feedback' => $feedback,
       ];
 
-      $setEmail->send($mailData);
+      Mail::send('mail.mail_summary', $mailData, function ($m) use ($approverpersonToReceiveEmail) {
+            $m->from('oakka.myo@palazon.com', 'Red Cross');
+            $m->to('tester1@redcross.sg')->subject('Summary of Questionnaire');
+      });
+
+      //
+      // $setEmail->send($mailData);
     }
 }
