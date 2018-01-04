@@ -5,111 +5,148 @@
 	<div class="col-md-12">
 		<h4 class="page-head-line">Edit Questionnaire</h4>
 	</div>
-</div>
+</div><!-- end row -->
+
 <div class="wrap-content">
+
 	<div class="row">
+
 		<div class="col-md-12">
+
 			<div class="panel panel-default">
+
 				<div class="panel-heading">
 					<h4>Edit questionnaire form</h4>
 					<span class="pos-add-back pull-right">
 						<a href="/tes/form-management/questionnaire-list">Back to Course List</a>
 					</span>
-				</div>
+				</div><!-- end panel-heading -->
+
 				<div class="panel-body">
 
-<?php if(Session::has('success')): ?>
+					<?php if(Session::has('success')): ?>
+
 					<div class="alert-success" style="margin-bottom:20px;">
 						<div class="success-msg">
 							<span class="glyphicon glyphicon-ok"></span> <?php echo e(Session::get('success')); ?>
 
 						</div>
 					</div>
-<?php elseif($errors->all()): ?>
+
+					<?php elseif($errors->all()): ?>
+
 					<div class="alert-danger padding" style="margin-bottom:20px;">
-<?php foreach($errors->all() as $error): ?>
+						<?php foreach($errors->all() as $error): ?>
 						<div class="error-list">
 							<span class="glyphicon glyphicon-remove"></span> <?php echo $error; ?>
 
+						</div><!-- end error-list -->
+
+						<?php endforeach; ?>
+					</div><!-- end alert-danger -->
+					<?php endif; ?>
+
+					<?php echo Form::open(['url'=>'/controller/tes/course/course-list/edit-questionnaire/'.$selected_course_list->questionnaire_id,'class'=>'',]); ?>
+
+
+
+					<div class="form-group">
+						<div class="">
+							<label>Course</label>
+							<h4><?php echo e($selected_course_list->name); ?></h4>
 						</div>
-<?php endforeach; ?>
-					</div>
-<?php endif; ?>
+					</div><!-- end form-group -->
+
+					<?php if(count($QuestionnaireAnswerList) != 0): ?>
+						<div style='color:red;'>
+							Currently there is submitter on this questionnaire, changes is not allow
+						</div>
+					<?php endif; ?>
+
+					<hr/>
+
+					<input type="hidden" name="course_id" value="<?php echo $selected_course_list->id; ?>"/>
+					<input type="hidden" name="questionnaire_id" value="<?php echo $selected_course_list->questionnaire_id; ?>"/>
 
 
+					<div class="form-group">
 
-<?php echo Form::open(['url'=>'/controller/tes/course/course-list/edit-questionnaire/'.$selected_course_list->questionnaire_id,'class'=>'',]); ?>
+						<div id="questionnaire-builder">
+								<?php if(count($QuestionnaireDetailList) > 0): ?>
+
+									<?php foreach($QuestionnaireDetailList as $line): ?>
+
+									<div class="question-row">
+
+										<div class="form-group">
+							 		    <label><?php if(count($QuestionnaireAnswerList) == 0): ?><i id="deleteRow" class="fa fa-minus-circle"><?php endif; ?></i> Question</label>
+							 				<input type="text" name="question[]" value="<?php echo e($line->question); ?>" class="form-control input-sm" />
+							 		  </div><!-- end form-group -->
+
+							 			<div class="form-group">
+							 				<label>Answer Input Type</label>
+							 				<div>
+							 				  <?php echo Form::select('answer_input_type[]', array('1'=>'Text','2' => 'Select', '3' => 'Checkbox', '4' => 'Radio', '5' => 'Table'), $line->answer_input_type  , array('class'=>'form-control answer-input-type'));; ?>
+
+							 				</div>
+							 			</div><!-- end form-group -->
+
+										<div class="form-group additional-text" style="display: none;">
+							 				<label>Text</label>
+							 				<input type="text" name="additional_text[]" value="Please √ the box which correctly reflects your learning experience" class="form-control input-sm" />
+							 			</div><!-- end form-group -->
+
+										<div class="form-group description-title" style="display: none;">
+							 				<label>Description</label>
+							 				<input type="text" name="description_title[]" value="<?php echo e($line->description_title); ?>" class="form-control input-sm" />
+							 			</div><!-- end form-group -->
+
+							 			<div class="form-group">
+							 				<label>Answer Input Value</label>
+							 				<?php if($line->answer_input_type == 5): ?>
+												<input type="text" name="answer_input_value[]" value="<?php echo e($line->description_value); ?>" class="form-control input-sm" />
+											<?php else: ?>
+												<input type="text" name="answer_input_value[]" value="<?php echo e($line->answer_input_value); ?>" class="form-control input-sm" />
+											<?php endif; ?>
+							 			</div><!-- end form-group -->
+
+										<hr/>
+ 								</div><!-- end question-row -->
+ 		   					<?php endforeach; ?>
+
+								<?php else: ?>
+
+								<div class="question-row">
+								</div><!-- end question-row -->
+
+    					<?php endif; ?>
+						</div><!-- end questionnaire-builder -->
+
+	 					<?php if(count($QuestionnaireAnswerList) == 0): ?>
+							<a href="#" id="addRowBtn" class="btn btn-success"><i class="glyphicon glyphicon-plus"></i> Add Question</a>
+						<?php endif; ?>
+
+						<hr/>
+					</div><!-- end form-group -->
+
+					<div class="form-group row">
+						<div class="col-sm-12" style="text-align:center">
+							<?php if(count($QuestionnaireAnswerList) == 0): ?>
+								<button type="submit" class="btn btn-default">Edit Questionnaire</button>
+							<?php endif; ?>
+						</div><!-- end col-sm-12 -->
+					</div><!-- end form-group -->
+
+					<?php echo Form::close(); ?>
 
 
+				</div><!-- end panel-body -->
 
-<div class="form-group">
-	<div class="">
-		<label>Course</label>
-		<h4><?php echo e($selected_course_list->name); ?></h4>
-	</div>
-</div>
-<?php if(count($QuestionnaireAnswerList) != 0): ?>
-<div style='color:red;'>Currently there is submitter on this questionnaire, changes is not allow </div>
-<?php endif; ?>
-<hr/>
-<input type="hidden" name="course_id" value="<?php echo $selected_course_list->id; ?>"/>
-<input type="hidden" name="questionnaire_id" value="<?php echo $selected_course_list->questionnaire_id; ?>"/>
+			</div><!-- end panel -->
 
-
-<div class="form-group">
-	<div id="questionnaire-builder">
-		<?php if(count($QuestionnaireDetailList) > 0): ?>
-                     <?php foreach($QuestionnaireDetailList as $line): ?>
- <div class="question-row">
- 			<div class="form-group">
- 		    <label><?php if(count($QuestionnaireAnswerList) == 0): ?><i id="deleteRow" class="fa fa-minus-circle"><?php endif; ?></i> Question</label>
- 				<input type="text" name="question[]" value="<?php echo e($line->question); ?>" class="form-control input-sm" />
- 		  </div>
- 			<div class="form-group">
- 				<label>Answer Input Type</label>
- 				<div>
- 				  <?php echo Form::select('answer_input_type[]', array('1'=>'Text','2' => 'Select', '3' => 'Checkbox', '4' => 'Radio', '5' => 'Table'), $line->answer_input_type  , array('class'=>'form-control answer-input-type'));; ?>
-
- 				</div>
- 			</div>
-			<div class="form-group additional-text" style="display: none;">
- 				<label>Text</label>
- 				<input type="text" name="additional_text[]" value="Please √ the box which correctly reflects your learning experience" class="form-control input-sm" />
- 			</div>
-			<div class="form-group description-title" style="display: none;">
- 				<label>Description</label>
- 				<input type="text" name="description_title[]" value="<?php echo e($line->description_title); ?>" class="form-control input-sm" />
- 			</div>
- 			<div class="form-group">
- 				<label>Answer Input Value</label>
- 				<?php if($line->answer_input_type == 5): ?>
-					<input type="text" name="answer_input_value[]" value="<?php echo e($line->description_value); ?>" class="form-control input-sm" />
-				<?php else: ?>
-					<input type="text" name="answer_input_value[]" value="<?php echo e($line->answer_input_value); ?>" class="form-control input-sm" />
-				<?php endif; ?>
- 			</div>
- 			<hr/>
- 		</div>
- 		   <?php endforeach; ?>
-    <?php endif; ?>
-	</div>
-
-	 <?php if(count($QuestionnaireAnswerList) == 0): ?><a href="#" id="addRowBtn" class="btn btn-success"><i class="glyphicon glyphicon-plus"></i> Add Question</a><?php endif; ?>
-	 <hr/>
-</div>
-
-<div class="form-group row">
-	<div class="col-sm-12" style="text-align:center">
-	<?php if(count($QuestionnaireAnswerList) == 0): ?>	<button type="submit" class="btn btn-default">Edit Questionnaire</button><?php endif; ?>
-	</div>
-</div>
-<?php echo Form::close(); ?>
-
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+		</div><!-- end col-md-12 -->
+	</div><!-- end row -->
+</div><!-- end wrap-content -->
 
 <script type="text/javascript">
 $(document).ready(function(){
@@ -192,6 +229,7 @@ $(document).ready(function(){
 	});
 
 });
+
 </script>
 <?php $__env->stopSection(); ?>
 

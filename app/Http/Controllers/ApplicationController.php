@@ -1600,8 +1600,6 @@ class ApplicationController extends ControllerCore
 
       else {
 
-        $this->sendMailToRO($input);
-
         // foreach($request->question as $index=>$row)
         // {
         //   $model = ModelFactory::getInstance('QuestionnaireAnswer');
@@ -1622,6 +1620,9 @@ class ApplicationController extends ControllerCore
         //   $model->questionnaire_id = $request->questionnaire_id;
         //   $model->save();
         // }
+
+        $this->sendMailToRO($input);
+
         //
         // // update application status from 6(Feedback Required) to 7(Feedback Given)
         // $applicationModel = ModelFactory::getInstance('Application')->where('id','=',$request->app_id)->first();
@@ -1671,7 +1672,7 @@ class ApplicationController extends ControllerCore
         }
       }
 
-      // Get Respective RO Email
+      // Get Respective Department of RO Email
       $dept_ro = ModelFactory::getInstance('User')
                   ->leftjoin('departments', 'users.deptid', '=', 'departments.idsrc_departments')
                   ->where('users.idsrc_login', \Auth::user()->idsrc_login)
@@ -1679,10 +1680,10 @@ class ApplicationController extends ControllerCore
                   ->first();
 
       $approverpersonToReceiveEmail = $this->selectUserBy($dept_ro->id, array('loginname','emailadd'));
-      //
+
       // $setEmail = LibraryFactory::getInstance('Email');
       // $setEmail->personToReceive = $approverpersonToReceiveEmail;
-      // $setEmail->subject = "Summary of Questionnaire";
+      // $setEmail->subject = 'Summary of Questionnaire';
       // $setEmail->layout = 'mail.mail_summary';
 
       $mailData = [
@@ -1697,7 +1698,6 @@ class ApplicationController extends ControllerCore
             $m->to('tester1@redcross.sg')->subject('Summary of Questionnaire');
       });
 
-      //
       // $setEmail->send($mailData);
     }
 }

@@ -21,5 +21,4 @@ class QuestionnaireAnswer extends Model
   {
     return 'required';
   }
-
 }

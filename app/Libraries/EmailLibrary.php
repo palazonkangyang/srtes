@@ -56,7 +56,7 @@ class EmailLibrary extends LibraryCore implements SingletonInterface
     $getPerson = $this->personToReceive;
     $subjectEmail = $this->subject;
 
-		dd($data);
+		// dd($getPerson->emailadd);
 
     Mail::send($this->layout, $data, function($message) use ($getPerson, $subjectEmail, $fromEmail, $compName)
 		{
