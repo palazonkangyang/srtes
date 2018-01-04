@@ -1600,34 +1600,34 @@ class ApplicationController extends ControllerCore
 
       else {
 
-        // foreach($request->question as $index=>$row)
-        // {
-        //   $model = ModelFactory::getInstance('QuestionnaireAnswer');
-        //
-        //   if(is_array($request->answer[$index]))
-        //   {
-        //     $model->answer = implode(",", $request->answer[$index]);
-        //   }
-        //
-        //   else
-        //   {
-        //     $model->answer = $request->answer[$index];
-        //   }
-        //
-        //   $model->question = $request->question[$index];
-        //   $model->questionnairedetail_id = $request->question[$index];
-        //   $model->app_id = $request->app_id;
-        //   $model->questionnaire_id = $request->questionnaire_id;
-        //   $model->save();
-        // }
+        foreach($request->question as $index=>$row)
+        {
+          $model = ModelFactory::getInstance('QuestionnaireAnswer');
+
+          if(is_array($request->answer[$index]))
+          {
+            $model->answer = implode(",", $request->answer[$index]);
+          }
+
+          else
+          {
+            $model->answer = $request->answer[$index];
+          }
+
+          $model->question = $request->question[$index];
+          $model->questionnairedetail_id = $request->question[$index];
+          $model->app_id = $request->app_id;
+          $model->questionnaire_id = $request->questionnaire_id;
+          $model->save();
+        }
 
         $this->sendMailToRO($input);
 
-        //
-        // // update application status from 6(Feedback Required) to 7(Feedback Given)
-        // $applicationModel = ModelFactory::getInstance('Application')->where('id','=',$request->app_id)->first();
-        // $applicationModel->status = 7;
-        // $applicationModel->save();
+
+        // update application status from 6(Feedback Required) to 7(Feedback Given)
+        $applicationModel = ModelFactory::getInstance('Application')->where('id','=',$request->app_id)->first();
+        $applicationModel->status = 7;
+        $applicationModel->save();
 
         return redirect('/application/view_details/'. $request->app_id)
                ->with('success', 'Successfully submitted form.');
@@ -1692,11 +1692,6 @@ class ApplicationController extends ControllerCore
         'date' => date('d/m/Y h:i A'),
         'feedback' => $feedback,
       ];
-
-      // Mail::send('mail.mail_summary', $mailData, function ($m) use ($approverpersonToReceiveEmail) {
-      //       $m->from('oakka.myo@palazon.com', 'Red Cross');
-      //       $m->to('tester1@redcross.sg')->subject('Summary of Questionnaire');
-      // });
 
       $setEmail->send($mailData);
     }
