@@ -2452,6 +2452,9 @@ class ApplicationPresenter extends PresenterCore
 			$this->view->app_id = $app_id;
 			$this->view->questionnaire_id = $questionnaire_id;
 			$this->view->title = 'Fill in the form';
+
+			dd($this->view->selected_questionnaire_detail->toArray());
+
 			return $this->view('application.feedback');
 		}
 
