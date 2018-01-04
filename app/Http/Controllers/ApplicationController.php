@@ -1653,8 +1653,6 @@ class ApplicationController extends ControllerCore
       $feedback['answers'] = $input['answer'];
       $feedback['description_title'] = $input['description_title'];
 
-      dd($feedback);
-
       for($i = 0; $i < count($feedback['answers']); $i ++)
       {
         if($feedback['answer_input_type'][$i] != 5)
