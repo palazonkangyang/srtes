@@ -1681,10 +1681,10 @@ class ApplicationController extends ControllerCore
 
       $approverpersonToReceiveEmail = $this->selectUserBy($dept_ro->id, array('loginname','emailadd'));
 
-      // $setEmail = LibraryFactory::getInstance('Email');
-      // $setEmail->personToReceive = $approverpersonToReceiveEmail;
-      // $setEmail->subject = 'Summary of Questionnaire';
-      // $setEmail->layout = 'mail.mail_summary';
+      $setEmail = LibraryFactory::getInstance('Email');
+      $setEmail->personToReceive = $approverpersonToReceiveEmail;
+      $setEmail->subject = 'Summary of Questionnaire';
+      $setEmail->layout = 'mail.mail_summary';
 
       $mailData = [
         'receiver_name' => $approverpersonToReceiveEmail->loginname,
@@ -1693,11 +1693,11 @@ class ApplicationController extends ControllerCore
         'feedback' => $feedback,
       ];
 
-      Mail::send('mail.mail_summary', $mailData, function ($m) use ($approverpersonToReceiveEmail) {
-            $m->from('oakka.myo@palazon.com', 'Red Cross');
-            $m->to('tester1@redcross.sg')->subject('Summary of Questionnaire');
-      });
+      // Mail::send('mail.mail_summary', $mailData, function ($m) use ($approverpersonToReceiveEmail) {
+      //       $m->from('oakka.myo@palazon.com', 'Red Cross');
+      //       $m->to('tester1@redcross.sg')->subject('Summary of Questionnaire');
+      // });
 
-      // $setEmail->send($mailData);
+      $setEmail->send($mailData);
     }
 }
