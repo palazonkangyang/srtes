@@ -7,7 +7,6 @@ use App\Core\LibraryCore;
 use App\Factories\ModelFactory;
 use Mail;
 
-
 class EmailLibrary extends LibraryCore implements SingletonInterface
 {
 	/**
@@ -50,18 +49,17 @@ class EmailLibrary extends LibraryCore implements SingletonInterface
 		throw new RuntimeException(get_class($this) . ' is a Singleton and cannot be cloned.');
 	}
 
-    public function send($data){
+  public function send($data)
+	{
+    $fromEmail = $this->from;
+    $compName = $this->companyName;
+    $getPerson = $this->personToReceive;
+    $subjectEmail = $this->subject;
 
-    	$fromEmail = $this->from;
-    	$compName = $this->companyName;
-    	$getPerson = $this->personToReceive;
-    	$subjectEmail = $this->subject;
-
-        Mail::send($this->layout, $data, function($message) use ($getPerson, $subjectEmail, $fromEmail, $compName){
-            $message->from($fromEmail, $compName);
-            $message->to($getPerson->emailadd)->subject($subjectEmail);
-        });
-
-    }
-
+    Mail::send($this->layout, $data, function($message) use ($getPerson, $subjectEmail, $fromEmail, $compName)
+		{
+    	$message->from($fromEmail, $compName);
+      $message->to($getPerson->emailadd)->subject($subjectEmail);
+  	});
+  }
 }

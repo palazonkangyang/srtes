@@ -1650,16 +1650,12 @@ class ApplicationController extends ControllerCore
       $feedback['answers'] = $input['answer'];
       $feedback['answer_input_type'] = $input['answer_input_type'];
 
+      // Get Respective RO Email
       $dept_ro = ModelFactory::getInstance('User')
                   ->leftjoin('departments', 'users.deptid', '=', 'departments.idsrc_departments')
                   ->where('users.idsrc_login', \Auth::user()->idsrc_login)
                   ->select('departments.dept_ro as id', 'loginname')
                   ->first();
-
-      // $ro_email = ModelFactory::getInstance('User')
-      //             ->where('users.idsrc_login', $dept_ro->id)
-      //             ->select('loginname', 'emailadd')
-      //             ->first();
 
       $approverpersonToReceiveEmail = $this->selectUserBy($dept_ro->id, array('loginname','emailadd'));
 
@@ -1668,13 +1664,11 @@ class ApplicationController extends ControllerCore
       $setEmail->subject = "Summary of Questionnaire";
       $setEmail->layout = 'mail.mail_summary';
 
-      // dd($setEmail);
-
       $mailData = [
         'receiver_name' => $approverpersonToReceiveEmail->loginname,
         'sender_name' => "RO",
         'date' => date('d/m/Y h:i A'),
-        'feedback' => $feedback
+        'feedback' => $feedback,
       ];
 
       $setEmail->send($mailData);
