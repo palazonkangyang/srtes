@@ -1681,7 +1681,7 @@ class ApplicationController extends ControllerCore
       $depart_ro = $this->selectUserBy($dept_ro->id, array('loginname','emailadd'));
 
       $setEmail = LibraryFactory::getInstance('Email');
-      $setEmail->personToReceive = $depart_ro;
+      $setEmail->personToReceive = $dept_member;
       $setEmail->subject = 'Summary of Questionnaire';
       $setEmail->layout = 'mail.mail_summary';
 
