@@ -71,9 +71,11 @@
 												{!! Form::input('text','answer['.$key.']', '', array('id' => 'answer', 'class' => 'form-control')) !!}
 
 											@elseif ($a->answer_input_type == 2)
+
 												@foreach (explode(",", $a->answer_input_value) as $b)
 													{{--*/ @$c[$b] = $b  /*--}}
 												@endforeach
+
 												{!! Form::select('answer['.$key.']',$c,'0',array('id' => 'answer', 'class' => 'form-control')) !!}
 
 											@elseif ($a->answer_input_type == 3)
@@ -111,10 +113,10 @@
 												@foreach(explode(",", $a->description_title) as $description_title)
 												<tr>
 													<td>{{ $description_title }}</td>
-													<td class="text-center">{!! Form::radio('answer['.$key.'][]' . $i, 'Strongly Agree') !!}</td>
-													<td class="text-center">{!! Form::radio('answer['.$key.'][]' . $i, 'Agree') !!}</td>
-													<td class="text-center">{!! Form::radio('answer['.$key.'][]' . $i, 'Disagree') !!}</td>
-													<td class="text-center">{!! Form::radio('answer['.$key.'][]' . $i, 'Strongly Disagree') !!}</td>
+													<td class="text-center">{!! Form::radio('answer['.$key.'][' . $i . ']', 'Strongly Agree') !!}</td>
+													<td class="text-center">{!! Form::radio('answer['.$key.'][' . $i . ']', 'Agree') !!}</td>
+													<td class="text-center">{!! Form::radio('answer['.$key.'][' . $i . ']', 'Disagree') !!}</td>
+													<td class="text-center">{!! Form::radio('answer['.$key.'][' . $i . ']', 'Strongly Disagree') !!}</td>
 												</tr>
 
 												{{-- */ $i++ /* --}}
@@ -136,7 +138,7 @@
 
 						<div class="form-group row">
 							<div class="col-sm-12" style="text-align:center">
-								<button type="submit" class="btn btn-default">Submit</button>
+								<button type="submit" class="btn btn-default" id="submit">Submit</button>
 							</div>
 						</div><!-- end form-group row -->
 
@@ -149,8 +151,10 @@
 </div>
 
 <script type="text/javascript">
+
 	$(document).ready(function() {
 
 	});
+
 </script>
 @stop

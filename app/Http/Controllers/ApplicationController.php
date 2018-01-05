@@ -1623,7 +1623,6 @@ class ApplicationController extends ControllerCore
 
         $this->sendMailToRO($input);
 
-
         // update application status from 6(Feedback Required) to 7(Feedback Given)
         $applicationModel = ModelFactory::getInstance('Application')->where('id','=',$request->app_id)->first();
         $applicationModel->status = 7;
@@ -1673,22 +1672,23 @@ class ApplicationController extends ControllerCore
       }
 
       // Get Respective Department of RO Email
-      $dept_ro = ModelFactory::getInstance('User')
-                  ->leftjoin('departments', 'users.deptid', '=', 'departments.idsrc_departments')
-                  ->where('users.idsrc_login', \Auth::user()->idsrc_login)
-                  ->select('departments.dept_ro as id', 'loginname')
-                  ->first();
+      $dept_member = ModelFactory::getInstance('User')
+                      ->leftjoin('departments', 'users.deptid', '=', 'departments.idsrc_departments')
+                      ->where('users.idsrc_login', \Auth::user()->idsrc_login)
+                      ->select('departments.dept_ro as id', 'loginname', 'emailadd')
+                      ->first();
 
-      $approverpersonToReceiveEmail = $this->selectUserBy($dept_ro->id, array('loginname','emailadd'));
+      $depart_ro = $this->selectUserBy($dept_ro->id, array('loginname','emailadd'));
 
       $setEmail = LibraryFactory::getInstance('Email');
-      $setEmail->personToReceive = $approverpersonToReceiveEmail;
+      $setEmail->personToReceive = $depart_ro;
       $setEmail->subject = 'Summary of Questionnaire';
       $setEmail->layout = 'mail.mail_summary';
 
       $mailData = [
-        'receiver_name' => $approverpersonToReceiveEmail->loginname,
-        'sender_name' => "RO",
+        'receiver_name' => $depart_ro->loginname,
+        'sender_name' => $dept_member->loginname,
+        'sender_email' => $dept_member->emailadd,
         'date' => date('d/m/Y h:i A'),
         'feedback' => $feedback,
       ];
