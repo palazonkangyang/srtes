@@ -2,11 +2,11 @@
 
   <p style="font-family: Arial, sans-serif; font-size:13px; line-height:22px;">
 		Dear {{$receiver_name}},
-	</p><br />
+	</p>
 
 	<p style="font-family: Arial, sans-serif; font-size:13px; line-height:22px;">
     Below are Summary of Questionnaire Answers. This form is submitted by {{ $sender_name }} ({{ $sender_email }}).
-	</p><br /><br />
+	</p><br />
 
   @for($i = 0; $i < count($feedback['questions']); $i++)
 
