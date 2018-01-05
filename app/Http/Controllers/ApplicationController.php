@@ -1678,7 +1678,7 @@ class ApplicationController extends ControllerCore
                       ->select('departments.dept_ro as id', 'loginname', 'emailadd')
                       ->first();
 
-      $depart_ro = $this->selectUserBy($dept_ro->id, array('loginname','emailadd'));
+      $depart_ro = $this->selectUserBy($dept_member->id, array('loginname','emailadd'));
 
       $setEmail = LibraryFactory::getInstance('Email');
       $setEmail->personToReceive = $dept_member;
