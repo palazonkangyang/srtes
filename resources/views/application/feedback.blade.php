@@ -113,7 +113,10 @@
 												@foreach(explode(",", $a->description_title) as $description_title)
 												<tr>
 													<td>{{ $description_title }}</td>
-													
+													<td class="text-center">{!! Form::radio('answer['.$key.'][' . $i . ']', 'Strongly Agree') !!}</td>
+													<td class="text-center">{!! Form::radio('answer['.$key.'][' . $i . ']', 'Agree') !!}</td>
+													<td class="text-center">{!! Form::radio('answer['.$key.'][' . $i . ']', 'Disagree') !!}</td>
+													<td class="text-center">{!! Form::radio('answer['.$key.'][' . $i . ']', 'Strongly Disagree') !!}</td>
 												</tr>
 
 												{{-- */ $i++ /* --}}
