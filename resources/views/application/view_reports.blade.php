@@ -3,13 +3,13 @@
 @section('content')
 
 <div class="row">
-    <div class="col-md-12"><h4 class="page-head-line">{{$title_page}}</h4></div>
+  <div class="col-md-12"><h4 class="page-head-line">{{$title_page}}</h4></div>
 </div>
 
 <div class="wrap-content">
 <div class="visible-print print-status-position">
-  Status: 
-  @if($myapplist[0]->status == 0) 
+  Status:
+  @if($myapplist[0]->status == 0)
     <span class="alert-warning">Pending</span>
   @elseif($myapplist[0]->status == 1)
     <span class="alert-success">Approved</span>
@@ -22,12 +22,12 @@
   @endif
 </div>
 
-{!!Form::open(['url'=>'/controller/application/reports/'.$action_url,'class'=>'form-horizontal fsize', 'files'=>true])!!} 
+{!!Form::open(['url'=>'/controller/application/reports/'.$action_url,'class'=>'form-horizontal fsize', 'files'=>true])!!}
 {!! Form::hidden('app_id', $myapplist[0]->id )!!}
 {!! Form::hidden('case_number', $myapplist[0]->case_number )!!}
 {!! Form::hidden('creator_id', $myapplist[0]->id )!!}
 {!! Form::hidden('case_status', $myapplist[0]->status )!!}
- 
+
 <div class="row bg-cc-only">
 <div class="col-md-2 bg-cc">Case Number</div>
 <div class="col-md-10 bg-ff">
@@ -94,7 +94,7 @@
       </span>
   @endforeach
 
-@else 
+@else
   <span class="no-approver">N/A</span>
 @endif
   </div>
@@ -109,7 +109,7 @@
     <a data-toggle="tooltip" data-placement="top" title="{{ $ccperson['ccperson_email'] }}" class="unap @if($ccperson['ccperson_status'] == 1) alert-success @endif">{{ $ccperson['ccperson_name'] }} </a>
     <input type="hidden" value="{{ $ccperson['ccperson_user_id'] }}" name="ccperson_each[]">
   @endforeach
-@else 
+@else
 N/A
 @endif
 </div>
@@ -178,11 +178,11 @@ N/A
 
 @if($filelist->count() == 0 && $doclist->count() == 0)
  N/A
-@else 
+@else
 @if($doclist)
   @foreach($doclist as $doc)
 
-<div class="google-drive"> 
+<div class="google-drive">
   <a class="thumbnail text-center" href="{{ $doc->document_link }}" target="_blank" data-toggle="tooltip" data-placement="top" title="{{ $doc->document_name }}"  class="thumbnail text-center" >
     <div class="hidden-md hidden-lg hidden-sm doc-size">{{ str_limit($doc->document_name, $limit = 10, $end = '...') }}</div>
   </a>
@@ -192,12 +192,12 @@ N/A
 @endif
 
 @if($filelist)
-  
+
   @foreach($filelist as $file)
-  <div class="icon-hover"> 
+  <div class="icon-hover">
     @if($file->files_mimes == 'application/pdf')
 
-    <a href="/application/view/file/{{ $file->files_fileurl }}/pdf" target="_blank" data-toggle="tooltip" data-placement="top" title="{{ $file->files_filename }}"  class="thumbnail text-center pdf-icon" > 
+    <a href="/application/view/file/{{ $file->files_fileurl }}/pdf" target="_blank" data-toggle="tooltip" data-placement="top" title="{{ $file->files_filename }}"  class="thumbnail text-center pdf-icon" >
       <div class="hidden-md hidden-lg hidden-sm doc-size">{{ str_limit($file->files_filename, $limit = 10, $end = '...') }}</div>
     </a>
 
@@ -205,13 +205,13 @@ N/A
 
     <a href="/application/view/file/{{ $file->files_fileurl }}/docx" target="_blank" data-toggle="tooltip" data-placement="top" title="{{ $file->files_filename }}"  class="thumbnail text-center doc-icon" >
       <div class="hidden-md hidden-lg hidden-sm doc-size">{{ str_limit($file->files_filename, $limit = 10, $end = '...') }}</div>
-    </a> 
+    </a>
 
      @elseif($file->files_mimes == 'application/msword')
 
     <a href="/application/view/file/{{ $file->files_fileurl }}/doc" target="_blank" data-toggle="tooltip" data-placement="top" title="{{ $file->files_filename }}"  class="thumbnail text-center doc-icon" >
       <div class="hidden-md hidden-lg hidden-sm doc-size">{{ str_limit($file->files_filename, $limit = 10, $end = '...') }}</div>
-    </a> 
+    </a>
 
     @elseif(($file->files_mimes == 'application/vnd.ms-excel'))
 
@@ -220,14 +220,14 @@ N/A
     </a>
 
     @elseif($file->files_mimes == 'image/jpeg' || $file->files_mimes == 'image/png')
-    
-     <a href="/application/download/file/{{ $file->files_fileurl }}" target="_blank" data-toggle="tooltip" data-placement="top" title="{{ $file->files_filename }}" data-imagelightbox="bx" class="thumbnail text-center image-icon" > 
+
+     <a href="/application/download/file/{{ $file->files_fileurl }}" target="_blank" data-toggle="tooltip" data-placement="top" title="{{ $file->files_filename }}" data-imagelightbox="bx" class="thumbnail text-center image-icon" >
         <img class="hidden-thumb-image" alt="{{ $file->files_filename }}" src="/uploads/final/{{ $file->files_fileurl }}" />
         <div class="hidden-md hidden-lg hidden-sm doc-size">{{ str_limit($file->files_filename, $limit = 10, $end = '...') }}</div>
-     </a>  
+     </a>
 
     @else
-    <a href="/application/download/file/{{ $file->files_fileurl }}" data-toggle="tooltip" data-placement="top" title="{{ $file->files_filename }}"  class="thumbnail text-center unknowned-icon" ></a> 
+    <a href="/application/download/file/{{ $file->files_fileurl }}" data-toggle="tooltip" data-placement="top" title="{{ $file->files_filename }}"  class="thumbnail text-center unknowned-icon" ></a>
       <div class="hidden-md hidden-lg hidden-sm doc-size">{{ str_limit($file->files_filename, $limit = 10, $end = '...') }}</div>
     @endif
   </div>
@@ -241,7 +241,7 @@ N/A
 <div class="visible-print-block">
 @if($filelist->count() == 0 && $doclist->count() == 0)
  N/A
-@else 
+@else
 @if($doclist)
   @foreach($doclist as $doc)
     <a href="{{ $doc->document_link }}" target="_blank" class="unap">{{ $doc->document_name }} </a>
@@ -250,9 +250,9 @@ N/A
 
 @if($filelist)
   @foreach($filelist as $file)
-    
+
     <a href="/application/file/{{ $file->files_fileurl }}" target="_blank" class="unap">{{ $file->files_filename }} </a>
-  
+
   @endforeach
 @endif
 @endif
@@ -264,7 +264,7 @@ N/A
 <div class="row bg-cc-only">
 <div class="col-md-2 bg-cc hidden-print">Status</div>
 <div class="col-md-10 bg-ff hidden-print">
-  @if($myapplist[0]->status == 0) 
+  @if($myapplist[0]->status == 0)
     <span class="alert-warning">Pending</span>
   @elseif($myapplist[0]->status == 1)
     <span class="alert-success">Approved</span>
@@ -285,7 +285,7 @@ N/A
 <div class="row bg-cc-only">
 <div class="col-md-2 bg-cc hidden-print">PP Status</div>
 <div class="col-md-10 bg-ff hidden-print">
-  @if($myapplist[0]->pp_status == 0) 
+  @if($myapplist[0]->pp_status == 0)
     <span class="alert-warning">Pending</span>
   @elseif($myapplist[0]->pp_status == 1)
     <span class="alert-info">Processing</span>
@@ -297,17 +297,17 @@ N/A
     <span class="alert-success">Collected</span>
      @elseif($myapplist[0]->pp_status == 5)
     <span class="alert-danger">Rejected</span>
-  
+
      @endif
 </div>
 </div>
 @endif
- 
+
 
 <div class="history">
   <div class="headhistory">History</div>
   <div class="printhistory"><a href="javascript:window.print()" id="print-page" class="btn btn-default">print</a></div>
-  
+
   <table class="table" id="table-history">
     <tr>
       <td style="width:12%">Date</td>
@@ -355,7 +355,7 @@ N/A
           @endif
         </td>
         <td>
-           
+
             <div>
               <div>@if(isset($history['recommend_user_id']))<strong> Forwarded to {{$history['recommend_user_id']['name']}} </strong> <br /> <br /> Remarks:</div> @endif
               {!! $history['remarks'] !!}
@@ -387,7 +387,7 @@ N/A
 
 </div>
 
-{!!Form::close()!!} 
+{!!Form::close()!!}
 
 
 <!-- Modal -->
@@ -400,8 +400,8 @@ N/A
       </div>
       <div class="modal-body">
          <div class="remarks-body">
-            
-         </div> 
+
+         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default close-google-pop" data-dismiss="modal">Close</button>
@@ -430,24 +430,24 @@ var len = $set.length;
   $(".approver-list > span").each(function(i) {
 
 
-    
+
 if (i == len - 1) {
            $(this).find("a").prepend('<span class="numbering_method"> <strong>[Approver] </strong> <span>');
-    
+
           }else{
               if(i == 0)    {
        $(this).find("a").prepend('<span class="numbering_method"> <strong>[1st Verify] </strong> <span>');
- 
+
     }
     else if (i == 1) {
            $(this).find("a").prepend('<span class="numbering_method"> <strong>[2nd Verify] </strong> <span>');
-    
+
           }
        else if (i == 2) {
            $(this).find("a").prepend('<span class="numbering_method"> <strong>[3rd Verify] </strong> <span>');
-    
+
           }
-              
+
               }
   });
 }
@@ -456,25 +456,23 @@ function prepend_view19(){
 
 if (i == len - 1) {
            $(this).find("a").prepend('<span class="numbering_method"> <strong>[Approver] </strong> <span>');
-    
+
           }else{
               if(i == 0)    {
        $(this).find("a").prepend('<span class="numbering_method"> <strong>[1st Verify] </strong> <span>');
- 
+
     }
     else if (i == 1) {
            $(this).find("a").prepend('<span class="numbering_method"> <strong>[2nd Verify] </strong> <span>');
-    
+
           }
        else if (i == 2) {
            $(this).find("a").prepend('<span class="numbering_method"> <strong>[3rd Verify] </strong> <span>');
-    
+
           }
-              
+
               }
   });
 }
 </script>
 @stop
-
-

@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Builder;
 
 class TextFilter extends FilterCore
 {
-
 	/**
 	 * (non-PHPdoc)
 	 * @see \App\Core\FilterCore::addFilter()
@@ -40,6 +39,11 @@ class TextFilter extends FilterCore
 		return $scope ? $this->$scope($model) : $model->where($name,'=',$this->getValue());
 	}
 
+	// public function addFilter($model, $name, $scope='')
+	// {
+  //
+	// }
+
 	/**
 	 * Get the input
 	 * @return \App\Core\unknown
@@ -56,7 +60,6 @@ class TextFilter extends FilterCore
 	 */
 	public function search($model, $values='')
 	{
-
 		if(!$values)
 		{
 			$values = $this->getValue();
@@ -64,21 +67,21 @@ class TextFilter extends FilterCore
 
 		$table = ($model instanceof Model) ? $model->getTable() : $model->getModel()->getTable();
 
-		$select = [ 'ams_type_request.id',
-                    'ams_type_request.name',
-                    'ams_type_request.created_at',
-                    'srcusers.users.idsrc_login as user_id',
-                    'srcusers.users.loginname as loginname'];
+		$select = ['ams_type_request.id',
+              'ams_type_request.name',
+              'ams_type_request.created_at',
+              'srcusers.users.idsrc_login as user_id',
+              'srcusers.users.loginname as loginname'];
 
 		$join = $model->join('srcusers.users',function($join) use ($table) {
 			$join->on($table.'.created_id','=','srcusers.users.idsrc_login');
 		})->select($select);
 
 		return  $join->whereNested(function($query) use ($values) {
-					$query->where('srcusers.users.loginname','like','%'.$values.'%');
-					$query->where('ams_type_request.id','like','%'.$values.'%', 'or');
-					$query->where('ams_type_request.name','like','%'.$values.'%', 'or');
-				});
+			$query->where('srcusers.users.loginname','like','%'.$values.'%');
+			$query->where('ams_type_request.id','like','%'.$values.'%', 'or');
+			$query->where('ams_type_request.name','like','%'.$values.'%', 'or');
+		});
 	}
 
 	/**
@@ -88,7 +91,6 @@ class TextFilter extends FilterCore
 	 */
 	public function searchKeywordUser($model, $values='')
 	{
-
 		if(!$values)
 		{
 			$values = $this->getValue();
@@ -96,17 +98,11 @@ class TextFilter extends FilterCore
 
 		$table = ($model instanceof Model) ? $model->getTable() : $model->getModel()->getTable();
 
-		// $join = $model->join('srcusers.departments',function($join) use ($table) {
-		// 	$join->on($table.'.idsrc_login','=','srcusers.departments.idsrc_departments');
-		// });
-
 		return  $model->whereNested(function($query) use ($values, $table) {
-					//$query->where('srcusers.departments.deptdesc','like','%'.$values.'%', 'or');
-					$query->where($table.'.loginid','like','%'.$values.'%', 'or');
-					$query->where($table.'.loginname','like','%'.$values.'%', 'or');
-					$query->where($table.'.emailadd','like','%'.$values.'%', 'or');
-				});
-
+			$query->where($table.'.loginid','like','%'.$values.'%', 'or');
+			$query->where($table.'.loginname','like','%'.$values.'%', 'or');
+			$query->where($table.'.emailadd','like','%'.$values.'%', 'or');
+		});
 	}
 
 	/**
@@ -116,7 +112,6 @@ class TextFilter extends FilterCore
 	 */
 	public function searchKeywordDepartment($model, $values='')
 	{
-
 		if(!$values)
 		{
 			$values = $this->getValue();
@@ -124,21 +119,59 @@ class TextFilter extends FilterCore
 
 		$table = ($model instanceof Model) ? $model->getTable() : $model->getModel()->getTable();
 
-		// $join = $model->join('srcusers.departments',function($join) use ($table) {
-		// 	$join->on($table.'.idsrc_login','=','srcusers.departments.idsrc_departments');
-		// });
+		return  $model->whereNested(function($query) use ($values, $table) {
+			$query->where($table.'.department','like','%'.$values.'%', 'or');
+			$query->where($table.'.deptdesc','like','%'.$values.'%', 'or');
+		});
+	}
+
+  public function searchKeywordAccountCode($model, $values='')
+	{
+		if(!$values)
+		{
+			$values = $this->getValue();
+		}
+
+		$table = ($model instanceof Model) ? $model->getTable() : $model->getModel()->getTable();
 
 		return  $model->whereNested(function($query) use ($values, $table) {
-					//$query->where('srcusers.departments.deptdesc','like','%'.$values.'%', 'or');
-					$query->where($table.'.department','like','%'.$values.'%', 'or');
-					$query->where($table.'.deptdesc','like','%'.$values.'%', 'or');
-				});
+			$query->where($table.'.name','like','%'.$values.'%', 'or');
+			$query->where($table.'.description','like','%'.$values.'%', 'or');
+		});
+	}
+
+  public function searchKeywordFlexiGroup($model, $values='')
+	{
+		if(!$values)
+		{
+			$values = $this->getValue();
+		}
+
+		$table = ($model instanceof Model) ? $model->getTable() : $model->getModel()->getTable();
+
+		return  $model->whereNested(function($query) use ($values, $table) {
+			$query->where($table.'.name','like','%'.$values.'%', 'or');
+			$query->where($table.'.description','like','%'.$values.'%', 'or');
+		});
+	}
+
+  public function searchKeywordAuditLog($model, $values='')
+	{
+		if(!$values)
+		{
+			$values = $this->getValue();
+		}
+
+		$table = ($model instanceof Model) ? $model->getTable() : $model->getModel()->getTable();
+
+		return  $model->whereNested(function($query) use ($values, $table) {
+			$query->where($table.'.user_id','like','%'.$values.'%', 'or');
+		});
 
 	}
 
-          public function searchKeywordAccountCode($model, $values='')
+  public function searchKeywordOptionalCode($model, $values='')
 	{
-
 		if(!$values)
 		{
 			$values = $this->getValue();
@@ -146,21 +179,14 @@ class TextFilter extends FilterCore
 
 		$table = ($model instanceof Model) ? $model->getTable() : $model->getModel()->getTable();
 
-		// $join = $model->join('srcusers.departments',function($join) use ($table) {
-		// 	$join->on($table.'.idsrc_login','=','srcusers.departments.idsrc_departments');
-		// });
-
 		return  $model->whereNested(function($query) use ($values, $table) {
-					//$query->where('srcusers.departments.deptdesc','like','%'.$values.'%', 'or');
-					$query->where($table.'.name','like','%'.$values.'%', 'or');
-					$query->where($table.'.description','like','%'.$values.'%', 'or');
-				});
-
+			$query->where($table.'.name','like','%'.$values.'%', 'or');
+			$query->where($table.'.description','like','%'.$values.'%', 'or');
+		});
 	}
 
-           public function searchKeywordFlexiGroup($model, $values='')
+  public function searchKeywordGlobalSetting($model, $values='')
 	{
-
 		if(!$values)
 		{
 			$values = $this->getValue();
@@ -168,83 +194,10 @@ class TextFilter extends FilterCore
 
 		$table = ($model instanceof Model) ? $model->getTable() : $model->getModel()->getTable();
 
-		// $join = $model->join('srcusers.departments',function($join) use ($table) {
-		// 	$join->on($table.'.idsrc_login','=','srcusers.departments.idsrc_departments');
-		// });
-
 		return  $model->whereNested(function($query) use ($values, $table) {
-					//$query->where('srcusers.departments.deptdesc','like','%'.$values.'%', 'or');
-					$query->where($table.'.name','like','%'.$values.'%', 'or');
-					$query->where($table.'.description','like','%'.$values.'%', 'or');
-				});
-
-	}
-
-
-         public function searchKeywordAuditLog($model, $values='')
-	{
-
-		if(!$values)
-		{
-			$values = $this->getValue();
-		}
-
-		$table = ($model instanceof Model) ? $model->getTable() : $model->getModel()->getTable();
-
-		// $join = $model->join('srcusers.departments',function($join) use ($table) {
-		// 	$join->on($table.'.idsrc_login','=','srcusers.departments.idsrc_departments');
-		// });
-
-		return  $model->whereNested(function($query) use ($values, $table) {
-					//$query->where('srcusers.departments.deptdesc','like','%'.$values.'%', 'or');
-
-					$query->where($table.'.user_id','like','%'.$values.'%', 'or');
-				});
-
-	}
-
-         public function searchKeywordOptionalCode($model, $values='')
-	{
-
-		if(!$values)
-		{
-			$values = $this->getValue();
-		}
-
-		$table = ($model instanceof Model) ? $model->getTable() : $model->getModel()->getTable();
-
-		// $join = $model->join('srcusers.departments',function($join) use ($table) {
-		// 	$join->on($table.'.idsrc_login','=','srcusers.departments.idsrc_departments');
-		// });
-
-		return  $model->whereNested(function($query) use ($values, $table) {
-					//$query->where('srcusers.departments.deptdesc','like','%'.$values.'%', 'or');
-					$query->where($table.'.name','like','%'.$values.'%', 'or');
-					$query->where($table.'.description','like','%'.$values.'%', 'or');
-				});
-
-	}
-
-         public function searchKeywordGlobalSetting($model, $values='')
-	{
-
-		if(!$values)
-		{
-			$values = $this->getValue();
-		}
-
-		$table = ($model instanceof Model) ? $model->getTable() : $model->getModel()->getTable();
-
-		// $join = $model->join('srcusers.departments',function($join) use ($table) {
-		// 	$join->on($table.'.idsrc_login','=','srcusers.departments.idsrc_departments');
-		// });
-
-		return  $model->whereNested(function($query) use ($values, $table) {
-					//$query->where('srcusers.departments.deptdesc','like','%'.$values.'%', 'or');
-					$query->where($table.'.name','like','%'.$values.'%', 'or');
-					$query->where($table.'.description','like','%'.$values.'%', 'or');
-				});
-
+			$query->where($table.'.name','like','%'.$values.'%', 'or');
+			$query->where($table.'.description','like','%'.$values.'%', 'or');
+		});
 	}
 
 	/**
@@ -303,7 +256,6 @@ class TextFilter extends FilterCore
 	 */
 	public function searchHistory($model, $values='')
 	{
-
 		if(!$values)
 		{
 			$values = $this->getValue();
@@ -313,7 +265,6 @@ class TextFilter extends FilterCore
 				$query->where('ams_applications.case_number','like', '%'.$values.'%');
 				$query->orWhere('ams_applications.title','like', '%'.$values.'%');
 		});
-
 	}
 
 	/**
@@ -323,17 +274,15 @@ class TextFilter extends FilterCore
 	 */
 	public function searchMyApplication($model, $values='')
 	{
+		if(!$values)
+		{
+			$values = $this->getValue();
+		}
 
-	if(!$values)
-	{
-		$values = $this->getValue();
-	}
-
-	return  $model->whereNested(function($query) use ($values) {
+		return  $model->whereNested(function($query) use ($values) {
 			$query->where('ams_applications.case_number','like', '%'.$values.'%');
 			$query->orWhere('ams_applications.title','like', '%'.$values.'%');
-	});
-
+		});
 	}
 
 	public function searchCourse($model, $values='')
@@ -346,16 +295,14 @@ class TextFilter extends FilterCore
 		$table = ($model instanceof Model) ? $model->getTable() : $model->getModel()->getTable();
 
 		return  $model->whereNested(function($query) use ($values, $table) {
-
-					$query->where($table.'.id','like','%'.$values.'%', 'or');
-					$query->Orwhere($table.'.name','like','%'.$values.'%', 'or');
-					$query->Orwhere($table.'.description','like','%'.$values.'%', 'or');
-					//$query->Orwhere($table.'.course_type_name','like','%'.$values.'%', 'or');
-					$query->Orwhere($table.'.code','like','%'.$values.'%', 'or');
-					$query->Orwhere($table.'.duration','like','%'.$values.'%', 'or');
-					$query->Orwhere($table.'.minimum_attendee','like','%'.$values.'%', 'or');
-					$query->Orwhere($table.'.maximum_attendee','like','%'.$values.'%', 'or');
-				});
+			$query->where($table.'.id','like','%'.$values.'%', 'or');
+			$query->Orwhere($table.'.name','like','%'.$values.'%', 'or');
+			$query->Orwhere($table.'.description','like','%'.$values.'%', 'or');
+			$query->Orwhere($table.'.code','like','%'.$values.'%', 'or');
+			$query->Orwhere($table.'.duration','like','%'.$values.'%', 'or');
+			$query->Orwhere($table.'.minimum_attendee','like','%'.$values.'%', 'or');
+			$query->Orwhere($table.'.maximum_attendee','like','%'.$values.'%', 'or');
+		});
 	}
 
 	/**
@@ -365,22 +312,31 @@ class TextFilter extends FilterCore
 	 */
 	public function searchReports($model, $values='')
 	{
+		if(!$values)
+		{
+			$values = $this->getValue();
+		}
 
-	if(!$values)
+		return  $model->whereNested(function($query) use ($values) {
+			$query->where('ams_applications.case_number','like', '%'.$values.'%');
+			$query->orWhere('ams_applications.title','like', '%'.$values.'%');
+			$query->orWhere('ams_applications.total','like', '%'.$values.'%');
+			$query->orWhere('ams_applications.department','like', '%'.$values.'%');
+			$query->orWhere('ams_forms.name','like', '%'. $values.'%');
+			$query->orWhere('ams_form_tsw.title','like', '%'. $values.'%');
+			$query->orWhere('ams_form_tsw.provider','like', '%'. $values.'%');
+			$query->orWhere('ams_form_tsw.description','like', '%'. $values.'%');
+			$query->orWhere('ams_form_tsw.designation','like', '%'. $values.'%');
+			$query->orWhere('ams_form_tsw.fee','like', '%'. $values.'%');
+			$query->orWhere('ams_form_tsw.funds','like', '%'. $values.'%');
+			$query->orWhere('srcusers.users.loginname','like', '%'. $values.'%');
+		});
+	}
+
+	public function fromtoSearch($model, $values='')
 	{
-		$values = $this->getValue();
-	}
-
-
-	return  $model->whereNested(function($query) use ($values) {
-				$query->where('ams_applications.case_number','like', '%'.$values.'%');
-				$query->orWhere('ams_applications.title','like', '%'.$values.'%');
-	});
-
-	}
-
-	public function fromtoSearch($model, $values='') {
-		if(!$values){
+		if(!$values)
+		{
 			$values = $this->getValue();
 		}
 
@@ -388,9 +344,7 @@ class TextFilter extends FilterCore
 		$endate = $values['to'];
 
 		return  $model->whereNested(function($query) use ($startdate, $endate) {
-					$query->whereBetween('ams_applications.created_at', array($startdate,$endate));
-				});
-
+			$query->whereBetween('ams_applications.created_at', array($startdate,$endate));
+		});
 	}
-
 }

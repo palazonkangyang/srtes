@@ -1064,6 +1064,7 @@ class ApplicationPresenter extends PresenterCore
       $prepare = ModelFactory::getInstance('Application')
 			            ->leftjoin('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_applications.created_id')
 			            ->leftjoin('ams_forms', 'ams_forms.id', '=', 'ams_applications.type_form')
+									->leftjoin('ams_form_tsw', 'ams_form_tsw.app_id', '=', 'ams_applications.id')
 			            ->orderBy('ams_applications.created_at','DESC')
 			            ->where('ams_applications.drafts', '=', 0)
 			          	->whereIn('ams_applications.type_form', $requestToForm)
@@ -1743,7 +1744,7 @@ class ApplicationPresenter extends PresenterCore
 
     public function viewReports($id)
     {
-         $select = [
+        $select = [
             'srcusers.users.idsrc_login as creator_id',
             'srcusers.users.loginname as creator_name',
             'srcusers.users.emailadd as creator_email',
@@ -1854,8 +1855,6 @@ class ApplicationPresenter extends PresenterCore
             'ams_cc_person.case_status as ccperson_case_status',
             'ams_cc_person.updated_at as ccperson_date'
         ];
-
-
 
         $app = ModelFactory::getInstance('Application')
             ->join('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_applications.created_id')
@@ -2129,7 +2128,6 @@ class ApplicationPresenter extends PresenterCore
             }
                else if($app[0]->type_form == 16)
             {
-
                     if(\Auth::User()->deptid != 9 )
                   {
                     //send email to HR if non Hr user visit the form
@@ -2161,6 +2159,8 @@ class ApplicationPresenter extends PresenterCore
                         ->where('app_id',$app[0]->id)
                         ->first();
 
+												// dd($form);
+
                   $formlineitem = ModelFactory::getInstance('LineItemTsw')
                         ->where('app_id',$app[0]->id)
                         ->get();
@@ -2171,6 +2171,8 @@ class ApplicationPresenter extends PresenterCore
 
                  $this->view->formlineitem =  $formlineitem;
                  $this->view->formlineitemAl =  $formlineitemAl;
+
+								 // dd($this->view->formlineitemAl->toArray());
 
             }
               else if($app[0]->type_form == 17)
@@ -2219,6 +2221,9 @@ class ApplicationPresenter extends PresenterCore
             ->where('ams_approver_person.app_id', '=', $id)
             ->orderBy('ams_approver_person.position', 'asc')
             ->select($select_approver)->get();
+
+				// dd($approver->toArray());
+
         $ccpersonData = ModelFactory::getInstance('Ccperson')
             ->join('ams_applications', 'ams_cc_person.app_id', '=', 'ams_applications.id')
             ->join('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_cc_person.user_id')
