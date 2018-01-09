@@ -998,6 +998,7 @@ class ApplicationPresenter extends PresenterCore
       $prepare = ModelFactory::getInstance('Application')
 			            ->leftjoin('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_applications.created_id')
 			            ->leftjoin('ams_forms', 'ams_forms.id', '=', 'ams_applications.type_form')
+									->leftjoin('ams_form_pcmcf', 'ams_form_pcmcf.app_id', '=', 'ams_applications.id')
 									->leftjoin('ams_form_pcmcf2', 'ams_form_pcmcf2.app_id', '=', 'ams_applications.id')
 									->leftjoin('ams_lineitem_pcmcf2', 'ams_lineitem_pcmcf2.app_id', '=', 'ams_applications.id')
 			            ->orderBy('ams_applications.created_at','DESC')

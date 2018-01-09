@@ -355,6 +355,8 @@ class TextFilter extends FilterCore
 				$query->orWhere('ams_applications.total','like', '%'.$values.'%');
 				$query->orWhere('ams_applications.department','like', '%'.$values.'%');
 				$query->orWhere('ams_forms.name','like', '%'.$values.'%');
+				$query->orWhere('ams_form_pcmcf.title','like', '%'.$values.'%');
+				$query->orWhere('ams_form_pcmcf.project','like', '%'.$values.'%');
 				$query->orWhere('ams_form_pcmcf2.title','like', '%'.$values.'%');
 				$query->orWhere('ams_form_pcmcf2.project','like', '%'.$values.'%');
 				$query->orWhere('ams_lineitem_pcmcf2.item_desc','like', '%'.$values.'%');
@@ -389,6 +391,7 @@ class TextFilter extends FilterCore
 				$query->where('ams_applications.case_number','like', '%'.$values.'%');
 				$query->orWhere('ams_applications.title','like', '%'.$values.'%');
 				$query->orWhere('ams_applications.total','like', '%'.$values.'%');
+				$query->orWhere('ams_applications.type_request','like', '%'.$values.'%');
 				$query->orWhere('ams_applications.department','like', '%'.$values.'%');
 				$query->orWhere('ams_forms.name','like', '%'. $values.'%');
 				$query->orWhere('ams_form_hphcrf.purpose_of_use','like', '%'. $values.'%');

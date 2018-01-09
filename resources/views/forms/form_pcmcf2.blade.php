@@ -4,16 +4,16 @@
     <label for="title">Title  (*)</label>
     {!! Form::text('title',NULL,['class'=>'form-control ', 'id'=>'title']) !!}
   </div>
-  
+
   <!--  <div class="form-group">
     <label for="voucher_no">Voucher No (*)</label>
     {!! Form::text('voucher_no',NULL,['class'=>'form-control ', 'id'=>'voucher_no']) !!}
   </div>  -->
-  
 
 
 
- 
+
+
 
 
 
@@ -24,14 +24,14 @@
   </div>
 
   <!-- line item table-->
-  
+
         <div class="form-group">
      <label for="date_required">Form Detail Table (*)</label>
                 <!--<table class="table table-hover table-condensed" id="example">-->
                 <table class="table table-striped table-condensed" id="itemsTable">
 
 <!--                <form action="" method="post" id="invoiceForm">-->
-       
+
             <thead>
             <tr>
                 <th class="v-align-middle"  style="width: 5%"></th>
@@ -45,7 +45,7 @@
             </tr>
             </thead>
             <tbody class="items">
-                    
+
 					<tr class="item-row">
                       <td class="v-align-middle"><i id="deleteRow" class="fa fa-minus-circle hide"></i></td>
                       <td class="v-align-middle"><input type="hidden" class="item_id" name="item_id[]" value=""/>
@@ -54,28 +54,28 @@
                            <td class="v-align-middle">{{-- */$getaccountcodename[0]='';/* --}}
                   		{{-- */$getaccountcodeid[0]='';/* --}}
                                 {{-- */$getis3lpha[0]='';/* --}}
-                      
+
                   	{!! Form::text('p_accountcode_id[0]',$getaccountcodename[0],['placeholder' => 'Choose', 'class'=>'form-control', 'id'=>'select-accountcode0']) !!}
                   	{!! Form::hidden('accountcode_id[0]',$getaccountcodeid[0]) !!}
                         {!! Form::hidden('is3alpha[0]',$getis3lpha[0]) !!}</td>
-                           <td class="v-align-middle">   
+                           <td class="v-align-middle">
                                {!! Form::text('p_accountcode_desc[0]',NULL,['class'=>'form-control ','readonly'=>1,'data-toggle'=>'tooltip', 'title'=>'',  'id'=>'p_accountcode_desc0']) !!}
               </td>
-               <td class="v-align-middle">   
+               <td class="v-align-middle">
               	{{-- */$getoptionalcodename[0]='';/* --}}
                   		{{-- */$getoptionalcodeid[0]='';/* --}}
-                            
-                  	
+
+
                   	{!! Form::text('p_optionalcode_id[0]',$getoptionalcodename[0],['class'=>'form-control','readonly'=>1, 'id'=>'select-optionalcode0']) !!}
                   	{!! Form::hidden('optionalcode_id[0]',$getoptionalcodeid[0]) !!}
                      </td>
                      <td>
                              {!! Form::text('p_optionalcode_desc[0]',NULL,['class'=>'form-control ','readonly'=>1,'data-toggle'=>'tooltip', 'title'=>'',  'id'=>'p_optionalcode_desc0']) !!}
-            
-                         
+
+
                      </td>
-                     
-                     
+
+
                       <td class="v-align-middle"><input name="item_total[]" class="item_total form-control input-sm" tabindex="5" type="text" ></td>
                     </tr>
                     		<tr class="item-row">
@@ -86,28 +86,28 @@
                            <td class="v-align-middle">{{-- */$getaccountcodename[1]='';/* --}}
                   		{{-- */$getaccountcodeid[1]='';/* --}}
                                 {{-- */$getis3lpha[1]='';/* --}}
-                      
+
                   	{!! Form::text('p_accountcode_id[1]',$getaccountcodename[1],['placeholder' => 'Choose', 'class'=>'form-control', 'id'=>'select-accountcode1']) !!}
                   	{!! Form::hidden('accountcode_id[1]',$getaccountcodeid[1]) !!}
                         {!! Form::hidden('is3alpha[1]',$getis3lpha[1]) !!}</td>
-                           <td class="v-align-middle">   
+                           <td class="v-align-middle">
                                {!! Form::text('p_accountcode_desc[1]',NULL,['class'=>'form-control ','readonly'=>1,'data-toggle'=>'tooltip', 'title'=>'',  'id'=>'p_accountcode_desc1']) !!}
               </td>
-               <td class="v-align-middle">   
+               <td class="v-align-middle">
               	{{-- */$getoptionalcodename[1]='';/* --}}
                   		{{-- */$getoptionalcodeid[1]='';/* --}}
-                            
-                  	
+
+
                   	{!! Form::text('p_optionalcode_id[1]',$getoptionalcodename[1],['class'=>'form-control','readonly'=>1, 'id'=>'select-optionalcode1']) !!}
                   	{!! Form::hidden('optionalcode_id[1]',$getoptionalcodeid[1]) !!}
                      </td>
                      <td>
                              {!! Form::text('p_optionalcode_desc[1]',NULL,['class'=>'form-control ','readonly'=>1,'data-toggle'=>'tooltip', 'title'=>'',  'id'=>'p_optionalcode_desc1']) !!}
-            
-                         
+
+
                      </td>
-                     
-                     
+
+
                       <td class="v-align-middle"><input name="item_total[]" class="item_total form-control input-sm" tabindex="5" type="text" ></td>
                     </tr>
                     		<tr class="item-row">
@@ -118,28 +118,28 @@
                            <td class="v-align-middle">{{-- */$getaccountcodename[2]='';/* --}}
                   		{{-- */$getaccountcodeid[2]='';/* --}}
                                 {{-- */$getis3lpha[2]='';/* --}}
-                      
+
                   	{!! Form::text('p_accountcode_id[2]',$getaccountcodename[2],['placeholder' => 'Choose', 'class'=>'form-control', 'id'=>'select-accountcode2']) !!}
                   	{!! Form::hidden('accountcode_id[2]',$getaccountcodeid[2]) !!}
                         {!! Form::hidden('is3alpha[2]',$getis3lpha[2]) !!}</td>
-                           <td class="v-align-middle">   
+                           <td class="v-align-middle">
                                {!! Form::text('p_accountcode_desc[2]',NULL,['class'=>'form-control ','readonly'=>1,'data-toggle'=>'tooltip', 'title'=>'',  'id'=>'p_accountcode_desc2']) !!}
               </td>
-               <td class="v-align-middle">   
+               <td class="v-align-middle">
               	{{-- */$getoptionalcodename[2]='';/* --}}
                   		{{-- */$getoptionalcodeid[2]='';/* --}}
-                            
-                  	
+
+
                   	{!! Form::text('p_optionalcode_id[2]',$getoptionalcodename[2],['class'=>'form-control','readonly'=>1, 'id'=>'select-optionalcode2']) !!}
                   	{!! Form::hidden('optionalcode_id[2]',$getoptionalcodeid[2]) !!}
                      </td>
                      <td>
                              {!! Form::text('p_optionalcode_desc[2]',NULL,['class'=>'form-control ','readonly'=>1,'data-toggle'=>'tooltip', 'title'=>'',  'id'=>'p_optionalcode_desc2']) !!}
-            
-                         
+
+
                      </td>
-                     
-                     
+
+
                       <td class="v-align-middle"><input name="item_total[]" class="item_total form-control input-sm" tabindex="5" type="text" ></td>
                     </tr>
                     		<tr class="item-row">
@@ -150,28 +150,28 @@
                            <td class="v-align-middle">{{-- */$getaccountcodename[3]='';/* --}}
                   		{{-- */$getaccountcodeid[3]='';/* --}}
                                 {{-- */$getis3lpha[3]='';/* --}}
-                      
+
                   	{!! Form::text('p_accountcode_id[3]',$getaccountcodename[3],['placeholder' => 'Choose', 'class'=>'form-control', 'id'=>'select-accountcode3']) !!}
                   	{!! Form::hidden('accountcode_id[3]',$getaccountcodeid[3]) !!}
                         {!! Form::hidden('is3alpha[3]',$getis3lpha[3]) !!}</td>
-                           <td class="v-align-middle">   
+                           <td class="v-align-middle">
                                {!! Form::text('p_accountcode_desc[3]',NULL,['class'=>'form-control ','readonly'=>1,'data-toggle'=>'tooltip', 'title'=>'',  'id'=>'p_accountcode_desc3']) !!}
               </td>
-               <td class="v-align-middle">   
+               <td class="v-align-middle">
               	{{-- */$getoptionalcodename[3]='';/* --}}
                   		{{-- */$getoptionalcodeid[3]='';/* --}}
-                            
-                  	
+
+
                   	{!! Form::text('p_optionalcode_id[3]',$getoptionalcodename[3],['class'=>'form-control','readonly'=>1, 'id'=>'select-optionalcode3']) !!}
                   	{!! Form::hidden('optionalcode_id[3]',$getoptionalcodeid[3]) !!}
                      </td>
                      <td>
                              {!! Form::text('p_optionalcode_desc[3]',NULL,['class'=>'form-control ','readonly'=>1,'data-toggle'=>'tooltip', 'title'=>'',  'id'=>'p_optionalcode_desc3']) !!}
-            
-                         
+
+
                      </td>
-                     
-                     
+
+
                       <td class="v-align-middle"><input name="item_total[]" class="item_total form-control input-sm" tabindex="5" type="text" ></td>
                     </tr>
         		<tr class="item-row">
@@ -182,33 +182,33 @@
                            <td class="v-align-middle">{{-- */$getaccountcodename[4]='';/* --}}
                   		{{-- */$getaccountcodeid[4]='';/* --}}
                                 {{-- */$getis3lpha[4]='';/* --}}
-                      
+
                   	{!! Form::text('p_accountcode_id[4]',$getaccountcodename[4],['placeholder' => 'Choose', 'class'=>'form-control', 'id'=>'select-accountcode4']) !!}
                   	{!! Form::hidden('accountcode_id[4]',$getaccountcodeid[4]) !!}
                         {!! Form::hidden('is3alpha[4]',$getis3lpha[4]) !!}</td>
-                           <td class="v-align-middle">   
+                           <td class="v-align-middle">
                                {!! Form::text('p_accountcode_desc[4]',NULL,['class'=>'form-control ','readonly'=>1,'data-toggle'=>'tooltip', 'title'=>'',  'id'=>'p_accountcode_desc4']) !!}
               </td>
-               <td class="v-align-middle">   
+               <td class="v-align-middle">
               	{{-- */$getoptionalcodename[4]='';/* --}}
                   		{{-- */$getoptionalcodeid[4]='';/* --}}
-                            
-                  	
+
+
                   	{!! Form::text('p_optionalcode_id[4]',$getoptionalcodename[4],['class'=>'form-control','readonly'=>1, 'id'=>'select-optionalcode4']) !!}
                   	{!! Form::hidden('optionalcode_id[4]',$getoptionalcodeid[4]) !!}
                      </td>
                      <td>
                              {!! Form::text('p_optionalcode_desc[4]',NULL,['class'=>'form-control ','readonly'=>1,'data-toggle'=>'tooltip', 'title'=>'', 'id'=>'p_optionalcode_desc4']) !!}
-            
-                         
+
+
                      </td>
-                     
-                     
+
+
                       <td class="v-align-middle"><input name="item_total[]" class="item_total form-control input-sm" tabindex="5" type="text" ></td>
                     </tr>
                   </tbody>
                 </table>
-                     
+
 <hr/>
         </div>
   <!--end of line item table-->
@@ -220,19 +220,19 @@
   </div>
 
   <script type="text/javascript">
-      
-      
+
+
                        function PCMCFjevent()
 {
-  
+
 
 }
-      
-      
+
+
     $(document).ready(function(){
-        
+
         $('#select-accountcode0').autocomplete({
-	    
+
 	    serviceUrl: '/application/getjsonaccountcode/?with=true',
 	    dataType: 'json',
 	    contentType: "application/json; charset=utf-8",
@@ -246,21 +246,21 @@
 	        if(suggestion.data.id != '') {
                    $(this).after('<input type="hidden" value="'+suggestion.data.id+'" name="accountcode_id[0]" /><input type="hidden" value="'+suggestion.data.is3alpha+'" name="is3alpha[0]" /><input type="hidden" value="'+suggestion.data.description+'" name="accountcode_desc[0]" />  ');
                   $('#p_accountcode_desc0').val(suggestion.data.description);
-                
+
                     if(suggestion.data.is3alpha == 1){
-		 
-                    $('#select-optionalcode0').prop('readonly',false);  	
+
+                    $('#select-optionalcode0').prop('readonly',false);
                 }else{
-                    $('#select-optionalcode0').prop('readonly',true);   
-                   }     
+                    $('#select-optionalcode0').prop('readonly',true);
+                   }
                    }
 	    },
 	    showNoSuggestionNotice: true,
 	    noSuggestionNotice: 'Sorry, no matching results'
 	});
-        
+
            $('#select-optionalcode0').autocomplete({
-	    
+
 	    serviceUrl: '/application/getjsonoptionalcode/?with=true',
 	    dataType: 'json',
 	    contentType: "application/json; charset=utf-8",
@@ -271,19 +271,19 @@
 	    	$(this).next().remove();
                 $(this).next().remove();
 	        if(suggestion.data.id != '') {
-		$(this).after('<input type="hidden" value="'+suggestion.data.id+'" name="optionalcode_id[0]" /><input type="hidden" value="'+suggestion.data.description+'" name="optionalcode_desc[0]" /> ');   
+		$(this).after('<input type="hidden" value="'+suggestion.data.id+'" name="optionalcode_id[0]" /><input type="hidden" value="'+suggestion.data.description+'" name="optionalcode_desc[0]" /> ');
                      $('#p_optionalcode_desc0').val(suggestion.data.description);
-                
+
                         }
 	    },
 	    showNoSuggestionNotice: true,
 	    noSuggestionNotice: 'Sorry, no matching results'
 	});
-        
-     
+
+
      //2
          $('#select-accountcode1').autocomplete({
-	    
+
 	    serviceUrl: '/application/getjsonaccountcode/?with=true',
 	    dataType: 'json',
 	    contentType: "application/json; charset=utf-8",
@@ -297,21 +297,21 @@
 	        if(suggestion.data.id != '') {
                    $(this).after('<input type="hidden" value="'+suggestion.data.id+'" name="accountcode_id[1]" /><input type="hidden" value="'+suggestion.data.is3alpha+'" name="is3alpha[1]" /><input type="hidden" value="'+suggestion.data.description+'" name="accountcode_desc[1]" />  ');
                   $('#p_accountcode_desc1').val(suggestion.data.description);
-               
+
                     if(suggestion.data.is3alpha == 1){
-		 
-                    $('#select-optionalcode1').prop('readonly',false);  	
+
+                    $('#select-optionalcode1').prop('readonly',false);
                 }else{
-                    $('#select-optionalcode1').prop('readonly',true);   
-                   }     
+                    $('#select-optionalcode1').prop('readonly',true);
+                   }
                    }
 	    },
 	    showNoSuggestionNotice: true,
 	    noSuggestionNotice: 'Sorry, no matching results'
 	});
-        
+
            $('#select-optionalcode1').autocomplete({
-	    
+
 	    serviceUrl: '/application/getjsonoptionalcode/?with=true',
 	    dataType: 'json',
 	    contentType: "application/json; charset=utf-8",
@@ -322,18 +322,18 @@
 	    	$(this).next().remove();
                 $(this).next().remove();
 	        if(suggestion.data.id != '') {
-		$(this).after('<input type="hidden" value="'+suggestion.data.id+'" name="optionalcode_id[1]" /><input type="hidden" value="'+suggestion.data.description+'" name="optionalcode_desc[1]" /> ');   
+		$(this).after('<input type="hidden" value="'+suggestion.data.id+'" name="optionalcode_id[1]" /><input type="hidden" value="'+suggestion.data.description+'" name="optionalcode_desc[1]" /> ');
                      $('#p_optionalcode_desc1').val(suggestion.data.description);
-             
+
                         }
 	    },
 	    showNoSuggestionNotice: true,
 	    noSuggestionNotice: 'Sorry, no matching results'
 	});
-        
+
      //3
         $('#select-accountcode2').autocomplete({
-	    
+
 	    serviceUrl: '/application/getjsonaccountcode/?with=true',
 	    dataType: 'json',
 	    contentType: "application/json; charset=utf-8",
@@ -347,21 +347,21 @@
 	        if(suggestion.data.id != '') {
                    $(this).after('<input type="hidden" value="'+suggestion.data.id+'" name="accountcode_id[2]" /><input type="hidden" value="'+suggestion.data.is3alpha+'" name="is3alpha[2]" /><input type="hidden" value="'+suggestion.data.description+'" name="accountcode_desc[2]" />  ');
                   $('#p_accountcode_desc2').val(suggestion.data.description);
-    
+
                     if(suggestion.data.is3alpha == 1){
-		 
-                    $('#select-optionalcode2').prop('readonly',false);  	
+
+                    $('#select-optionalcode2').prop('readonly',false);
                 }else{
-                    $('#select-optionalcode2').prop('readonly',true);   
-                   }     
+                    $('#select-optionalcode2').prop('readonly',true);
+                   }
                    }
 	    },
 	    showNoSuggestionNotice: true,
 	    noSuggestionNotice: 'Sorry, no matching results'
 	});
-        
+
            $('#select-optionalcode2').autocomplete({
-	    
+
 	    serviceUrl: '/application/getjsonoptionalcode/?with=true',
 	    dataType: 'json',
 	    contentType: "application/json; charset=utf-8",
@@ -372,18 +372,18 @@
 	    	$(this).next().remove();
                 $(this).next().remove();
 	        if(suggestion.data.id != '') {
-		$(this).after('<input type="hidden" value="'+suggestion.data.id+'" name="optionalcode_id[2]" /><input type="hidden" value="'+suggestion.data.description+'" name="optionalcode_desc[2]" /> ');   
+		$(this).after('<input type="hidden" value="'+suggestion.data.id+'" name="optionalcode_id[2]" /><input type="hidden" value="'+suggestion.data.description+'" name="optionalcode_desc[2]" /> ');
                      $('#p_optionalcode_desc2').val(suggestion.data.description);
-             
+
                         }
 	    },
 	    showNoSuggestionNotice: true,
 	    noSuggestionNotice: 'Sorry, no matching results'
 	});
-        
+
      //4
        $('#select-accountcode3').autocomplete({
-	    
+
 	    serviceUrl: '/application/getjsonaccountcode/?with=true',
 	    dataType: 'json',
 	    contentType: "application/json; charset=utf-8",
@@ -397,21 +397,21 @@
 	        if(suggestion.data.id != '') {
                    $(this).after('<input type="hidden" value="'+suggestion.data.id+'" name="accountcode_id[3]" /><input type="hidden" value="'+suggestion.data.is3alpha+'" name="is3alpha[3]" /><input type="hidden" value="'+suggestion.data.description+'" name="accountcode_desc[3]" />  ');
                   $('#p_accountcode_desc3').val(suggestion.data.description);
-           
+
                     if(suggestion.data.is3alpha == 1){
-		 
-                    $('#select-optionalcode3').prop('readonly',false);  	
+
+                    $('#select-optionalcode3').prop('readonly',false);
                 }else{
-                    $('#select-optionalcode3').prop('readonly',true);   
-                   }     
+                    $('#select-optionalcode3').prop('readonly',true);
+                   }
                    }
 	    },
 	    showNoSuggestionNotice: true,
 	    noSuggestionNotice: 'Sorry, no matching results'
 	});
-        
+
            $('#select-optionalcode3').autocomplete({
-	    
+
 	    serviceUrl: '/application/getjsonoptionalcode/?with=true',
 	    dataType: 'json',
 	    contentType: "application/json; charset=utf-8",
@@ -422,19 +422,19 @@
 	    	$(this).next().remove();
                 $(this).next().remove();
 	        if(suggestion.data.id != '') {
-		$(this).after('<input type="hidden" value="'+suggestion.data.id+'" name="optionalcode_id[3]" /><input type="hidden" value="'+suggestion.data.description+'" name="optionalcode_desc[3]" /> ');   
+		$(this).after('<input type="hidden" value="'+suggestion.data.id+'" name="optionalcode_id[3]" /><input type="hidden" value="'+suggestion.data.description+'" name="optionalcode_desc[3]" /> ');
                      $('#p_optionalcode_desc3').val(suggestion.data.description);
-              
+
                         }
 	    },
 	    showNoSuggestionNotice: true,
 	    noSuggestionNotice: 'Sorry, no matching results'
 	});
-     
+
      //5
-     
+
        $('#select-accountcode4').autocomplete({
-	    
+
 	    serviceUrl: '/application/getjsonaccountcode/?with=true',
 	    dataType: 'json',
 	    contentType: "application/json; charset=utf-8",
@@ -448,21 +448,21 @@
 	        if(suggestion.data.id != '') {
                    $(this).after('<input type="hidden" value="'+suggestion.data.id+'" name="accountcode_id[4]" /><input type="hidden" value="'+suggestion.data.is3alpha+'" name="is3alpha[4]" /><input type="hidden" value="'+suggestion.data.description+'" name="accountcode_desc[4]" />  ');
                   $('#p_accountcode_desc4').val(suggestion.data.description);
-               
+
                     if(suggestion.data.is3alpha == 1){
-		 
-                    $('#select-optionalcode4').prop('readonly',false);  	
+
+                    $('#select-optionalcode4').prop('readonly',false);
                 }else{
-                    $('#select-optionalcode4').prop('readonly',true);   
-                   }     
+                    $('#select-optionalcode4').prop('readonly',true);
+                   }
                    }
 	    },
 	    showNoSuggestionNotice: true,
 	    noSuggestionNotice: 'Sorry, no matching results'
 	});
-        
+
            $('#select-optionalcode4').autocomplete({
-	    
+
 	    serviceUrl: '/application/getjsonoptionalcode/?with=true',
 	    dataType: 'json',
 	    contentType: "application/json; charset=utf-8",
@@ -473,17 +473,17 @@
 	    	$(this).next().remove();
                 $(this).next().remove();
 	        if(suggestion.data.id != '') {
-		$(this).after('<input type="hidden" value="'+suggestion.data.id+'" name="optionalcode_id[4]" /><input type="hidden" value="'+suggestion.data.description+'" name="optionalcode_desc[4]" /> ');   
+		$(this).after('<input type="hidden" value="'+suggestion.data.id+'" name="optionalcode_id[4]" /><input type="hidden" value="'+suggestion.data.description+'" name="optionalcode_desc[4]" /> ');
                      $('#p_optionalcode_desc4').val(suggestion.data.description);
-             
+
                         }
 	    },
 	    showNoSuggestionNotice: true,
 	    noSuggestionNotice: 'Sorry, no matching results'
 	});
-     
+
      $('#approver_1').removeClass('hide').addClass('show');
-     
+
      /*     $('input[name=SOP]').on('change', function(){
        if(this.checked) {
               $('.payee_name_no').removeClass('hide').addClass('show');
@@ -492,9 +492,9 @@
                $('.payee_name').removeClass('hide').addClass('show');
                 $('.payee_name_no').addClass('hide').removeClass('show');
            }
-    
+
         }); */
-        
+
 //** start of item line
 
  var rowTemp = [
@@ -507,9 +507,9 @@
       "<td class='v-align-middle'><input name='item_total[]' class='item_total form-control input-sm'type='text' tabindex='5' ></td>"+
     "</tr>"
 ].join('');
-     
+
     $("#addRowBtn").on('click', function (e) {
-    orderLines.addRow(); 
+    orderLines.addRow();
     e.preventDefault();
 }
 );
@@ -532,18 +532,18 @@ var orderLines = {
             if (!isNaN(price)) total += Number(price);
         });
 
-       
+
             if (total > 300){
                 alert('Maximum is SGD300 , Please enter again');
                  $('input.item_total').val(0);
                       $('#total').val(0);
-        
+
           }
-          
+
         else{
-              
+
                     $('#total').val(this.roundNumber(total, 2));
-          }  
+          }
     },
 
     /**
@@ -556,16 +556,16 @@ var orderLines = {
         var $itemsTable = $('#itemsTable');
         var $row = $(rowTemp);
           var rowCount = $('#itemsTable tr').length;
-         
+
          if(rowCount == 5 )
-         {        
-            alert('Maximum is 5 item rows.');      
+         {
+            alert('Maximum is 5 item rows.');
                   $('#addRowBtn').addClass('hide');
-         }else{          
-         } 
+         }else{
+         }
 
         // Add row after the first row in table
-        $('.item-row:last', $itemsTable).after($row);      
+        $('.item-row:last', $itemsTable).after($row);
         // save reference to inputs within row
              $('.item_date').datetimepicker({
 	format:'YYYY-MM-DD',
@@ -576,8 +576,8 @@ var orderLines = {
          $(".item_total").on('keyup', function () {
          orderLines.updateTotal();
 });
-   
- 
+
+
 
     },
 
@@ -593,7 +593,7 @@ var orderLines = {
         if (rowCount != 2) {
             $(row).parents('.item-row').remove();
             if ($(".item-row").length < 2) $("#deleteRow").hide();
-        
+
             orderLines.updateTotal();
             return true;
         } else {
@@ -663,7 +663,7 @@ var orderLines = {
 	defaultDate: new Date()
 });
 
- 
+
  $(".item_total").on('keyup', function () {
          orderLines.updateTotal();
 });
@@ -672,11 +672,11 @@ var orderLines = {
          orderLines.updateTotal();
 });
 
-//end of item line 
-        
+//end of item line
 
 
-  
+
+
 
 });
   </script>
