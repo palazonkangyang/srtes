@@ -357,8 +357,13 @@ class TextFilter extends FilterCore
 				$query->orWhere('ams_forms.name','like', '%'.$values.'%');
 				$query->orWhere('ams_form_pcmcf.title','like', '%'.$values.'%');
 				$query->orWhere('ams_form_pcmcf.project','like', '%'.$values.'%');
+				$query->orWhere('ams_form_pcmcf.payee_name','like', '%'.$values.'%');
 				$query->orWhere('ams_form_pcmcf2.title','like', '%'.$values.'%');
 				$query->orWhere('ams_form_pcmcf2.project','like', '%'.$values.'%');
+				$query->orWhere('ams_lineitem_pcmcf.item_desc','like', '%'.$values.'%');
+				$query->orWhere('ams_lineitem_pcmcf.account_code','like', '%'.$values.'%');
+				$query->orWhere('ams_lineitem_pcmcf.optional_code','like', '%'.$values.'%');
+				$query->orWhere('ams_lineitem_pcmcf.item_total','like', '%'.$values.'%');
 				$query->orWhere('ams_lineitem_pcmcf2.item_desc','like', '%'.$values.'%');
 				$query->orWhere('ams_lineitem_pcmcf2.account_code','like', '%'.$values.'%');
 				$query->orWhere('ams_lineitem_pcmcf2.optional_code','like', '%'.$values.'%');

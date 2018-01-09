@@ -1000,6 +1000,7 @@ class ApplicationPresenter extends PresenterCore
 			            ->leftjoin('ams_forms', 'ams_forms.id', '=', 'ams_applications.type_form')
 									->leftjoin('ams_form_pcmcf', 'ams_form_pcmcf.app_id', '=', 'ams_applications.id')
 									->leftjoin('ams_form_pcmcf2', 'ams_form_pcmcf2.app_id', '=', 'ams_applications.id')
+									->leftjoin('ams_lineitem_pcmcf', 'ams_lineitem_pcmcf.app_id', '=', 'ams_applications.id')
 									->leftjoin('ams_lineitem_pcmcf2', 'ams_lineitem_pcmcf2.app_id', '=', 'ams_applications.id')
 			            ->orderBy('ams_applications.created_at','DESC')
 			            ->where('ams_applications.drafts', '=', 0)
