@@ -103,14 +103,14 @@
                 @endif
               </td>
               <td data-title="Total">{{ $report->total }}</td>
-              <div class='hide'>{{$grant_total =$grant_total + $report->total }}</div>
+              <div class='hide'>{{ $grant_total = $grant_total + $report->total }}</div>
             </tr>
             @endforeach
             <td></td>
             <td></td>
             <td></td>
             <td></td>
-            <td></td><td>Grant Total:</td><td>{{$grant_total}}</td>
+            <td></td><td>Grant Total:</td><td>{{ number_format( $grant_total, 2) }}</td>
           </tbody>
         </table>
       </div><!-- end no-more-tables -->

@@ -20,8 +20,8 @@ class FilterFactory extends FactoryCore
 		$args = func_get_args();
 		array_shift($args);
 		return self::createInstance(self::getNamespace().$className.self::getSuffix(),$args);
-	} 
-	
+	}
+
 	/**
 	 * Get Filter Class's namespace root
 	 */
@@ -29,7 +29,7 @@ class FilterFactory extends FactoryCore
 	{
 		return 'App\Filters'.self::NAMESPACE_SEPARATOR;
 	}
-	
+
 	/**
 	 * Get Filter class name suffix
 	 */
@@ -37,5 +37,5 @@ class FilterFactory extends FactoryCore
 	{
 		return 'Filter';
 	}
-	
+
 }

@@ -10,25 +10,25 @@ abstract class FilterCore implements FilterableInterface
 	 * @var unknown
 	 */
 	protected $label;
-	
+
 	/**
 	 * The input type
 	 * @var unknown
 	 */
 	protected $input = 'text';
-	
+
 	/**
 	 * The field ID and name
 	 * @var unknown
 	 */
 	protected $name;
-	
+
 	/**
 	 * The field options
 	 * @var unknown
 	 */
 	protected $options = [];
-	
+
 	/**
 	 * The field value
 	 * @var unknown
@@ -40,13 +40,13 @@ abstract class FilterCore implements FilterableInterface
 	 * @var unknown
 	 */
 	protected $request;
-	
+
 	/**
 	 * The session
 	 * @var unknown
 	 */
 	protected $session;
-	
+
 	/**
 	 * The class constructor
 	 * @param string $label
@@ -56,16 +56,16 @@ abstract class FilterCore implements FilterableInterface
 		$this->label = $label;
 		$this->request = app('request');
 		$this->session = app('session');
-		
-		// setup filter index 
+
+		// setup filter index
 		if(!$this->session->has('filters'))
 		{
 			$this->session->put('filters',$this->request->getPathInfo());
 		}
-		
+
 		$this->clear();
 	}
-	
+
 	/**
 	 * Get the field label
 	 */
@@ -73,7 +73,7 @@ abstract class FilterCore implements FilterableInterface
 	{
 		return $this->label;
 	}
-	
+
 	/**
 	 * Set the label
 	 * @param unknown $text
@@ -82,7 +82,7 @@ abstract class FilterCore implements FilterableInterface
 	{
 		$this->label = $text;
 	}
-	
+
 	/**
 	 * Set the input
 	 * @param unknown $type
@@ -91,7 +91,7 @@ abstract class FilterCore implements FilterableInterface
 	{
 		$this->input = $type;
 	}
-	
+
 	/**
 	 * Get the input
 	 * @return \App\Core\unknown
@@ -100,7 +100,7 @@ abstract class FilterCore implements FilterableInterface
 	{
 		return $this->input;
 	}
-	
+
 	/**
 	 * Set the name
 	 * @param unknown $name
@@ -109,7 +109,7 @@ abstract class FilterCore implements FilterableInterface
 	{
 		$this->name = $name;
 	}
-	
+
 	/**
 	 * Get the name
 	 * @return \App\Core\unknown
@@ -118,7 +118,7 @@ abstract class FilterCore implements FilterableInterface
 	{
 		return $this->name;
 	}
-	
+
 	/**
 	 * Set the value
 	 * @param unknown $value
@@ -136,7 +136,7 @@ abstract class FilterCore implements FilterableInterface
 	{
 		return $this->value;
 	}
-	
+
 	/**
 	 * Set the options
 	 * @param unknown $options
@@ -145,7 +145,7 @@ abstract class FilterCore implements FilterableInterface
 	{
 		$this->options = $options;
 	}
-	
+
 	/**
 	 * Get the options
 	 * @return \App\Core\unknown
@@ -154,7 +154,7 @@ abstract class FilterCore implements FilterableInterface
 	{
 		return $this->options;
 	}
-	
+
 	/**
 	 * Render the filter field
 	 */
@@ -162,7 +162,7 @@ abstract class FilterCore implements FilterableInterface
 	{
 		return \Form::filterInput($this->getInput(),$this->name,$this->label, $this->value);
 	}
-	
+
 	/**
 	 * Render the filter value
 	 */
@@ -172,24 +172,24 @@ abstract class FilterCore implements FilterableInterface
 		{
 			return '';
 		}
-		
+
 		if($this->options instanceof \Illuminate\Support\Collection)
 		{
 			$this->options = $this->options->toArray();
 			$this->value = array_only($this->options, $this->value);
 		}
-		
+
 		$value = is_array($this->value) ? implode(', ',$this->value) : $this->value;
 		return \Html::filterValue($this->label, $value);
 	}
-	
+
 	/**
 	 * (non-PHPdoc)
 	 * @see \App\Interfaces\FilterableInterface::addFilter()
 	 */
 	abstract public function addFilter($model, $name, $scope='');
-	
-	
+
+
 	/**
 	 * Store selected data to session
 	 */
@@ -197,7 +197,7 @@ abstract class FilterCore implements FilterableInterface
 	{
 		$this->session->put('filters.'.$this->request->getPathInfo().'.'.$this->name, $this->value);
 	}
-	
+
 	/**
 	 * Get data from session
 	 */
@@ -210,8 +210,8 @@ abstract class FilterCore implements FilterableInterface
 		}
 		return '';
 	}
-	
-	
+
+
 	/**
 	 * Clear data filter from session
 	 * @param string $key

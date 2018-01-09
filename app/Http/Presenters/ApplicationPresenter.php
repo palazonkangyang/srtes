@@ -873,7 +873,7 @@ class ApplicationPresenter extends PresenterCore
       $this->view->fromtoFilter = $fromtoFilter;
 
       $searchFilter = FilterFactory::getInstance('Text','Search');
-      $prepare = $searchFilter->addFilter($prepare,'search','searchReports');
+      $prepare = $searchFilter->addFilter($prepare,'search','searchReports', 'myapp');
       $this->view->searchFilter = $searchFilter;
 
       //add search filter
@@ -910,8 +910,13 @@ class ApplicationPresenter extends PresenterCore
       $prepare = ModelFactory::getInstance('Application')
 			            ->leftjoin('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_applications.created_id')
 			            ->leftjoin('ams_forms', 'ams_forms.id', '=', 'ams_applications.type_form')
+									->leftjoin('ams_form_tsw', 'ams_form_tsw.app_id', '=', 'ams_applications.id')
+									->leftjoin('ams_form_pcmcf2', 'ams_form_pcmcf2.app_id', '=', 'ams_applications.id')
+									->leftjoin('ams_form_sorapfca', 'ams_form_sorapfca.app_id', '=', 'ams_applications.id')
+									->leftjoin('ams_lineitem_sorapfca', 'ams_lineitem_sorapfca.app_id', '=', 'ams_applications.id')
 			            ->orderBy('ams_applications.created_at','DESC')
 			            ->where('ams_applications.drafts', '=', 0)
+									->GroupBy('ams_applications.id')
 			            ->select($select);
 
       $urgencyFilter = FilterFactory::getInstance('Select','Urgency',SelectFilter::SINGLE_SELECT);
@@ -947,7 +952,7 @@ class ApplicationPresenter extends PresenterCore
       $this->view->fromtoFilter = $fromtoFilter;
 
       $searchFilter = FilterFactory::getInstance('Text','Search');
-      $prepare = $searchFilter->addFilter($prepare,'search','searchReports');
+      $prepare = $searchFilter->addFilter($prepare,'search','searchReports', 'ad-hoc');
       $this->view->searchFilter = $searchFilter;
 
       $this->view->reports = $this->paginate($prepare);
@@ -993,9 +998,12 @@ class ApplicationPresenter extends PresenterCore
       $prepare = ModelFactory::getInstance('Application')
 			            ->leftjoin('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_applications.created_id')
 			            ->leftjoin('ams_forms', 'ams_forms.id', '=', 'ams_applications.type_form')
+									->leftjoin('ams_form_pcmcf2', 'ams_form_pcmcf2.app_id', '=', 'ams_applications.id')
+									->leftjoin('ams_lineitem_pcmcf2', 'ams_lineitem_pcmcf2.app_id', '=', 'ams_applications.id')
 			            ->orderBy('ams_applications.created_at','DESC')
 			            ->where('ams_applications.drafts', '=', 0)
 			            ->whereIn('ams_applications.type_form', $requestToForm)
+									->GroupBy('ams_applications.id')
 			            ->select($select);
 
       $urgencyFilter = FilterFactory::getInstance('Select','Urgency',SelectFilter::SINGLE_SELECT);
@@ -1025,7 +1033,7 @@ class ApplicationPresenter extends PresenterCore
       $this->view->fromtoFilter = $fromtoFilter;
 
       $searchFilter = FilterFactory::getInstance('Text','Search');
-      $prepare = $searchFilter->addFilter($prepare,'search','searchReports');
+      $prepare = $searchFilter->addFilter($prepare,'search','searchReports', 'finance');
       $this->view->searchFilter = $searchFilter;
 
       $this->view->reports = $this->paginate($prepare);
@@ -1097,7 +1105,7 @@ class ApplicationPresenter extends PresenterCore
       $this->view->fromtoFilter = $fromtoFilter;
 
       $searchFilter = FilterFactory::getInstance('Text','Search');
-      $prepare = $searchFilter->addFilter($prepare,'search','searchReports');
+      $prepare = $searchFilter->addFilter($prepare,'search','searchReports', 'hr');
       $this->view->searchFilter = $searchFilter;
 
       $this->view->reports = $this->paginate($prepare);
@@ -1109,74 +1117,74 @@ class ApplicationPresenter extends PresenterCore
 
     public function reportsAdmin()
     {
-        $user_id = \Auth::User()->idsrc_login;
-        $role = \Auth::User()->roleid;
+      $user_id = \Auth::User()->idsrc_login;
+      $role = \Auth::User()->roleid;
 
-        $select = [
-            'srcusers.users.idsrc_login as id',
-            'srcusers.users.loginname as name',
-            'srcusers.users.emailadd as email',
-            'ams_applications.id',
-            'ams_applications.department',
-            'ams_applications.type_request',
-            'ams_applications.title',
-            'ams_applications.urgency',
-            'ams_applications.case_number',
-            'ams_applications.created_at',
-            'ams_applications.status',
-            'ams_applications.total',
-            'ams_forms.name as form_name'
-        ];
+      $select = [
+        'srcusers.users.idsrc_login as id',
+        'srcusers.users.loginname as name',
+        'srcusers.users.emailadd as email',
+        'ams_applications.id',
+        'ams_applications.department',
+        'ams_applications.type_request',
+        'ams_applications.title',
+        'ams_applications.urgency',
+        'ams_applications.case_number',
+        'ams_applications.created_at',
+        'ams_applications.status',
+        'ams_applications.total',
+        'ams_forms.name as form_name'
+      ];
 
-        $forms = ModelFactory::getInstance('Forms');
-        $requestToForm = ModelFactory::getInstance('RequestToForm') ->select('form_id')
-                    				->where('form_id', '!=', 1)
-            								->where('request_id', 7)->get()->toArray();
+      $forms = ModelFactory::getInstance('Forms');
+      $requestToForm = ModelFactory::getInstance('RequestToForm') ->select('form_id')
+                    		->where('form_id', '!=', 1)
+            						->where('request_id', 7)->get()->toArray();
 
+      $prepare = ModelFactory::getInstance('Application')
+				         ->leftjoin('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_applications.created_id')
+				         ->leftjoin('ams_forms', 'ams_forms.id', '=', 'ams_applications.type_form')
+								 ->leftjoin('ams_form_hphcrf', 'ams_form_hphcrf.app_id', '=', 'ams_applications.id')
+				         ->orderBy('ams_applications.created_at','DESC')
+				         ->where('ams_applications.drafts', '=', 0)
+				         ->whereIn('ams_applications.type_form', $requestToForm)
+				         ->select($select);
 
-        $prepare = ModelFactory::getInstance('Application')
-				            ->leftjoin('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_applications.created_id')
-				            ->leftjoin('ams_forms', 'ams_forms.id', '=', 'ams_applications.type_form')
-				            ->orderBy('ams_applications.created_at','DESC')
-				            ->where('ams_applications.drafts', '=', 0)
-				            ->whereIn('ams_applications.type_form', $requestToForm)
-				          	->select($select);
+      $urgencyFilter = FilterFactory::getInstance('Select','Urgency',SelectFilter::SINGLE_SELECT);
+      $prepare = $urgencyFilter->addFilter($prepare,'urgency','byUrgency');
+      $urgencyFilter->setOptions(array('' => '-- Select Urgency --', '1' => 'Normal', '2' => 'Urgent'));
+      $this->view->urgencyFilter = $urgencyFilter;
 
-        $urgencyFilter = FilterFactory::getInstance('Select','Urgency',SelectFilter::SINGLE_SELECT);
-        $prepare = $urgencyFilter->addFilter($prepare,'urgency','byUrgency');
-        $urgencyFilter->setOptions(array('' => '-- Select Urgency --', '1' => 'Normal', '2' => 'Urgent'));
-        $this->view->urgencyFilter = $urgencyFilter;
+      $this->view->department = $this->getDepartment();
+      $departmentFilter = FilterFactory::getInstance('Select','Department',SelectFilter::SINGLE_SELECT);
+      $prepare = $departmentFilter->addFilter($prepare,'department','byDepartment');
+      $departmentFilter->setOptions($this->view->department);
+      $this->view->departmentFilter = $departmentFilter;
 
-        $this->view->department = $this->getDepartment();
-        $departmentFilter = FilterFactory::getInstance('Select','Department',SelectFilter::SINGLE_SELECT);
-        $prepare = $departmentFilter->addFilter($prepare,'department','byDepartment');
-        $departmentFilter->setOptions($this->view->department);
-        $this->view->departmentFilter = $departmentFilter;
+      $this->view->forms = $this->getAdminAppForms();
+      $formsFilter = FilterFactory::getInstance('Select','Forms',SelectFilter::SINGLE_SELECT);
+      $prepare = $formsFilter->addFilter($prepare,'forms','byForms');
+      $formsFilter->setOptions($this->view->forms);
+      $this->view->formsFilter = $formsFilter;
 
-        $this->view->forms = $this->getAdminAppForms();
-        $formsFilter = FilterFactory::getInstance('Select','Forms',SelectFilter::SINGLE_SELECT);
-        $prepare = $formsFilter->addFilter($prepare,'forms','byForms');
-        $formsFilter->setOptions($this->view->forms);
-        $this->view->formsFilter = $formsFilter;
+      $statusFilter = FilterFactory::getInstance('Select','Status',SelectFilter::SINGLE_SELECT);
+      $prepare = $statusFilter->addFilter($prepare,'status','byStatus');
+      $statusFilter->setOptions(array('' => '-- Select Status --', '5' => 'Pending', '1' => 'Approved', '2' => 'Rejected', '4' => 'Forwarded', '3' => 'Cancelled' ));
+      $this->view->statusFilter = $statusFilter;
 
-        $statusFilter = FilterFactory::getInstance('Select','Status',SelectFilter::SINGLE_SELECT);
-        $prepare = $statusFilter->addFilter($prepare,'status','byStatus');
-        $statusFilter->setOptions(array('' => '-- Select Status --', '5' => 'Pending', '1' => 'Approved', '2' => 'Rejected', '4' => 'Forwarded', '3' => 'Cancelled' ));
-        $this->view->statusFilter = $statusFilter;
+      $fromtoFilter = FilterFactory::getInstance('Multiple','Search');
+      $prepare = $fromtoFilter->addFilter($prepare,'startdate','fromtoSearch');
+      $this->view->fromtoFilter = $fromtoFilter;
 
-        $fromtoFilter = FilterFactory::getInstance('Multiple','Search');
-        $prepare = $fromtoFilter->addFilter($prepare,'startdate','fromtoSearch');
-        $this->view->fromtoFilter = $fromtoFilter;
+      $searchFilter = FilterFactory::getInstance('Text','Search');
+      $prepare = $searchFilter->addFilter($prepare,'search','searchReports', 'admin');
+      $this->view->searchFilter = $searchFilter;
 
-        $searchFilter = FilterFactory::getInstance('Text','Search');
-        $prepare = $searchFilter->addFilter($prepare,'search','searchReports');
-        $this->view->searchFilter = $searchFilter;
+      $this->view->reports = $this->paginate($prepare);
+      $reports = $this->paginate($prepare);
 
-        $this->view->reports = $this->paginate($prepare);
-        $reports = $this->paginate($prepare);
-
-        $this->view->title = 'Reports';
-        return $this->view('application.reportsAdmin');
+      $this->view->title = 'Reports';
+      return $this->view('application.reportsAdmin');
     }
 
     public function viewDetails($id)
@@ -1744,544 +1752,573 @@ class ApplicationPresenter extends PresenterCore
 
     public function viewReports($id)
     {
-        $select = [
-            'srcusers.users.idsrc_login as creator_id',
-            'srcusers.users.loginname as creator_name',
-            'srcusers.users.emailadd as creator_email',
-            'ams_applications.id',
-            'ams_applications.status',
-            'ams_applications.close_remarks',
-            'ams_applications.department',
-            'ams_applications.type_request',
-            'ams_applications.type_form',
-            'ams_applications.title',
-            'ams_applications.urgency',
-            'ams_applications.case_number',
-            'ams_applications.request_details',
-            'ams_applications.created_at',
-            'ams_applications.updated_at',
-            'ams_applications.status',
-            'ams_applications.pp_status',
-            'ams_applications.user_status as user_status'
-        ];
+      $select = [
+        'srcusers.users.idsrc_login as creator_id',
+        'srcusers.users.loginname as creator_name',
+        'srcusers.users.emailadd as creator_email',
+        'ams_applications.id',
+        'ams_applications.status',
+        'ams_applications.close_remarks',
+        'ams_applications.department',
+        'ams_applications.type_request',
+        'ams_applications.type_form',
+        'ams_applications.title',
+        'ams_applications.urgency',
+        'ams_applications.case_number',
+        'ams_applications.request_details',
+        'ams_applications.created_at',
+        'ams_applications.updated_at',
+        'ams_applications.status',
+        'ams_applications.pp_status',
+        'ams_applications.user_status as user_status'
+      ];
 
-        $select_doc = [
-            'ams_documents.id as document_id',
-            'ams_documents.name as document_name',
-            'ams_documents.link as document_link',
-            'ams_documents.app_id as app_id',
-        ];
+      $select_doc = [
+        'ams_documents.id as document_id',
+        'ams_documents.name as document_name',
+        'ams_documents.link as document_link',
+        'ams_documents.app_id as app_id',
+      ];
 
-         $select_files = [
-            'ams_files.id as files_id',
-            'ams_files.filename as files_filename',
-            'ams_files.mimes as files_mimes',
-            'ams_files.file_url as files_fileurl',
-            'ams_files.app_id as app_id',
-        ];
+      $select_files = [
+        'ams_files.id as files_id',
+        'ams_files.filename as files_filename',
+        'ams_files.mimes as files_mimes',
+        'ams_files.file_url as files_fileurl',
+        'ams_files.app_id as app_id',
+      ];
 
-        //select for list of cc and approver
-        $select_approver = [
-            'srcusers.users.idsrc_login as approver_user_id',
-            'srcusers.users.loginname as approver_name',
-            'srcusers.users.emailadd as approver_email',
-            'ams_approver_person.id as approver_id',
-            'ams_approver_person.remarks as approver_remarks',
-            'ams_approver_person.status as approver_status',
-            'ams_approver_person.case_status as approver_case_status',
-            'ams_approver_person.updated_at as approver_date'
-        ];
-        $select_cc = [
-            'srcusers.users.idsrc_login as ccperson_user_id',
-            'srcusers.users.loginname as ccperson_name',
-            'srcusers.users.emailadd as ccperson_email',
-            'ams_cc_person.id as ccperson_id',
-            'ams_cc_person.remarks as ccperson_remarks',
-            'ams_cc_person.status as ccperson_status',
-            'ams_cc_person.case_status as ccperson_case_status',
-            'ams_cc_person.updated_at as ccperson_date'
-        ];
+      //select for list of cc and approver
+      $select_approver = [
+        'srcusers.users.idsrc_login as approver_user_id',
+        'srcusers.users.loginname as approver_name',
+        'srcusers.users.emailadd as approver_email',
+        'ams_approver_person.id as approver_id',
+        'ams_approver_person.remarks as approver_remarks',
+        'ams_approver_person.status as approver_status',
+        'ams_approver_person.case_status as approver_case_status',
+        'ams_approver_person.updated_at as approver_date'
+      ];
 
+			$select_cc = [
+        'srcusers.users.idsrc_login as ccperson_user_id',
+        'srcusers.users.loginname as ccperson_name',
+        'srcusers.users.emailadd as ccperson_email',
+        'ams_cc_person.id as ccperson_id',
+        'ams_cc_person.remarks as ccperson_remarks',
+        'ams_cc_person.status as ccperson_status',
+        'ams_cc_person.case_status as ccperson_case_status',
+        'ams_cc_person.updated_at as ccperson_date'
+      ];
 
-        //select for history
-        $select_recommend_history = [
-            'srcusers.users.idsrc_login as user_id',
-            'srcusers.users.loginname as name',
-            'srcusers.users.emailadd as email',
-            'ams_recommend.id as id',
-            'ams_recommend.remarks as remarks',
-            'ams_recommend.user_status as status',
-            'ams_recommend.case_status as case_status',
-            'ams_recommend.recommend_user_id as recommend_user_id',
-            'ams_recommend.updated_at as date'
-        ];
-        $select_approver_history = [
-            'srcusers.users.idsrc_login as user_id',
-            'srcusers.users.loginname as name',
-            'srcusers.users.emailadd as email',
-            'ams_approver_person.id as id',
-            'ams_approver_person.position as position',
-            'ams_approver_person.remarks as remarks',
-            'ams_approver_person.status as status',
-            'ams_approver_person.case_status as case_status',
-            'ams_approver_person.updated_at as date'
-        ];
-        $select_cc_history = [
-            'srcusers.users.idsrc_login as id',
-            'srcusers.users.loginname as name',
-            'srcusers.users.emailadd as email',
-            'ams_cc_person.id as id',
-            'ams_cc_person.remarks as remarks',
-            'ams_cc_person.status as status',
-            'ams_cc_person.case_status as case_status',
-            'ams_cc_person.updated_at as date'
-        ];
+      //select for history
+      $select_recommend_history = [
+        'srcusers.users.idsrc_login as user_id',
+        'srcusers.users.loginname as name',
+        'srcusers.users.emailadd as email',
+        'ams_recommend.id as id',
+        'ams_recommend.remarks as remarks',
+        'ams_recommend.user_status as status',
+        'ams_recommend.case_status as case_status',
+        'ams_recommend.recommend_user_id as recommend_user_id',
+        'ams_recommend.updated_at as date'
+      ];
 
+			$select_approver_history = [
+        'srcusers.users.idsrc_login as user_id',
+        'srcusers.users.loginname as name',
+        'srcusers.users.emailadd as email',
+        'ams_approver_person.id as id',
+        'ams_approver_person.position as position',
+        'ams_approver_person.remarks as remarks',
+        'ams_approver_person.status as status',
+        'ams_approver_person.case_status as case_status',
+        'ams_approver_person.updated_at as date'
+      ];
 
-        //select for only approver and cc
-        $select_only_approver = [
-            'ams_approver_person.id as approver_id',
-            'ams_approver_person.remarks as approver_remarks',
-            'ams_approver_person.status as approver_status',
-            'ams_approver_person.position as approver_position',
-            'ams_approver_person.case_status as approver_case_status',
-            'ams_approver_person.read as approver_read',
-            'ams_approver_person.updated_at as approver_date'
-        ];
-        $select_only_cc = [
-            'ams_cc_person.id as ccperson_id',
-            'ams_cc_person.remarks as ccperson_remarks',
-            'ams_cc_person.status as ccperson_status',
-            'ams_cc_person.case_status as ccperson_case_status',
-            'ams_cc_person.updated_at as ccperson_date'
-        ];
+			$select_cc_history = [
+        'srcusers.users.idsrc_login as id',
+        'srcusers.users.loginname as name',
+        'srcusers.users.emailadd as email',
+        'ams_cc_person.id as id',
+        'ams_cc_person.remarks as remarks',
+        'ams_cc_person.status as status',
+        'ams_cc_person.case_status as case_status',
+        'ams_cc_person.updated_at as date'
+      ];
 
-        $app = ModelFactory::getInstance('Application')
+      //select for only approver and cc
+      $select_only_approver = [
+        'ams_approver_person.id as approver_id',
+        'ams_approver_person.remarks as approver_remarks',
+        'ams_approver_person.status as approver_status',
+        'ams_approver_person.position as approver_position',
+        'ams_approver_person.case_status as approver_case_status',
+        'ams_approver_person.read as approver_read',
+        'ams_approver_person.updated_at as approver_date'
+      ];
+
+			$select_only_cc = [
+        'ams_cc_person.id as ccperson_id',
+        'ams_cc_person.remarks as ccperson_remarks',
+        'ams_cc_person.status as ccperson_status',
+        'ams_cc_person.case_status as ccperson_case_status',
+        'ams_cc_person.updated_at as ccperson_date'
+      ];
+
+      $app = ModelFactory::getInstance('Application')
             ->join('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_applications.created_id')
             ->where('ams_applications.id', '=', $id)
             ->where('ams_applications.drafts', '=', 0)
             ->get($select);
 
-        $application_form_name = ModelFactory::getInstance('Forms')
-                ->where('id',$app[0]->type_form)
-                ->first(['name']);
+      $application_form_name = ModelFactory::getInstance('Forms')
+								                ->where('id',$app[0]->type_form)
+								                ->first(['name']);
 
-          $application_form_message = ModelFactory::getInstance('Forms')
-                    ->where('id',$app[0]->type_form)
-                    ->first(['message']);
+      $application_form_message = ModelFactory::getInstance('Forms')
+							                    ->where('id',$app[0]->type_form)
+							                    ->first(['message']);
 
-            if($app[0]->type_form == 2)
-            {
-                $form = ModelFactory::getInstance('FormRcp')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-            }
-            else if($app[0]->type_form == 3)
-            {
-                $form = ModelFactory::getInstance('FormRca')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-            }
-            else if($app[0]->type_form == 4)
-            {
-                $form = ModelFactory::getInstance('FormArea')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-            }
-            else if($app[0]->type_form == 5)
-            {
-                $form = ModelFactory::getInstance('FormArge')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-            }
-            else if($app[0]->type_form == 6)
-            {
-                $form = ModelFactory::getInstance('FormCdsaa')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-            }
-             else if($app[0]->type_form == 7)
-            {
-                $form = ModelFactory::getInstance('FormRdra')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-            }
-             else if($app[0]->type_form == 8)
-            {
-                $form = ModelFactory::getInstance('FormAtac')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-            }
-             else if($app[0]->type_form == 9)
-            {
-                $form = ModelFactory::getInstance('FormHphcrf')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-            }
-             else if($app[0]->type_form == 10)
-            {
-                $form = ModelFactory::getInstance('FormMjr')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-            }
-            else if($app[0]->type_form == 11)
-            {
-                $form = ModelFactory::getInstance('FormPgvbf')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-            }
-            else if($app[0]->type_form == 12)
-            {
-                     if(\Auth::User()->deptid != 12 )
-                  {
-                    //send email to Finance if non Finance user visit the form
+      if($app[0]->type_form == 2)
+      {
+        $form = ModelFactory::getInstance('FormRcp')
+                ->where('app_id',$app[0]->id)
+                ->first();
+      }
 
-                       $FinanceGlobalSetting = ModelFactory::getInstance('GlobalSetting')
-                    ->where('id','=',2)
-                    ->first();
-                          $Forms = ModelFactory::getInstance('Forms')
+			else if($app[0]->type_form == 3)
+      {
+        $form = ModelFactory::getInstance('FormRca')
+                ->where('app_id',$app[0]->id)
+                ->first();
+      }
+
+			else if($app[0]->type_form == 4)
+      {
+        $form = ModelFactory::getInstance('FormArea')
+                ->where('app_id',$app[0]->id)
+                ->first();
+      }
+
+			else if($app[0]->type_form == 5)
+      {
+        $form = ModelFactory::getInstance('FormArge')
+                ->where('app_id',$app[0]->id)
+                ->first();
+      }
+
+			else if($app[0]->type_form == 6)
+      {
+        $form = ModelFactory::getInstance('FormCdsaa')
+                ->where('app_id',$app[0]->id)
+                ->first();
+      }
+
+			else if($app[0]->type_form == 7)
+      {
+        $form = ModelFactory::getInstance('FormRdra')
+                ->where('app_id',$app[0]->id)
+                ->first();
+      }
+
+			else if($app[0]->type_form == 8)
+      {
+        $form = ModelFactory::getInstance('FormAtac')
+                ->where('app_id',$app[0]->id)
+                ->first();
+      }
+
+			else if($app[0]->type_form == 9)
+      {
+        $form = ModelFactory::getInstance('FormHphcrf')
+                ->where('app_id',$app[0]->id)
+                ->first();
+      }
+
+			else if($app[0]->type_form == 10)
+      {
+        $form = ModelFactory::getInstance('FormMjr')
+                ->where('app_id',$app[0]->id)
+                ->first();
+      }
+
+			else if($app[0]->type_form == 11)
+      {
+        $form = ModelFactory::getInstance('FormPgvbf')
+                ->where('app_id',$app[0]->id)
+                ->first();
+      }
+
+			else if($app[0]->type_form == 12)
+      {
+        if(\Auth::User()->deptid != 12 )
+        {
+          //send email to Finance if non Finance user visit the form
+          $FinanceGlobalSetting = ModelFactory::getInstance('GlobalSetting')
+							                    ->where('id','=',2)
+							                    ->first();
+
+					$Forms = ModelFactory::getInstance('Forms')
                     ->where('id','=',$app[0]->type_form)
                     ->first();
-                             $Department = ModelFactory::getInstance('Department')
-                    ->where('idsrc_departments','=',\Auth::User()->deptid)
+
+					$Department = ModelFactory::getInstance('Department')
+		                    ->where('idsrc_departments','=',\Auth::User()->deptid)
+		                    ->first();
+
+          $data = array(
+    				'date' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
+            'loginname' =>  \Auth::User()->loginname,
+            'module' =>  $Forms->name,
+            'case_number' =>  $app[0]->case_number,
+            'department' =>  $Department->department,
+    			);
+
+					$email =  $FinanceGlobalSetting->value;
+
+					\Mail::send('mail.mail_emailalert', $data , function ($m) use ($email) {
+	            $m->from('do-not-reply@redcross.sg', 'SRC Approval Management System');
+	            $m->to($email)->subject('Email Alert on Viewing Finance Matters');
+          	});
+          }
+
+					$form = ModelFactory::getInstance('FormSorapfca')
+                  ->where('app_id',$app[0]->id)
+                  ->first();
+
+        	$formlineitem = ModelFactory::getInstance('LineItemSorapfca')
+                        	->where('app_id',$app[0]->id)
+                        	->get();
+
+          $this->view->formlineitem =  $formlineitem;
+        }
+
+				else if($app[0]->type_form == 13)
+        {
+          if(\Auth::User()->deptid != 12)
+          {
+            //send email to Finance if non Finance user visit the form
+            $FinanceGlobalSetting = ModelFactory::getInstance('GlobalSetting')
+								                    ->where('id','=',2)
+								                    ->first();
+
+						$Forms = ModelFactory::getInstance('Forms')
+	                    ->where('id','=',$app[0]->type_form)
+	                    ->first();
+
+						$Department = ModelFactory::getInstance('Department')
+			                    ->where('idsrc_departments','=',\Auth::User()->deptid)
+			                    ->first();
+
+					 $data = array(
+    				'date' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
+            'loginname' =>  \Auth::User()->loginname,
+            'module' =>  $Forms->name,
+            'case_number' =>  $app[0]->case_number,
+            'department' =>  $Department->department,
+    			 );
+
+					 $email =  $FinanceGlobalSetting->value;
+
+						\Mail::send('mail.mail_emailalert', $data , function ($m) use ($email) {
+            	$m->from('do-not-reply@redcross.sg', 'SRC Approval Management System');
+            	$m->to($email)->subject('Email Alert on Viewing Finance Matters');
+              });
+          }
+
+          $form = ModelFactory::getInstance('FormAca')
+                  ->where('app_id',$app[0]->id)
+                  ->first();
+        }
+
+				else if($app[0]->type_form == 14)
+        {
+          if(\Auth::User()->deptid != 12)
+          {
+            //send email to Finance if non Finance user visit the form
+            $FinanceGlobalSetting = ModelFactory::getInstance('GlobalSetting')
+								                    ->where('id','=',2)
+								                    ->first();
+
+						$Forms = ModelFactory::getInstance('Forms')
+	                    ->where('id','=',$app[0]->type_form)
+	                    ->first();
+
+						$Department = ModelFactory::getInstance('Department')
+			                    ->where('idsrc_departments','=',\Auth::User()->deptid)
+			                    ->first();
+
+					 $data = array(
+    				'date' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
+            'loginname' =>  \Auth::User()->loginname,
+            'module' =>  $Forms->name,
+            'case_number' =>  $app[0]->case_number,
+            'department' =>  $Department->department,
+    				);
+
+						$email =  $FinanceGlobalSetting->value;
+
+						\Mail::send('mail.mail_emailalert', $data , function ($m) use ($email) {
+            	$m->from('do-not-reply@redcross.sg', 'SRC Approval Management System');
+            	$m->to($email)->subject('Email Alert on Viewing Finance Matters');
+              });
+          	}
+
+						$form = ModelFactory::getInstance('FormPcmcf')
+                    ->where('app_id',$app[0]->id)
                     ->first();
-           $data = array(
-    			'date' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
+
+            $formlineitem = ModelFactory::getInstance('LineItemPcmcf')
+		                        ->where('app_id',$app[0]->id)
+		                        ->get();
+
+            $this->view->formlineitem =  $formlineitem;
+
+          }
+
+					else if($app[0]->type_form == 20)
+          {
+            if(\Auth::User()->deptid != 12)
+            {
+              //send email to Finance if non Finance user visit the form
+              $FinanceGlobalSetting = ModelFactory::getInstance('GlobalSetting')
+									                    ->where('id','=',2)
+									                    ->first();
+
+							$Forms = ModelFactory::getInstance('Forms')
+		                    ->where('id','=',$app[0]->type_form)
+		                    ->first();
+
+							$Department = ModelFactory::getInstance('Department')
+				                    ->where('idsrc_departments','=',\Auth::User()->deptid)
+				                    ->first();
+
+							$data = array(
+    						'date' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
                 'loginname' =>  \Auth::User()->loginname,
                 'module' =>  $Forms->name,
                 'case_number' =>  $app[0]->case_number,
-                 'department' =>  $Department->department,
-    	);
-                   $email =  $FinanceGlobalSetting->value;
-                      \Mail::send('mail.mail_emailalert', $data , function ($m) use ($email) {
-            $m->from('do-not-reply@redcross.sg', 'SRC Approval Management System');
-            $m->to($email)->subject('Email Alert on Viewing Finance Matters');
+                'department' =>  $Department->department,
+    					);
 
+							$email =  $FinanceGlobalSetting->value;
+
+							\Mail::send('mail.mail_emailalert', $data , function ($m) use ($email) {
+            		$m->from('do-not-reply@redcross.sg', 'SRC Approval Management System');
+            		$m->to($email)->subject('Email Alert on Viewing Finance Matters');
               });
-                }
-
-
-
-                $form = ModelFactory::getInstance('FormSorapfca')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-
-                 $formlineitem = ModelFactory::getInstance('LineItemSorapfca')
-                        ->where('app_id',$app[0]->id)
-                        ->get();
-
-                 $this->view->formlineitem =  $formlineitem;
             }
-            else if($app[0]->type_form == 13)
+
+            $form = ModelFactory::getInstance('FormPcmcf2')
+                    ->where('app_id',$app[0]->id)
+                    ->first();
+
+            $formlineitem = ModelFactory::getInstance('LineItemPcmcf2')
+		                        ->where('app_id',$app[0]->id)
+		                        ->get();
+
+            $this->view->formlineitem =  $formlineitem;
+          }
+
+					else if($app[0]->type_form == 15)
+          {
+            if(\Auth::User()->deptid != 9)
             {
+              //send email to HR if non Hr user visit the form
+              $HRGlobalSetting = ModelFactory::getInstance('GlobalSetting')
+							                    ->where('id','=',1)
+							                    ->first();
 
-                     if(\Auth::User()->deptid != 12 )
-                  {
-                   //send email to Finance if non Finance user visit the form
+							$Forms = ModelFactory::getInstance('Forms')
+		                    ->where('id','=',$app[0]->type_form)
+		                    ->first();
 
-                       $FinanceGlobalSetting = ModelFactory::getInstance('GlobalSetting')
-                    ->where('id','=',2)
-                    ->first();
-                          $Forms = ModelFactory::getInstance('Forms')
-                    ->where('id','=',$app[0]->type_form)
-                    ->first();
-                             $Department = ModelFactory::getInstance('Department')
-                    ->where('idsrc_departments','=',\Auth::User()->deptid)
-                    ->first();
-           $data = array(
-    			'date' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
+              $Department = ModelFactory::getInstance('Department')
+				                    ->where('idsrc_departments','=',\Auth::User()->deptid)
+				                    ->first();
+
+							$data = array(
+    						'date' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
                 'loginname' =>  \Auth::User()->loginname,
                 'module' =>  $Forms->name,
                 'case_number' =>  $app[0]->case_number,
-                 'department' =>  $Department->department,
-    	);
-                   $email =  $FinanceGlobalSetting->value;
-                      \Mail::send('mail.mail_emailalert', $data , function ($m) use ($email) {
-            $m->from('do-not-reply@redcross.sg', 'SRC Approval Management System');
-            $m->to($email)->subject('Email Alert on Viewing Finance Matters');
+                'department' =>  $Department->department,
+    					);
 
+							$email =  $HRGlobalSetting->value;
+
+							\Mail::send('mail.mail_emailalert', $data , function ($m) use ($email) {
+            		$m->from('do-not-reply@redcross.sg', 'SRC Approval Management System');
+            		$m->to($email)->subject('Email Alert on Viewing HR Matters');
               });
-                }
-
-                $form = ModelFactory::getInstance('FormAca')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
             }
-            else if($app[0]->type_form == 14)
+
+						$form = ModelFactory::getInstance('FormMrf')
+                    ->where('app_id',$app[0]->id)
+                    ->first();
+          }
+
+					else if($app[0]->type_form == 16)
+          {
+            if(\Auth::User()->deptid != 9)
             {
+              //send email to HR if non Hr user visit the form
+              $HRGlobalSetting = ModelFactory::getInstance('GlobalSetting')
+							                    ->where('id','=',1)
+							                    ->first();
 
-                     if(\Auth::User()->deptid != 12 )
-                  {
-                  //send email to Finance if non Finance user visit the form
+							$Forms = ModelFactory::getInstance('Forms')
+		                    ->where('id','=',$app[0]->type_form)
+		                    ->first();
 
-                       $FinanceGlobalSetting = ModelFactory::getInstance('GlobalSetting')
-                    ->where('id','=',2)
-                    ->first();
-                          $Forms = ModelFactory::getInstance('Forms')
-                    ->where('id','=',$app[0]->type_form)
-                    ->first();
-                             $Department = ModelFactory::getInstance('Department')
-                    ->where('idsrc_departments','=',\Auth::User()->deptid)
-                    ->first();
-           $data = array(
-    			'date' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
+							$Department = ModelFactory::getInstance('Department')
+				                    ->where('idsrc_departments','=',\Auth::User()->deptid)
+				                    ->first();
+
+							$data = array(
+    						'date' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
                 'loginname' =>  \Auth::User()->loginname,
                 'module' =>  $Forms->name,
                 'case_number' =>  $app[0]->case_number,
-                 'department' =>  $Department->department,
-    	);
-                   $email =  $FinanceGlobalSetting->value;
-                      \Mail::send('mail.mail_emailalert', $data , function ($m) use ($email) {
-            $m->from('do-not-reply@redcross.sg', 'SRC Approval Management System');
-            $m->to($email)->subject('Email Alert on Viewing Finance Matters');
+                'department' =>  $Department->department,
+    					);
 
+							$email =  $HRGlobalSetting->value;
+
+							\Mail::send('mail.mail_emailalert', $data , function ($m) use ($email) {
+            		$m->from('do-not-reply@redcross.sg', 'SRC Approval Management System');
+            		$m->to($email)->subject('Some one check the report');
               });
-                }
-
-
-                $form = ModelFactory::getInstance('FormPcmcf')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-
-                 $formlineitem = ModelFactory::getInstance('LineItemPcmcf')
-                        ->where('app_id',$app[0]->id)
-                        ->get();
-
-                 $this->view->formlineitem =  $formlineitem;
-
-            }
-            else if($app[0]->type_form == 20)
-            {
-
-                     if(\Auth::User()->deptid != 12 )
-                  {
-                    //send email to Finance if non Finance user visit the form
-
-                       $FinanceGlobalSetting = ModelFactory::getInstance('GlobalSetting')
-                    ->where('id','=',2)
-                    ->first();
-                          $Forms = ModelFactory::getInstance('Forms')
-                    ->where('id','=',$app[0]->type_form)
-                    ->first();
-                             $Department = ModelFactory::getInstance('Department')
-                    ->where('idsrc_departments','=',\Auth::User()->deptid)
-                    ->first();
-           $data = array(
-    			'date' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
-                'loginname' =>  \Auth::User()->loginname,
-                'module' =>  $Forms->name,
-                'case_number' =>  $app[0]->case_number,
-                 'department' =>  $Department->department,
-    	);
-                   $email =  $FinanceGlobalSetting->value;
-                      \Mail::send('mail.mail_emailalert', $data , function ($m) use ($email) {
-            $m->from('do-not-reply@redcross.sg', 'SRC Approval Management System');
-            $m->to($email)->subject('Email Alert on Viewing Finance Matters');
-
-              });
-                }
-
-                $form = ModelFactory::getInstance('FormPcmcf2')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-
-                 $formlineitem = ModelFactory::getInstance('LineItemPcmcf2')
-                        ->where('app_id',$app[0]->id)
-                        ->get();
-
-                 $this->view->formlineitem =  $formlineitem;
-
-            }
-            else if($app[0]->type_form == 15)
-            {
-
-                if(\Auth::User()->deptid != 9 )
-                {
-                    //send email to HR if non Hr user visit the form
-
-                       $HRGlobalSetting = ModelFactory::getInstance('GlobalSetting')
-                    ->where('id','=',1)
-                    ->first();
-                          $Forms = ModelFactory::getInstance('Forms')
-                    ->where('id','=',$app[0]->type_form)
-                    ->first();
-                             $Department = ModelFactory::getInstance('Department')
-                    ->where('idsrc_departments','=',\Auth::User()->deptid)
-                    ->first();
-           $data = array(
-    			'date' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
-                'loginname' =>  \Auth::User()->loginname,
-                'module' =>  $Forms->name,
-                'case_number' =>  $app[0]->case_number,
-                 'department' =>  $Department->department,
-    	);
-                   $email =  $HRGlobalSetting->value;
-                      \Mail::send('mail.mail_emailalert', $data , function ($m) use ($email) {
-            $m->from('do-not-reply@redcross.sg', 'SRC Approval Management System');
-            $m->to($email)->subject('Email Alert on Viewing HR Matters');
-
-              });
-                }
-                $form = ModelFactory::getInstance('FormMrf')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-            }
-               else if($app[0]->type_form == 16)
-            {
-                    if(\Auth::User()->deptid != 9 )
-                  {
-                    //send email to HR if non Hr user visit the form
-
-                       $HRGlobalSetting = ModelFactory::getInstance('GlobalSetting')
-                    ->where('id','=',1)
-                    ->first();
-                          $Forms = ModelFactory::getInstance('Forms')
-                    ->where('id','=',$app[0]->type_form)
-                    ->first();
-                             $Department = ModelFactory::getInstance('Department')
-                    ->where('idsrc_departments','=',\Auth::User()->deptid)
-                    ->first();
-           $data = array(
-    			'date' => \Carbon\Carbon::now()->format('Y-m-d H:i:s'),
-                'loginname' =>  \Auth::User()->loginname,
-                'module' =>  $Forms->name,
-                'case_number' =>  $app[0]->case_number,
-                 'department' =>  $Department->department,
-    	);
-                   $email =  $HRGlobalSetting->value;
-                      \Mail::send('mail.mail_emailalert', $data , function ($m) use ($email) {
-            $m->from('do-not-reply@redcross.sg', 'SRC Approval Management System');
-            $m->to($email)->subject('Some one check the report');
-
-              });
-                }
-                $form = ModelFactory::getInstance('FormTsw')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-
-												// dd($form);
-
-                  $formlineitem = ModelFactory::getInstance('LineItemTsw')
-                        ->where('app_id',$app[0]->id)
-                        ->get();
-
-                 $formlineitemAl = ModelFactory::getInstance('LineItemAlTsw')
-                        ->where('app_id',$app[0]->id)
-                        ->get();
-
-                 $this->view->formlineitem =  $formlineitem;
-                 $this->view->formlineitemAl =  $formlineitemAl;
-
-								 // dd($this->view->formlineitemAl->toArray());
-
-            }
-              else if($app[0]->type_form == 17)
-            {
-                $form = ModelFactory::getInstance('FormIrfi')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-            }
-            else if($app[0]->type_form == 18)
-            {
-                $form = ModelFactory::getInstance('FormCoprpo')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-            }
-            else if($app[0]->type_form == 19)
-            {
-                $form = ModelFactory::getInstance('FormEoq')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-
-                 $formlineitem = ModelFactory::getInstance('LineItemEoq')
-                        ->where('app_id',$app[0]->id)
-                        ->get();
-
-                 $this->view->formlineitem =  $formlineitem;
-            }
-            else
-            {
-                $form = (object) [];
             }
 
-        $doc = ModelFactory::getInstance('Documents')
-            ->join('ams_applications', 'ams_documents.app_id', '=', 'ams_applications.id')
-            ->where('ams_documents.app_id', '=', $id)
-            ->select($select_doc)->get();
+						$form = ModelFactory::getInstance('FormTsw')
+                    ->where('app_id',$app[0]->id)
+                    ->first();
 
-        $files = ModelFactory::getInstance('File')
-            ->join('ams_applications', 'ams_files.app_id', '=', 'ams_applications.id')
-            ->where('ams_files.app_id', '=', $id)
-            ->select($select_files)->get();
+            $formlineitem = ModelFactory::getInstance('LineItemTsw')
+		                        ->where('app_id',$app[0]->id)
+		                        ->get();
 
+            $formlineitemAl = ModelFactory::getInstance('LineItemAlTsw')
+			                        ->where('app_id',$app[0]->id)
+			                        ->get();
 
-        $approver = ModelFactory::getInstance('Approver')
-            ->join('ams_applications', 'ams_approver_person.app_id', '=', 'ams_applications.id')
-            ->join('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_approver_person.user_id')
-            ->where('ams_approver_person.app_id', '=', $id)
-            ->orderBy('ams_approver_person.position', 'asc')
-            ->select($select_approver)->get();
+            $this->view->formlineitem =  $formlineitem;
+            $this->view->formlineitemAl =  $formlineitemAl;
+          }
 
-				// dd($approver->toArray());
+					else if($app[0]->type_form == 17)
+          {
+            $form = ModelFactory::getInstance('FormIrfi')
+                    ->where('app_id',$app[0]->id)
+                    ->first();
+          }
 
-        $ccpersonData = ModelFactory::getInstance('Ccperson')
-            ->join('ams_applications', 'ams_cc_person.app_id', '=', 'ams_applications.id')
-            ->join('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_cc_person.user_id')
-            ->where('ams_cc_person.app_id', '=', $id)
-            ->select($select_cc)->get()->toArray();
+					else if($app[0]->type_form == 18)
+          {
+            $form = ModelFactory::getInstance('FormCoprpo')
+                    ->where('app_id',$app[0]->id)
+                    ->first();
+          }
 
-        $result = array();
-        foreach ($ccpersonData as $val) {
+					else if($app[0]->type_form == 19)
+          {
+            $form = ModelFactory::getInstance('FormEoq')
+                    ->where('app_id',$app[0]->id)
+                    ->first();
+
+            $formlineitem = ModelFactory::getInstance('LineItemEoq')
+		                        ->where('app_id',$app[0]->id)
+		                        ->get();
+
+            $this->view->formlineitem =  $formlineitem;
+          }
+
+					else
+          {
+            $form = (object) [];
+          }
+
+        	$doc = ModelFactory::getInstance('Documents')
+			            ->join('ams_applications', 'ams_documents.app_id', '=', 'ams_applications.id')
+			            ->where('ams_documents.app_id', '=', $id)
+			            ->select($select_doc)->get();
+
+	        $files = ModelFactory::getInstance('File')
+				            ->join('ams_applications', 'ams_files.app_id', '=', 'ams_applications.id')
+				            ->where('ams_files.app_id', '=', $id)
+				            ->select($select_files)->get();
+
+        	$approver = ModelFactory::getInstance('Approver')
+					            ->join('ams_applications', 'ams_approver_person.app_id', '=', 'ams_applications.id')
+					            ->join('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_approver_person.user_id')
+					            ->where('ams_approver_person.app_id', '=', $id)
+					            ->orderBy('ams_approver_person.position', 'asc')
+					            ->select($select_approver)->get();
+
+        	$ccpersonData = ModelFactory::getInstance('Ccperson')
+							            ->join('ams_applications', 'ams_cc_person.app_id', '=', 'ams_applications.id')
+							            ->join('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_cc_person.user_id')
+							            ->where('ams_cc_person.app_id', '=', $id)
+							            ->select($select_cc)->get()->toArray();
+
+        	$result = array();
+
+					foreach ($ccpersonData as $val) {
             if (!isset($result[$val['ccperson_user_id']]))
-                $result[$val['ccperson_user_id']] = $val;
+              $result[$val['ccperson_user_id']] = $val;
+        	}
+
+					$ccperson = array_values($result);
+
+        	//special request from Jerry when 20042017 to show special word comment on non approver
+         	$approverhistorycommenter = ModelFactory::getInstance('Approver')
+													            ->leftjoin('ams_applications', 'ams_approver_person.app_id', '=', 'ams_applications.id')
+													            ->leftjoin('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_approver_person.user_id')
+													            ->where('ams_approver_person.app_id', '=', $id)
+													            ->where('ams_approver_person.read', '=', 1)
+													            ->where('ams_approver_person.id','!=', DB::raw("(select max(`id`) from ams_approver_person where app_id=".$id.")"))
+            													->select($select_approver_history)->get()->toArray();
+
+          if($approverhistorycommenter)
+					{
+          	foreach($approverhistorycommenter as $column => $commenter)
+            {
+        			$approverhistorycommenter[$column]['status'] = 5;
+          		$approverhistorycommenter[$column]['case_status'] = 5;
+         		}
+         	}
+
+        	$approverhistoryapprover = ModelFactory::getInstance('Approver')
+													            ->leftjoin('ams_applications', 'ams_approver_person.app_id', '=', 'ams_applications.id')
+													            ->leftjoin('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_approver_person.user_id')
+													            ->where('ams_approver_person.app_id', '=', $id)
+													            ->where('ams_approver_person.read', '=', 1)
+													            ->where('ams_approver_person.id','=', DB::raw("(select max(`id`) from ams_approver_person where app_id=".$id.")"))
+													            ->orderby('position','desc')
+													            ->select($select_approver_history)->get()->toArray();
+
+	      	$ccpersonhistory = ModelFactory::getInstance('Ccperson')
+									            ->join('ams_applications', 'ams_cc_person.app_id', '=', 'ams_applications.id')
+									            ->join('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_cc_person.user_id')
+									            ->where('ams_cc_person.app_id', '=', $id)
+									            ->where('ams_cc_person.status', '=', 5)
+									            ->select($select_cc_history)->get()->toArray();
+
+        	$recommendhistory = ModelFactory::getInstance('Recommend')
+									            ->join('ams_applications', 'ams_recommend.app_id', '=', 'ams_applications.id')
+									            ->join('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_recommend.user_id')
+									            ->where('ams_recommend.app_id', '=', $id)
+									            ->where('ams_recommend.user_status', '=', 4)
+									            ->select($select_recommend_history)->get()->toArray();
+
+				$this->view->mark = '';
+        if($app[0]['status']== 1 && !$approverhistoryapprover)
+				{
+        	$app[0]['status'] = 5;
         }
-        $ccperson = array_values($result);
 
-
-        //special request from Jerry when 20042017 to show special word comment on non approver
-         $approverhistorycommenter = ModelFactory::getInstance('Approver')
-            ->leftjoin('ams_applications', 'ams_approver_person.app_id', '=', 'ams_applications.id')
-            ->leftjoin('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_approver_person.user_id')
-            ->where('ams_approver_person.app_id', '=', $id)
-            ->where('ams_approver_person.read', '=', 1)
-            ->where('ams_approver_person.id','!=', DB::raw("(select max(`id`) from ams_approver_person where app_id=".$id.")"))
-
-            ->select($select_approver_history)->get()->toArray();
-
-            if($approverhistorycommenter){
-             foreach($approverhistorycommenter as $column => $commenter)
-             {
-        $approverhistorycommenter[$column]['status'] = 5;
-          $approverhistorycommenter[$column]['case_status'] = 5;
-         }
-         }
-
-        $approverhistoryapprover = ModelFactory::getInstance('Approver')
-            ->leftjoin('ams_applications', 'ams_approver_person.app_id', '=', 'ams_applications.id')
-            ->leftjoin('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_approver_person.user_id')
-            ->where('ams_approver_person.app_id', '=', $id)
-            ->where('ams_approver_person.read', '=', 1)
-            ->where('ams_approver_person.id','=', DB::raw("(select max(`id`) from ams_approver_person where app_id=".$id.")"))
-            ->orderby('position','desc')
-            ->select($select_approver_history)->get()->toArray();
-
-        $ccpersonhistory = ModelFactory::getInstance('Ccperson')
-            ->join('ams_applications', 'ams_cc_person.app_id', '=', 'ams_applications.id')
-            ->join('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_cc_person.user_id')
-            ->where('ams_cc_person.app_id', '=', $id)
-            ->where('ams_cc_person.status', '=', 5)
-            ->select($select_cc_history)->get()->toArray();
-        $recommendhistory = ModelFactory::getInstance('Recommend')
-            ->join('ams_applications', 'ams_recommend.app_id', '=', 'ams_applications.id')
-            ->join('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_recommend.user_id')
-            ->where('ams_recommend.app_id', '=', $id)
-            ->where('ams_recommend.user_status', '=', 4)
-            ->select($select_recommend_history)->get()->toArray();
-        $this->view->mark = '';
-        if($app[0]['status']== 1 && !$approverhistoryapprover){
-         $app[0]['status'] = 5;
-
-        }
         $this->view->myapplist =  $app;
         $this->view->forminfo =  $form;
         $this->view->afm =  $application_form_name;
@@ -2291,33 +2328,37 @@ class ApplicationPresenter extends PresenterCore
         $this->view->approverlist =  $approver;
         $this->view->ccpersonlist =  $ccperson;
         $merge_history = array();
-       $merge_history = array_merge($merge_history, $approverhistoryapprover);
+       	$merge_history = array_merge($merge_history, $approverhistoryapprover);
         $merge_history = array_merge($merge_history, $approverhistorycommenter);
         $merge_history = array_merge($merge_history, $ccpersonhistory);
 
         $recdump = array();
-        foreach ($recommendhistory as $key => $value) {
-            $recdump[$key]['user_id'] = $value['user_id'];
-            $recdump[$key]['name'] = $value['name'];
-            $recdump[$key]['email'] = $value['email'];
-            $recdump[$key]['id'] = $value['id'];
-            $recdump[$key]['remarks'] = $value['remarks'];
-            $recdump[$key]['status'] = $value['status'];
-            $recdump[$key]['case_status'] = $value['case_status'];
-            $recdump[$key]['recommend_user_id'] = $this->selectUserBy($value['recommend_user_id'],array('loginname as name'))->toArray();
-            $recdump[$key]['date'] = $value['date'];
+        foreach ($recommendhistory as $key => $value)
+				{
+          $recdump[$key]['user_id'] = $value['user_id'];
+          $recdump[$key]['name'] = $value['name'];
+          $recdump[$key]['email'] = $value['email'];
+          $recdump[$key]['id'] = $value['id'];
+          $recdump[$key]['remarks'] = $value['remarks'];
+          $recdump[$key]['status'] = $value['status'];
+          $recdump[$key]['case_status'] = $value['case_status'];
+          $recdump[$key]['recommend_user_id'] = $this->selectUserBy($value['recommend_user_id'],array('loginname as name'))->toArray();
+          $recdump[$key]['date'] = $value['date'];
         }
+
         $merge_history = array_merge($merge_history, $recdump);
 
         //sort merge by date
-        usort($merge_history, function ($a, $b) {
-            if ($a['date'] == $b['date']) {
-                return 0;
-            }
-                return ($a['date'] < $b['date']) ? -1 : 1;
+        usort($merge_history, function ($a, $b)
+				{
+          if ($a['date'] == $b['date'])
+					{
+            return 0;
+          }
+          return ($a['date'] < $b['date']) ? -1 : 1;
         });
-        $this->view->historylist = $merge_history;
 
+        $this->view->historylist = $merge_history;
         $this->view->action_url =  'print';
         $this->view->title_page = 'Detail Reports';
         $this->view->title = 'View Details - Reports';
