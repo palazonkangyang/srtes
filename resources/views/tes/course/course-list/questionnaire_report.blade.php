@@ -214,7 +214,7 @@
 
 												 @foreach($answers as $answer=>$value)
 
-												 <td>{{$value}}</td>
+												 <td>{{ $value }}</td>
 
 												 @endforeach
 											 </tr>

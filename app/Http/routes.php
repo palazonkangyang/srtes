@@ -37,6 +37,8 @@ Route::group(['prefix' => 'account'],function(){
 	Route::get('/account-settings', ['uses' => 'AccountPresenter@accountSettings']);
 });
 
+Route::get('/pdf', ["as" => "pdfa", 'uses' => 'PdfPresenter@pdf']);
+
 // Core Module: Training Evaluation System
 // tes/*
 Route::group(['prefix' => 'tes'],function(){
@@ -49,6 +51,19 @@ Route::group(['prefix' => 'tes'],function(){
     Route::get('/', ['uses' => 'CoursePresenter@index']);
     Route::get('/get_json_course', ['uses' => 'CoursePresenter@getjsonCourse']);
     Route::get('/get_json_course_by_course_type_id', ['uses' => 'CoursePresenter@getjsonCourseByCourseTypeId']);
+
+    // Training Evaluation System -> Course
+    // tes/course/course-type/*
+
+    Route::group(['prefix' => 'course-type'],function(){
+
+      Route::get('/', ['uses' => 'CourseTypePresenter@getCourseTypeList']);
+      Route::post('/', ['uses' => 'CourseTypePresenter@getCourseTypeList']);
+      Route::get('/add-course-type', ['uses' => 'CourseTypePresenter@getAddCourseType']);
+      Route::get('/edit-course-type/{id}', ['uses' => 'CourseTypePresenter@editCourseType']);
+      Route::get('/edit-questionnaire/{id}', ['uses' => 'CourseTypePresenter@editQuestionnaire']);
+    });
+
 
     // Training Evaluation System -> Course -> Course List
     // tes/course/course-list/*
@@ -63,6 +78,17 @@ Route::group(['prefix' => 'tes'],function(){
       Route::get('/edit-course/{id}', ['uses' => 'CoursePresenter@edit']);
       Route::get('/edit-questionnaire/{id}', ['uses' => 'CoursePresenter@editquestionnaire']);
       Route::get('/remove-course/{id}', ['uses' => 'CourseController@destroy']);
+    });
+
+    // Training Evaluation System -> Course -> Designation
+    // tes/course/designation/*
+
+    Route::group(['prefix' => 'designation'],function(){
+
+      Route::get('/', ['uses' => 'DesignationPresenter@getDesignation']);
+      Route::get('/add-designation', ['uses' => 'DesignationPresenter@addDesignation']);
+      Route::get('/edit-designation/{id}', ['uses' => 'DesignationPresenter@editDesignation']);
+      Route::get('/remove-designation/{id}', ['uses' => 'DesignationController@deleteDesignation']);
     });
 
     Route::get('/course-completion-status', ['uses' => 'CoursePresenter@courseCompletionStatus']);
@@ -100,6 +126,7 @@ Route::group(['prefix' => 'tes'],function(){
 Route::group(['prefix' => 'settings'], function() {
 	//access right super admin
 	Route::get('/', ['uses' => 'SettingsPresenter@index']);
+  Route::get('/out_of_office_settings', ['uses' => 'SettingsPresenter@outOfOfficeSettings']);
 	Route::get('/request', ['middleware' => 'access','uses' => 'SettingsPresenter@typeRequest']);
 	Route::post('/request', ['middleware' => 'access','uses' => 'SettingsPresenter@typeRequest']);
   Route::get('/person', ['middleware' => 'access','uses' => 'SettingsPresenter@typePerson']);
@@ -178,6 +205,7 @@ Route::group(['prefix' => 'application'],function(){
   Route::get('/view_details/{id}/feedback', 'ApplicationPresenter@fillFeedbackForm');
 	Route::get('/pending', 'ApplicationPresenter@pending');
 	Route::post('/pending', ['uses' => 'ApplicationPresenter@pending']);
+  Route::get('/out_of_office_pending_lists', 'ApplicationPresenter@outOfOfficePendingLists');
 	Route::get('/myapp', 'ApplicationPresenter@myapp');
 	Route::post('/myapp', ['uses' => 'ApplicationPresenter@myapp']);
 	Route::get('/download/file/{name}', ['uses' => 'ApplicationPresenter@file']);
@@ -201,7 +229,7 @@ Route::group(['prefix' => 'application'],function(){
   Route::get('/reportsFin', ['uses' => 'ApplicationPresenter@reportsFin']);
   Route::post('/reportsFin', ['uses' => 'ApplicationPresenter@reportsFin']);
 
-	Route::get('/view_reports/{id}', [ 'uses' => 'ApplicationPresenter@viewReports']);
+	Route::get('/view_reports/{id}', ["as" => 'view', 'uses' => 'ApplicationPresenter@viewReports']);
 });
 
 
@@ -316,6 +344,8 @@ Route::group(['prefix' => 'controller'],function(){
 	Route::post('/accountsettings', ['uses' => 'AccountController@accountSettings']);
 	Route::post('/updateprofile', ['uses' => 'AccountController@updateProfile']);
 
+  Route::post('/tempapproveruser', ['uses' => 'AccountController@tempapproveruser']);
+
 	/*usermanagement*/
 	Route::post('/adduser', ['uses' => 'UserManagementController@store']);
 	Route::post('/updateuser', ['uses' => 'UserManagementController@update']);
@@ -335,7 +365,6 @@ Route::group(['prefix' => 'controller'],function(){
 	Route::post('/createflexigroup', ['uses' => 'FlexiGroupController@store']);
 	Route::post('/updateflexigroup', ['uses' => 'FlexiGroupController@update']);
 	Route::get('/removeflexigroup/{id}', ['uses' => 'FlexiGroupController@destroy']);
-
 
   /*optionalcode*/
 	Route::post('/createoptionalcode', ['uses' => 'OptionalCodeController@store']);
@@ -360,9 +389,20 @@ Route::group(['prefix' => 'controller'],function(){
   Route::post('/settings/updatepost','SettingsController@updatepost');
 
   // Core Module: Training Evaluation System
+  // Training Evaluation System -> Course -> Course Type -> Add Course Type
+  Route::post('/tes/course/course-type/add-course-type', ['uses' => 'CourseTypeController@store']);
+  Route::post('/tes/course/course-type/edit-course-type/{id}', ['uses' => 'CourseTypeController@update']);
+  Route::post('/tes/course/course-type/edit-questionnaire/{id}', ['uses' => 'CourseTypeController@questionnaire_update']);
+
+  // Core Module: Training Evaluation System
   // Training Evaluation System -> Course -> Course List -> Add Course
   Route::post('/tes/course/course-list/add-course', ['uses' => 'CourseController@store']);
   Route::post('/tes/course/course-list/edit-course/{id}', ['uses' => 'CourseController@update']);
+
+  // Training Evaluation System -> Designation -> Designation List -> Add Designation
+  Route::post('/tes/course/designation/add-designation', ['uses' => 'DesignationController@store']);
+  Route::post('/tes/course/designation/edit-designation/{id}', ['uses' => 'DesignationController@update']);
+
   // Training Evaluation System -> Form Management -> Questionnaire List -> Add Questionnaire
   Route::post('/tes/course/course-list/edit-questionnaire/{id}', ['uses' => 'FormManagementController@questionnaire_update']);
 

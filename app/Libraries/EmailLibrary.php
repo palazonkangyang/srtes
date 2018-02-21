@@ -34,11 +34,16 @@ class EmailLibrary extends LibraryCore implements SingletonInterface
 	public $personToReceive;
 
 	/**
+	 * cc personToReceive
+	 * @var array
+	 */
+	public $ccpersonToReceive;
+
+	/**
 	 * Blade layout selected
 	 * @var [type]
 	 */
 	public $layout;
-
 
 	/**
 	 * Magic clone method
@@ -54,12 +59,26 @@ class EmailLibrary extends LibraryCore implements SingletonInterface
     $fromEmail = $this->from;
     $compName = $this->companyName;
     $getPerson = $this->personToReceive;
+		$getccPerson = $this->ccpersonToReceive;
     $subjectEmail = $this->subject;
 
-    Mail::send($this->layout, $data, function($message) use ($getPerson, $subjectEmail, $fromEmail, $compName)
+    if(!empty($getccPerson))
 		{
-    	$message->from($fromEmail, $compName);
-      $message->to($getPerson->emailadd)->subject($subjectEmail);
-  	});
+			Mail::send($this->layout, $data, function($message) use ($getPerson, $getccPerson, $subjectEmail, $fromEmail, $compName)
+			{
+	    	$message->from($fromEmail, $compName);
+	      $message->to($getPerson->emailadd)->subject($subjectEmail);
+				$message->cc($getccPerson->emailadd)->subject($subjectEmail);
+	  	});
+		}
+
+		else
+		{
+			Mail::send($this->layout, $data, function($message) use ($getPerson, $subjectEmail, $fromEmail, $compName)
+			{
+	    	$message->from($fromEmail, $compName);
+	      $message->to($getPerson->emailadd)->subject($subjectEmail);
+	  	});
+		}
   }
 }

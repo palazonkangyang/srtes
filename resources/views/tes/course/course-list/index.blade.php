@@ -44,17 +44,17 @@
 		<div id="no-more-tables">
 			<table class="col-md-12 table-bordered table-striped table-condensed cf">
 				<thead class="cf">
-					<th>{!!$course_list->sortColumn('id','ID')!!}</th>
-					<th>{!!$course_list->sortColumn('name','Name')!!}</th>
-					<th>{!!$course_list->sortColumn('description','Description')!!}</th>
-					<th>{!!$course_list->sortColumn('course_type_id','Type')!!}</th>
-					<th>{!!$course_list->sortColumn('code','Code')!!}</th>
-					<th>{!!$course_list->sortColumn('duration','Duration')!!}</th>
-					<th>{!!$course_list->sortColumn('minimum_attendee','Minimum Attendee')!!}</th>
-					<th>{!!$course_list->sortColumn('maximum_attendee','Maximum Attendee')!!}</th>
-					<th>Register</th>
-					<th>Complete</th>
-					<th>Action</th>
+					<th class="col-md-1">{!!$course_list->sortColumn('id','ID')!!}</th>
+					<th class="col-md-2">{!!$course_list->sortColumn('name','Name')!!}</th>
+					<th class="col-md-2">{!!$course_list->sortColumn('description','Description')!!}</th>
+					<th class="col-md-1">{!!$course_list->sortColumn('course_type_id','Type')!!}</th>
+					<th class="col-md-1">{!!$course_list->sortColumn('code','Code')!!}</th>
+					<th class="col-md-1">{!!$course_list->sortColumn('duration','Duration')!!}</th>
+					<th class="col-md-1">{!!$course_list->sortColumn('minimum_attendee','Minimum Attendee')!!}</th>
+					<th class="col-md-1">{!!$course_list->sortColumn('maximum_attendee','Maximum Attendee')!!}</th>
+					<th class="col-md-1">Register</th>
+					<th class="col-md-1">Complete</th>
+					<th class="col-md-1">Action</th>
 				</thead>
 
 				<tbody>
@@ -69,13 +69,13 @@
 						<td data-title="duration">{{ $course->duration }}</td>
 						<td data-title="minimum_attendee">{{ $course->minimum_attendee }}</td>
 						<td data-title="maximum_attendee">{{ $course->maximum_attendee }}</td>
-						<td>{{ $course->register }}</td>
-						<td>{{ $course->complete }}</td>
+						<td data-title="register">{{ $course->register }}</td>
+						<td data-title="complete">{{ $course->complete }}</td>
 						<td class="special-td">
-							<a title='Edit' href="/tes/course/course-list/edit-questionnaire/{{$course->questionnaire_id}}" class='btn btn-default btn-xs'><i class="glyphicon glyphicon-edit"></i></a>
+							<a title='Edit Questionnaire' href="/tes/course/course-list/edit-questionnaire/{{$course->id}}" class='btn btn-default btn-xs'><i class="glyphicon glyphicon-edit"></i></a>
 
 							@if(isset($course->hasreport))
-								<a title='Report' href="/tes/course/course-list/questionnaire_report/{{$course->questionnaire_id}}" class='btn btn-default btn-xs'><i class="glyphicon glyphicon-list"></i></a>
+								<a title='Report' href="/tes/course/course-list/questionnaire_report/{{$course->id}}" class='btn btn-default btn-xs'><i class="glyphicon glyphicon-list"></i></a>
 							@endif
           	</td>
 					</tr>

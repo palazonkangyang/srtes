@@ -240,7 +240,15 @@
 		      			@endif
                                         @endif
                                         @if($appr['emailadd'] !='url')
-		      			<div class="approver-list" id="approver_{{$keynote+1}}" ><i class="glyphicon glyphicon-minus-sign minus-approver-disabled"></i><span class="numbering_method"> <strong></strong> <span></span></span> {{ $appr['loginname'] }} <small><b>{{ $appr['emailadd'] }}</b></small><input type="hidden" name="approver[]" id="approverfield_{{$keynote+1}}"  value="{{ $appr['idsrc_login'] }}"></div>
+		      			                           <div class="approver-list" id="approver_{{$keynote+1}}" >
+                                             <i class="glyphicon glyphicon-minus-sign minus-approver-disabled"></i>
+                                             <span class="numbering_method"> <strong></strong> <span></span></span>
+                                             {{ $appr['loginname'] }} <small><b>{{ $appr['emailadd'] }}</b></small>
+                                             <input type="hidden" name="approver[]" id="approverfield_{{$keynote+1}}" value="{{ $appr['idsrc_login'] }}"><br />
+                                             <span class="numbering_method"> <strong>[Replacer]</strong> <span></span></span>
+                                             {{ $appr['temp_approver_loginname'] }} <small><b>{{ $appr['temp_approver_emailadd'] }}</b></small>
+                                             <input type="hidden" name="temp_approver[]" value="{{ $appr['temp_approver_id'] }}">
+                                           </div>
                                         @else
                                         <div class="approver-list" id="approver_{{$keynote+1}}" ><i class="glyphicon glyphicon-minus-sign minus-approver-disabled"></i><span class="numbering_method"> <strong></strong> <span></span></span> {{ $appr['loginname'] }} <a target="_blank" href="{{url('/flexigroup/viewflexigroup/'.$appr['idsrc_login'])}}">click to view</a> <input type="hidden" name="approver[]" id="approverfield_{{$keynote+1}}"  value="group_{{ $appr['idsrc_login'] }}"></div>
                                         @endif
@@ -321,23 +329,23 @@
 		 	@include('forms.form_mjr')
 		@elseif($form[0]->id == 11)
 		 	@include('forms.form_pgvbf')
-                @elseif($form[0]->id == 12)
+    @elseif($form[0]->id == 12)
 		 	@include('forms.form_sorapfca')
-                @elseif($form[0]->id == 13)
+    @elseif($form[0]->id == 13)
 		 	@include('forms.form_aca')
-                @elseif($form[0]->id == 14)
-		 	@include('forms.form_pcmcf')
-                @elseif($form[0]->id == 20)
+    @elseif($form[0]->id == 14)
+			@include('forms.form_pcmcf')
+    @elseif($form[0]->id == 20)
 		 	@include('forms.form_pcmcf2')
-                @elseif($form[0]->id == 15)
-		 	@include('forms.form_mrf')
-                @elseif($form[0]->id == 16)
+    @elseif($form[0]->id == 15)
+			@include('forms.form_mrf')
+    @elseif($form[0]->id == 16)
 		 	@include('forms.form_tsw')
-                @elseif($form[0]->id == 17)
+    @elseif($form[0]->id == 17)
 		 	@include('forms.form_irfi')
-                @elseif($form[0]->id == 18)
+    @elseif($form[0]->id == 18)
 		 	@include('forms.form_coprpo')
-                @elseif($form[0]->id == 19)
+    @elseif($form[0]->id == 19)
 		 	@include('forms.form_eoq')
 
 		@else
@@ -529,6 +537,8 @@ $('form').submit(function(event) {
     var form = $(this);
     var formdata = new FormData($("form")[0]);
     var progressTrigger;
+
+    alert(JSON.stringify(formdata));
 
     $.ajaxSetup({
         headers: {

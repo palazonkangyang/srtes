@@ -27,6 +27,8 @@
         "OwenIt\\Auditing\\AuditingServiceProvider",
         "Maatwebsite\\Excel\\ExcelServiceProvider",
         "Laravel\\Socialite\\SocialiteServiceProvider",
+        "Barryvdh\\DomPDF\\ServiceProvider",
+        "LynX39\\LaraPdfMerger\\PdfMergerServiceProvider",
         "App\\Providers\\AppServiceProvider",
         "App\\Providers\\EventServiceProvider",
         "App\\Providers\\RouteServiceProvider",
@@ -46,6 +48,8 @@
         "Illuminate\\View\\ViewServiceProvider",
         "OwenIt\\Auditing\\AuditingServiceProvider",
         "Maatwebsite\\Excel\\ExcelServiceProvider",
+        "Barryvdh\\DomPDF\\ServiceProvider",
+        "LynX39\\LaraPdfMerger\\PdfMergerServiceProvider",
         "App\\Providers\\AppServiceProvider",
         "App\\Providers\\EventServiceProvider",
         "App\\Providers\\RouteServiceProvider"

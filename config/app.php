@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'url' => 'http://srtes.palazon.com',
+    'url' => 'http://localhost:8000',
 
     /*
     |--------------------------------------------------------------------------
@@ -140,6 +140,9 @@ return [
         OwenIt\Auditing\AuditingServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
+        LynX39\LaraPdfMerger\PdfMergerServiceProvider::class,
+
          /*
          * Application Service Providers...
          */
@@ -198,6 +201,8 @@ return [
         'Html'      => Collective\Html\HtmlFacade::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+        'PDF'       => Barryvdh\DomPDF\Facade::class,
+        'PdfMerger' => LynX39\LaraPdfMerger\Facades\PdfMerger::class,
       ],
 
 ];

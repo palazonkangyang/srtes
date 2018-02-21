@@ -19,7 +19,7 @@
 			<div class="panel panel-default">
 
 				<div class="panel-heading">
-					<h4>{!! $selected_questionnaire->name !!}</h4>
+					<h4>{!! $course->name !!}</h4>
 				</div><!-- end panel-heading -->
 
 				<div class="panel-body">
@@ -51,7 +51,7 @@
 					{!!Form::open(['url'=>'controller/application/view_details/{id}/feedback/','class'=>'',])!!}
 
 					{!! Form::hidden('app_id', $app_id, array("id"=>"app_id"))!!}
-					{!! Form::hidden('questionnaire_id', $questionnaire_id, array("questionnaire_id"=>"questionnaire_id"))!!}
+					{!! Form::hidden('course_id', $course_id, array("course_id"=>"course_id"))!!}
 
 						@foreach($selected_questionnaire_detail as $key=>$a)
 

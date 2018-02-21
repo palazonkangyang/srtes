@@ -17,6 +17,22 @@ class CourseType extends Model
       return $this->belongsTo('App\Http\Models\Course','course_type_id','id');
   }
 
+  public static function selectedCourseTypeList($id)
+  {
+    $selectedCourseTypeList = CourseType::find($id);
+    return $selectedCourseTypeList;
+  }
+
+  public static function nameRule()
+  {
+    return 'required|unique:tes_course_type,name|max:255';
+  }
+
+	public static function editNameRule($id)
+  {
+    return 'required|unique:tes_course_type,name,'.$id.'|max:255';
+  }
+
   public static function courseTypeList()
   {
     $prepare = CourseType::with('course')->get();

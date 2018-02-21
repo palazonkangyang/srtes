@@ -19,7 +19,7 @@
 				<div class="panel-heading">
 					<h4>Edit questionnaire form</h4>
 					<span class="pos-add-back pull-right">
-						<a href="/tes/form-management/questionnaire-list">Back to Course List</a>
+						<a href="/tes/course/course-list">Back to Course List</a>
 					</span>
 				</div><!-- end panel-heading -->
 
@@ -45,8 +45,7 @@
 					</div><!-- end alert-danger -->
 					@endif
 
-					{!!Form::open(['url'=>'/controller/tes/course/course-list/edit-questionnaire/'.$selected_course_list->questionnaire_id,'class'=>'',])!!}
-
+					{!! Form::open(['url'=>'/controller/tes/course/course-list/edit-questionnaire/'.$selected_course_list->id,'class'=>'',]) !!}
 
 					<div class="form-group">
 						<div class="">
@@ -57,15 +56,13 @@
 
 					@if(count($QuestionnaireAnswerList) != 0)
 						<div style='color:red;'>
-							Currently there is submitter on this questionnaire, changes is not allow
+							Currently there is submitter on this questionnaire, changes are not allowed.
 						</div>
 					@endif
 
 					<hr/>
 
-					<input type="hidden" name="course_id" value="{!!$selected_course_list->id!!}"/>
-					<input type="hidden" name="questionnaire_id" value="{!!$selected_course_list->questionnaire_id!!}"/>
-
+					<input type="hidden" name="course_id" value="{!!$selected_course_list->id!!}" />
 
 					<div class="form-group">
 

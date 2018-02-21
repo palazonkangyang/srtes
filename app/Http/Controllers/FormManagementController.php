@@ -102,46 +102,48 @@ class FormManagementController extends ControllerCore
       $verifier->setConnection('mysql');
       $validator = \Validator::make($request->all(), [
         'question' => \App\Http\Models\QuestionnaireDetail::questionRule(),
-       'answer_input_type' => \App\Http\Models\QuestionnaireDetail::answerInputTypeRule(),
-       'answer_input_value' => \App\Http\Models\QuestionnaireDetail::answerInputValueRule(),
+        'answer_input_type' => \App\Http\Models\QuestionnaireDetail::answerInputTypeRule(),
+        'answer_input_value' => \App\Http\Models\QuestionnaireDetail::answerInputValueRule(),
      ]);
 
      $validator->setPresenceVerifier($verifier);
 
      if ($validator->fails()) {
-       return redirect('tes/course/course-list/edit-questionnaire/'.$request->questionnaire_id)
+       return redirect('tes/course/course-list/edit-questionnaire/'.$request->course_id)
                ->withErrors($validator)
                ->withInput();
      }
 
      else {
        //Remove QuestionnaireDetail Line and Insert again
-       $QuestionnaireDetailRemove = ModelFactory::getInstance('QuestionnaireDetail')->where('questionnaire_id','=',$request->questionnaire_id)->delete();
+       $QuestionnaireDetailRemove = ModelFactory::getInstance('QuestionnaireDetail')->where('course_id','=',$request->course_id)->delete();
 
-         foreach($request->question as $index=>$row){
-           $model = ModelFactory::getInstance('QuestionnaireDetail');
+       foreach($request->question as $index=>$row)
+       {
+         $model = ModelFactory::getInstance('QuestionnaireDetail');
 
-           if($request->answer_input_type[$index] == 5)
-           {
-             $model->questionnaire_id = $request->questionnaire_id;
-             $model->question = $request->question[$index];
-             $model->answer_input_type = $request->answer_input_type[$index];
-             $model->additional_text = $request->additional_text[$index];
-             $model->description_title = $request->description_title[$index];
-             $model->description_value = $request->answer_input_value[$index];
-             $model->save();
-           }
-           else
-           {
-             $model->questionnaire_id = $request->questionnaire_id;
-             $model->question = $request->question[$index];
-             $model->answer_input_type = $request->answer_input_type[$index];
-             $model->answer_input_value = $request->answer_input_value[$index];
-             $model->save();
-           }
+         if($request->answer_input_type[$index] == 5)
+         {
+           $model->course_id = $request->course_id;
+           $model->question = $request->question[$index];
+           $model->answer_input_type = $request->answer_input_type[$index];
+           $model->additional_text = $request->additional_text[$index];
+           $model->description_title = $request->description_title[$index];
+           $model->description_value = $request->answer_input_value[$index];
+           $model->save();
          }
 
-       return redirect('tes/course/course-list/edit-questionnaire/'.$request->questionnaire_id)
+         else
+         {
+           $model->course_id = $request->course_id;
+           $model->question = $request->question[$index];
+           $model->answer_input_type = $request->answer_input_type[$index];
+           $model->answer_input_value = $request->answer_input_value[$index];
+           $model->save();
+         }
+       }
+
+       return redirect('tes/course/course-list/edit-questionnaire/'.$request->course_id)
                ->with('success', 'Successfully edited questionnaire.');
      }
     }

@@ -30,7 +30,8 @@ class ApplicationController extends ControllerCore
       DB::beginTransaction();
 
     	//remove exisiting
-      if($request->appid){
+      if($request->appid)
+      {
         $approverRemove = ModelFactory::getInstance('Approver')->where('app_id','=',$request->appid)->delete();
         $ccpersonRemove = ModelFactory::getInstance('Ccperson')->where('app_id','=',$request->appid)->delete();
         $docsRemove = ModelFactory::getInstance('Documents')->where('app_id','=',$request->appid)->delete();
@@ -309,7 +310,6 @@ class ApplicationController extends ControllerCore
           $form->payee_name = $request->payee_name;
           $form->project = $request->project;
           $form->total = $request->total;
-
           $form->save();
 
           //**start of line item insert
@@ -500,6 +500,16 @@ class ApplicationController extends ControllerCore
 
             else
             {
+              if(isset($request->temp_approver[$key]))
+              {
+                $approver->temp_approver_id = $request->temp_approver[$key];
+              }
+
+              else
+              {
+                $approver->temp_approver_id = 0;
+              }
+
               $approver->user_id = $value;
               $approver->group_id = 0;
             }
@@ -543,13 +553,25 @@ class ApplicationController extends ControllerCore
 
               else
               {
+                // Notify replacer
+                if(isset($request->temp_approver[$key]))
+                {
+                  $approverpersonToReceiveEmail = $this->selectUserBy($request->temp_approver[$key], array('loginname','emailadd'));
+                  $ccpersonToReceiveEmail = $this->selectUserBy($value, array('loginname','emailadd'));
+                }
+
                 // Notify first approver
-                $approverpersonToReceiveEmail = $this->selectUserBy($value, array('loginname','emailadd'));
+                else
+                {
+                  $approverpersonToReceiveEmail = $this->selectUserBy($value, array('loginname','emailadd'));
+                  $ccpersonToReceiveEmail = '';
+                }
 
                 if($approverpersonToReceiveEmail)
                 {
                   $setEmail = LibraryFactory::getInstance('Email');
                   $setEmail->personToReceive = $approverpersonToReceiveEmail;
+                  $setEmail->ccpersonToReceive = $ccpersonToReceiveEmail;
                   $setEmail->subject = '[SRC-AMS] '.$request->title.' [Case #'.$case_number.']'. ' - ' .$form_name->name;
                   $setEmail->layout = 'mail.mail_approver';
 
@@ -643,13 +665,16 @@ class ApplicationController extends ControllerCore
 
         // Notify applicant
         $personToReceiveEmail = $this->selectUserBy(\Auth::User()->idsrc_login, array('loginname','emailadd'));
+        $ccpersonToReceiveEmail = '';
 
         if($personToReceiveEmail)
         {
           $setEmail = LibraryFactory::getInstance('Email');
           $setEmail->personToReceive = $personToReceiveEmail;
+          $setEmail->ccpersonToReceive = $ccpersonToReceiveEmail;
           $setEmail->subject = '[SRC-AMS] '.$request->title.' [Case #'.$case_number.']'. ' - ' .$form_name->name;
           $setEmail->layout = 'mail.mail_creator';
+
           $mailData = [
             'receiver_name' => $personToReceiveEmail->loginname,
             'sender_name' => $personToReceiveEmail->loginname,
@@ -666,7 +691,8 @@ class ApplicationController extends ControllerCore
     }
   }
 
-    public function closeapp(Request $request){
+    public function closeapp(Request $request)
+    {
 
         DB::beginTransaction();
 
@@ -1541,7 +1567,8 @@ class ApplicationController extends ControllerCore
      * @param  [type] $subject  [description]
      * @return [type]           [description]
      */
-    public function send_email($layout, $data, $criteria, $subject){
+    public function send_email($layout, $data, $criteria, $subject)
+    {
         Mail::send($layout,$data,function($message) use ($criteria, $subject){
             $message->from('do-not-reply@redcross.sg', 'SRC Approval Management System');
             $message->to($criteria->emailadd)->subject($subject);
@@ -1557,7 +1584,8 @@ class ApplicationController extends ControllerCore
      * @param  [type] $subject  [description]
      * @return [type]           [description]
      */
-    public function delay_email($sec, $layout, $data, $criteria, $subject){
+    public function delay_email($sec, $layout, $data, $criteria, $subject)
+    {
         Mail::later($sec, $layout,$data,function($message) use ($criteria, $subject){
             $message->from('do-not-reply@redcross.sg', 'SRC Approval Management System');
             $message->to($criteria->emailadd)->subject($subject);
@@ -1570,17 +1598,17 @@ class ApplicationController extends ControllerCore
      * @param  [type] $select [description]
      * @return [type]         [description]
      */
-    public function selectUserBy($id, $select){
-        return ModelFactory::getInstance('User')
+    public function selectUserBy($id, $select)
+    {
+      return ModelFactory::getInstance('User')
                     ->where('idsrc_login', '=', $id)
                     ->first($select);
     }
 
+    // save questionnaire answers
     public function questionnaireStore(Request $request)
     {
       $input = array_except($request->all(), '_token');
-
-      // dd($input);
 
       $verifier = \App::make('validation.presence');
       $verifier->setConnection('mysql');
@@ -1592,17 +1620,23 @@ class ApplicationController extends ControllerCore
 
       $validator->setPresenceVerifier($verifier);
 
-      if ($validator->fails()) {
+      if ($validator->fails())
+      {
         return redirect('/application/view_details/'.$request->app_id.'/feedback')
                 ->withErrors($validator)
                 ->withInput();
       }
 
-      else {
-
+      else
+      {
         foreach($request->question as $index=>$row)
         {
           $model = ModelFactory::getInstance('QuestionnaireAnswer');
+
+          $model->app_id = $request->app_id;
+          $model->course_id = $request->course_id;
+          $model->question = $request->question[$index];
+          $model->questionnairedetail_id = $request->question[$index];
 
           if(is_array($request->answer[$index]))
           {
@@ -1614,10 +1648,6 @@ class ApplicationController extends ControllerCore
             $model->answer = $request->answer[$index];
           }
 
-          $model->question = $request->question[$index];
-          $model->questionnairedetail_id = $request->question[$index];
-          $model->app_id = $request->app_id;
-          $model->questionnaire_id = $request->questionnaire_id;
           $model->save();
         }
 
@@ -1633,10 +1663,11 @@ class ApplicationController extends ControllerCore
       }
     }
 
+    // send mail to RO
     public function sendMailToRO($input)
     {
       $result = ModelFactory::getInstance('QuestionnaireDetail')
-                    ->where('questionnaire_id','=',$input['questionnaire_id'])
+                    ->where('course_id','=',$input['course_id'])
                     ->select('question', 'answer_input_type', 'description_title')
                     ->get();
 
@@ -1652,7 +1683,7 @@ class ApplicationController extends ControllerCore
       $feedback['answers'] = $input['answer'];
       $feedback['description_title'] = $input['description_title'];
 
-      for($i = 0; $i < count($feedback['answers']); $i ++)
+      for($i = 0; $i < count($feedback['answers']); $i++)
       {
         if($feedback['answer_input_type'][$i] != 5)
         {

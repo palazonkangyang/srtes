@@ -13,17 +13,17 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        \App\Console\Commands\Inspire::class,
+      \App\Console\Commands\Inspire::class,
     	\App\Console\Commands\MakePresenter::class,
     	\App\Console\Commands\MakeWebService::class,
     	\App\Console\Commands\MakeController::class,
     	\App\Console\Commands\MakeFactory::class,
     	\App\Console\Commands\MakeLibrary::class,
-        \App\Console\Commands\MakeInterface::class,
+      \App\Console\Commands\MakeInterface::class,
     	\App\Console\Commands\MakeType::class,
-        \App\Console\Commands\MakeModel::class,        
+      \App\Console\Commands\MakeModel::class,
     	\App\Console\Commands\RedCrossNotify::class,
-        \App\Console\Commands\PaymentProcessingNotify::class,
+      \App\Console\Commands\PaymentProcessingNotify::class,
     ];
 
     /**
@@ -36,9 +36,10 @@ class Kernel extends ConsoleKernel
     {
       //  $schedule->command('redcross:notify')
       //            ->daily()
-        //         ->sendOutputTo(storage_path('logs/redcross.log')) ;
-                $schedule->command('paymentprocessing:notify')
-                ->daily()
-                 ->sendOutputTo(storage_path('logs/paymentprocessing.log')) ;
+      //         ->sendOutputTo(storage_path('logs/redcross.log')) ;
+
+      $schedule->command('paymentprocessing:notify')
+               ->daily()
+               ->sendOutputTo(storage_path('logs/paymentprocessing.log')) ;
     }
 }

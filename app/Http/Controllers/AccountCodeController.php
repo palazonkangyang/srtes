@@ -22,7 +22,7 @@ class AccountCodeController extends ControllerCore
 
         $validator = \Validator::make($request->all(), [
             'name' => 'required|Size:6|unique:ams_accountcode,name'
-          
+
         ]);
 
 
@@ -35,14 +35,14 @@ class AccountCodeController extends ControllerCore
         } else {
         // save accountcode info
             $accountcode = ModelFactory::getInstance('AccountCode');
-            
+
             $accountcode->name = $request->name;
             $accountcode->description = $request->description;
             $accountcode->is3alpha = $request->is3alpha;
             $accountcode->example = $request->example;
+
        
-       
-            
+
             if($accountcode->save()){
                  return redirect('accountcode/createaccountcode')
                         ->with('success', 'Successfully created account code.');
@@ -62,7 +62,7 @@ class AccountCodeController extends ControllerCore
 
         $validator = \Validator::make($request->all(), [
             'name' => 'required|Size:6'
-           
+
         ]);
 
 
@@ -77,12 +77,12 @@ class AccountCodeController extends ControllerCore
             // save accountcode info
             $accountcode = ModelFactory::getInstance('AccountCode')
                          ->find($request->id);
-            
+
             $accountcode->name = $request->name;
             $accountcode->description = $request->description;
             $accountcode->is3alpha = $request->is3alpha;
             $accountcode->example = $request->example;
-             
+
             if($accountcode->save()){
                  return redirect('accountcode/editaccountcode/'.$request->id)
                         ->with('success', 'Successfully updated account code.');
@@ -103,7 +103,7 @@ class AccountCodeController extends ControllerCore
                 $accountcode = ModelFactory::getInstance('AccountCode')
                         ->where('id','=',$id)
                         ->delete();
-                
+
                 return redirect('accountcode')
                         ->with('success', 'Successfully deleted account code #'.$id);
 

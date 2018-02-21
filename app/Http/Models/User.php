@@ -7,16 +7,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Core\ModelCore;
 use OwenIt\Auditing\AuditingTrait;
 class User extends ModelCore {
- use AuditingTrait;
+use AuditingTrait;
 
-     public static $logCustomMessage = '{user.loginname|Anonymous} login   {elapsed_time}'; // with default value
- 
+  public static $logCustomMessage = '{user.loginname|Anonymous} login   {elapsed_time}'; // with default value
+
 	protected $connection = 'mysql2';
-	
+
 	protected $table = 'users';
 
 	protected $primaryKey = 'idsrc_login';
-	
+
 	public $timestamps = true;
 
 	/**
@@ -44,5 +44,4 @@ class User extends ModelCore {
 	{
 		return $this->hasMany('Application', 'created_id');
 	}
-
 }

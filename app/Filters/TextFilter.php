@@ -296,6 +296,21 @@ class TextFilter extends FilterCore
 		});
 	}
 
+	public function searchCourseType($model, $values='')
+	{
+		if(!$values)
+		{
+			$values = $this->getValue();
+		}
+
+		$table = ($model instanceof Model) ? $model->getTable() : $model->getModel()->getTable();
+
+		return $model->whereNested(function($query) use ($values, $table) {
+			$query->where($table.'.id','like','%'.$values.'%', 'or');
+			$query->Orwhere($table.'.name','like','%'.$values.'%', 'or');
+		});
+	}
+
 	/**
 	 * Query scope for filtering data by buyer fullname
 	 * @param unknown $model

@@ -35,7 +35,7 @@ body{
 	padding:0;
 	background: #eee;
 	border-bottom:1px solid #ccc;
-	padding-bottom: 20px
+	padding-bottom: 20px;
 }
 
 .wrap-content{
@@ -65,8 +65,8 @@ th .glyphicon{
     display: none !important;
 }
 
-div.history { 
-  /* page-break-before: always; 
+div.history {
+  /* page-break-before: always;
    page-break-inside: avoid;*/
    float:none;
    position: relative;

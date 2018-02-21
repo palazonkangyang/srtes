@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Core\ModelCore;
 
-
 class QuestionnaireDetail extends Model
 {
   protected $table = 'tes_questionnaire_detail';
@@ -14,7 +13,7 @@ class QuestionnaireDetail extends Model
 
   public static function selectedQuestionnaireDetail($id)
   {
-    $result = QuestionnaireDetail::where('questionnaire_id',"=",$id)->get();
+    $result = QuestionnaireDetail::where('course_id',"=",$id)->get();
     return $result;
   }
 

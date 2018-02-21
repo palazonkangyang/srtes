@@ -158,6 +158,7 @@ img {
     background-repeat: no-repeat;
     background-size: 32px 32px;
 }
+
 .blog:before { background-image: url(../img/blog.png); }
 .forum:before { background-image: url(../img/forum.png); }
 .knowledge-base:before { background-image: url(../img/knowledge-base.png); }

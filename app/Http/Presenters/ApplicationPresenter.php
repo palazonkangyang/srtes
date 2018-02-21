@@ -10,10 +10,12 @@ use App\Filters\SelectFilter;
 use Response;
 use Validator;
 use DB;
+use PDF;
+use Carbon\Carbon;
+use PdfMerger;
 use Illuminate\Support\Facades\Auth;
 class ApplicationPresenter extends PresenterCore
 {
-
 	/**
 	 * Application Process
 	 *
@@ -34,7 +36,7 @@ class ApplicationPresenter extends PresenterCore
       $HRdepartment = ModelFactory::getInstance('Department')->where('idsrc_departments','9')->get();
       $RCHDdepartment = ModelFactory::getInstance('Department')->where('idsrc_departments','5')->get();
 
-			// dd($form->toArray());
+			$designation = ModelFactory::getInstance('Designation')->select('id', 'name')->orderBy('name', 'asc')->get();
 
       $DSG = ModelFactory::getInstance('TypePerson')->where('id','1')->get();
 			$SecGen = ModelFactory::getInstance('TypePerson')->where('id','2')->get();
@@ -45,6 +47,7 @@ class ApplicationPresenter extends PresenterCore
 			$this->view->form = $form;
 			$this->view->urgency = $urgency;
 			$this->view->department = $department;
+			$this->view->designation = $designation;
 
 			/**
 			 * Get approvers in form with conditions
@@ -240,9 +243,32 @@ class ApplicationPresenter extends PresenterCore
                                   			->where('idsrc_login','=',$listitem)
                                   			->first();
 
-              $approverlist_mod[$key]['emailadd']=$approverlistindividual->emailadd;
-              $approverlist_mod[$key]['loginname']=$approverlistindividual->loginname;
-              $approverlist_mod[$key]['idsrc_login']=$approverlistindividual->idsrc_login;
+              $approverlist_mod[$key]['emailadd'] = $approverlistindividual->emailadd;
+              $approverlist_mod[$key]['loginname'] = $approverlistindividual->loginname;
+              $approverlist_mod[$key]['idsrc_login'] = $approverlistindividual->idsrc_login;
+							$approverlist_mod[$key]['temp_approver_id'] = $approverlistindividual->temp_approver_id;
+
+							// append temporary approver lists
+							for($i = 0; $i < count($approverlist_mod); $i++)
+							{
+								if($approverlist_mod[$i]['temp_approver_id'] != null)
+								{
+									$tempapproverlist = ModelFactory::getInstance("User")
+																			->where('idsrc_login', $approverlist_mod[$i]['temp_approver_id'])
+						                          ->select('loginname', 'emailadd')
+						                          ->get();
+
+									$approverlist_mod[$i]['temp_approver_loginname'] = $tempapproverlist[0]->loginname;
+									$approverlist_mod[$i]['temp_approver_emailadd'] = $tempapproverlist[0]->emailadd;
+								}
+
+								else
+								{
+									$approverlist_mod[$i]->temp_approver_idsrc_login = NULL;
+									$approverlist_mod[$i]->temp_approver_loginname = NULL;
+									$approverlist_mod[$i]->temp_approver_emailadd = NULL;
+								}
+							}
             }
 
 						else
@@ -594,8 +620,10 @@ class ApplicationPresenter extends PresenterCore
   {
     $user_id = \Auth::User()->idsrc_login;
 
-    $select = ['idsrc_login','loginname','emailadd'];
+    $select = ['idsrc_login','loginname','emailadd', 'inoffice', 'temp_approver_id'];
     $filter = $this->request->get('query');
+
+		// $filter = "Tan";
 
     if($this->request->get('with'))
 		{
@@ -611,7 +639,31 @@ class ApplicationPresenter extends PresenterCore
               	->where('idsrc_login', '!=', $user_id)
                 ->where('roleid', '!=', -1)
                 ->where('isactive', '=', 1)
-              	->where('loginname','like', '%'.$filter.'%')->get($select)->toArray();
+              	->where('loginname','like', '%'.$filter.'%')
+								->get($select)
+								->toArray();
+
+			for($i = 0; $i < count($users); $i++)
+			{
+				if($users[$i]['inoffice'] == 1)
+				{
+					$temp_approver = ModelFactory::getInstance('User')
+														->where('idsrc_login', '=', $users[$i]['temp_approver_id'])
+						              	->get($select)
+														->toArray();
+
+					$users[$i]['temp_approver_idsrc_login'] = $temp_approver[0]['idsrc_login'];
+					$users[$i]['temp_approver_loginname'] = $temp_approver[0]['loginname'];
+					$users[$i]['temp_approver_emailadd'] = $temp_approver[0]['emailadd'];
+				}
+
+				else
+				{
+					$users[$i]['temp_approver_idsrc_login'] = null;
+					$users[$i]['temp_approver_loginname'] = null;
+					$users[$i]['temp_approver_emailadd'] = null;
+				}
+			}
     }
 
 		$usersdata = $users;
@@ -619,9 +671,10 @@ class ApplicationPresenter extends PresenterCore
 
 		if($usersdata)
 		{
-            foreach ($usersdata as $key => $value) {
-                $autocomplete['suggestions'][] = ['value'=>$value['loginname'], 'data' => [ 'id'=> $value['idsrc_login'], 'name'=>$value['loginname'], 'email'=>$value['emailadd']]];
-            }
+      foreach ($usersdata as $key => $value)
+			{
+        $autocomplete['suggestions'][] = ['value'=>$value['loginname'], 'data' => [ 'id'=> $value['idsrc_login'], 'name'=>$value['loginname'], 'email'=>$value['emailadd']], 'temp_approver_data' => [ 'temp_approver_id'=> $value['temp_approver_idsrc_login'], 'temp_approver_name'=>$value['temp_approver_loginname'], 'temp_approver_email'=>$value['temp_approver_emailadd']]];
+      }
   	}
 
 		else
@@ -773,6 +826,7 @@ class ApplicationPresenter extends PresenterCore
 						            ->where('ams_approver_person.forward', '=', 1)
 						           	->whereNotIn('ams_applications.status', [ 2, 3 ])
 						            ->where('ams_applications.drafts', '=', 0)
+												->where('ams_approver_person.temp_approver_id', '=', 0)
 						           	->orWhere('ams_applications.created_id', '=', $user_id)
 						            ->distinct()
 						            ->whereNotIn('ams_applications.status', [0, 1, 2, 3, 4, 6, 7])
@@ -787,6 +841,78 @@ class ApplicationPresenter extends PresenterCore
 
       return $this->view('application.pending');
     }
+
+		public function outOfOfficePendingLists()
+		{
+			$user_id = \Auth::User()->idsrc_login;
+      $role = \Auth::User()->roleid;
+
+			$select = [
+        'srcusers.users.idsrc_login as id',
+        'srcusers.users.loginname as name',
+        'srcusers.users.emailadd as email',
+				'u2.loginname as temp_approver_name',
+        'u2.emailadd as temp_approver_email',
+        'ams_applications.id',
+        'ams_applications.department',
+        'ams_applications.type_request',
+        'ams_applications.title',
+        'ams_applications.urgency',
+        'ams_applications.case_number',
+        'ams_applications.created_at',
+        'ams_applications.status',
+        'ams_forms.name as form_name'
+      ];
+
+			// 0 for group
+      $firstprepare = ModelFactory::getInstance('Approver')
+					         		->leftjoin('ams_applications', 'ams_applications.id', '=', 'ams_approver_person.app_id')
+					            ->leftjoin('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_applications.created_id')
+											->leftjoin('srcusers.users as u2', 'u2.idsrc_login', '=', 'ams_approver_person.temp_approver_id')
+					            ->leftjoin('ams_forms', 'ams_forms.id', '=', 'ams_applications.type_form')
+					            ->leftjoin('ams_flexigroup', 'ams_flexigroup.id', '=', 'ams_approver_person.group_id')
+					            ->leftjoin('ams_flexigroup_person', 'ams_flexigroup_person.group_id', '=', 'ams_flexigroup.id')
+					            ->where('ams_approver_person.user_id', '=', 0)
+					            ->where('ams_approver_person.read', '=', 0)
+					            ->where('ams_approver_person.forward', '=', 1)
+					            ->where('ams_approver_person.group_id', '>', 0)
+					            ->whereNotIn('ams_applications.status', [ 2, 3 ])
+					            ->where('ams_applications.drafts', '=', 0)
+					            ->where('ams_flexigroup_person.user_id', '=', $user_id)
+					            ->orWhere('ams_applications.created_id', '=', $user_id)
+					            ->distinct()
+					            ->whereNotIn( 'ams_applications.status', [0, 1, 2, 3, 4, 7])
+					            ->select($select);
+
+			$secondprepare = ModelFactory::getInstance('Approver')
+						            ->leftjoin('ams_applications', 'ams_applications.id', '=', 'ams_approver_person.app_id')
+						            ->leftjoin('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_applications.created_id')
+												->leftjoin('srcusers.users as u2', 'u2.idsrc_login', '=', 'ams_approver_person.temp_approver_id')
+						            ->leftjoin('ams_forms', 'ams_forms.id', '=', 'ams_applications.type_form')
+						            ->leftjoin('ams_flexigroup', 'ams_flexigroup.id', '=', 'ams_approver_person.group_id')
+						            ->leftjoin('ams_flexigroup_person', 'ams_flexigroup_person.group_id', '=', 'ams_flexigroup.id')
+						            ->where('ams_approver_person.user_id', '=', $user_id)
+												->where('ams_approver_person.temp_approver_id', '!=', 0)
+						            ->where('ams_approver_person.read', '=', 0)
+						            ->where('ams_approver_person.forward', '=', 1)
+						           	->whereNotIn('ams_applications.status', [ 2, 3 ])
+						            ->where('ams_applications.drafts', '=', 0)
+						           	->orWhere('ams_applications.created_id', '=', $user_id)
+						            ->distinct()
+						            ->whereNotIn('ams_applications.status', [0, 1, 2, 3, 4, 6, 7])
+						            ->select($select);
+
+			// dd($secondprepare->get()->toArray());
+
+			$prepare = $firstprepare->unionAll($secondprepare)->get();
+
+      //add search filter
+      $this->view->pendinglist = $prepare;
+
+			$this->view->title = 'Out of Office - Pending List';
+
+      return $this->view('application.outofoffice_pending_lists');
+		}
 
 		public function pendingStatus(Request $request)
 		{
@@ -1189,570 +1315,664 @@ class ApplicationPresenter extends PresenterCore
       return $this->view('application.reportsAdmin');
     }
 
-    public function viewDetails($id)
-    {
-        $select = [
-            'srcusers.users.idsrc_login as creator_id',
-            'srcusers.users.loginname as creator_name',
-            'srcusers.users.emailadd as creator_email',
-            'ams_applications.id',
-            'ams_applications.status',
-            'ams_applications.close_remarks',
-            'ams_applications.department',
-            'ams_applications.type_request',
-            'ams_applications.type_form',
-            'ams_applications.title',
-            'ams_applications.urgency',
-            'ams_applications.case_number',
-            'ams_applications.request_details',
-            'ams_applications.created_at',
-            'ams_applications.updated_at',
-            'ams_applications.status',
-            'ams_applications.pp_status',
-            'ams_applications.user_status as user_status'
-        ];
+	public function viewDetails(Request $request, $id)
+  {
+    $select = [
+      'srcusers.users.idsrc_login as creator_id',
+      'srcusers.users.loginname as creator_name',
+      'srcusers.users.emailadd as creator_email',
+      'ams_applications.id',
+      'ams_applications.status',
+      'ams_applications.close_remarks',
+      'ams_applications.department',
+      'ams_applications.type_request',
+      'ams_applications.type_form',
+      'ams_applications.title',
+      'ams_applications.urgency',
+      'ams_applications.case_number',
+      'ams_applications.request_details',
+      'ams_applications.created_at',
+      'ams_applications.updated_at',
+      'ams_applications.status',
+      'ams_applications.pp_status',
+      'ams_applications.user_status as user_status'
+    ];
 
-        $select_idonly = [
-            'ams_approver_person.id as id'
-        ];
+    $select_idonly = [
+      'ams_approver_person.id as id'
+    ];
 
-        $select_doc = [
-            'ams_documents.id as document_id',
-            'ams_documents.name as document_name',
-            'ams_documents.link as document_link',
-            'ams_documents.app_id as app_id',
-        ];
+    $select_doc = [
+      'ams_documents.id as document_id',
+      'ams_documents.name as document_name',
+      'ams_documents.link as document_link',
+      'ams_documents.app_id as app_id',
+    ];
 
-         $select_files = [
-            'ams_files.id as files_id',
-            'ams_files.filename as files_filename',
-            'ams_files.mimes as files_mimes',
-            'ams_files.file_url as files_fileurl',
-            'ams_files.app_id as app_id',
-        ];
+    $select_files = [
+      'ams_files.id as files_id',
+      'ams_files.filename as files_filename',
+      'ams_files.mimes as files_mimes',
+      'ams_files.file_url as files_fileurl',
+      'ams_files.app_id as app_id',
+    ];
 
-        //select for list of cc and approver
-        $select_approver = [
-            'srcusers.users.idsrc_login as approver_user_id',
-            'srcusers.users.loginname as approver_name',
-            'srcusers.users.emailadd as approver_email',
-            'ams_approver_person.id as approver_id',
-            'ams_approver_person.group_id as group_id',
-            'ams_approver_person.remarks as approver_remarks',
-            'ams_approver_person.status as approver_status',
-            'ams_approver_person.case_status as approver_case_status',
-            'ams_approver_person.updated_at as approver_date',
-            'ams_flexigroup.name as group_name'
-        ];
+    //select for list of cc and approver
+    $select_approver = [
+      'srcusers.users.idsrc_login as approver_user_id',
+      'srcusers.users.loginname as approver_name',
+      'srcusers.users.emailadd as approver_email',
+      'ams_approver_person.id as approver_id',
+      'ams_approver_person.group_id as group_id',
+      'ams_approver_person.remarks as approver_remarks',
+      'ams_approver_person.status as approver_status',
+      'ams_approver_person.case_status as approver_case_status',
+      'ams_approver_person.updated_at as approver_date',
+      'ams_flexigroup.name as group_name'
+    ];
 
-        $select_cc = [
-            'srcusers.users.idsrc_login as ccperson_user_id',
-            'srcusers.users.loginname as ccperson_name',
-            'srcusers.users.emailadd as ccperson_email',
-            'ams_cc_person.id as ccperson_id',
-            'ams_cc_person.remarks as ccperson_remarks',
-            'ams_cc_person.status as ccperson_status',
-            'ams_cc_person.case_status as ccperson_case_status',
-            'ams_cc_person.updated_at as ccperson_date'
-        ];
+    $select_cc = [
+      'srcusers.users.idsrc_login as ccperson_user_id',
+      'srcusers.users.loginname as ccperson_name',
+      'srcusers.users.emailadd as ccperson_email',
+      'ams_cc_person.id as ccperson_id',
+      'ams_cc_person.remarks as ccperson_remarks',
+      'ams_cc_person.status as ccperson_status',
+      'ams_cc_person.case_status as ccperson_case_status',
+      'ams_cc_person.updated_at as ccperson_date'
+    ];
 
-        //select for history
-        $select_recommend_history = [
-            'srcusers.users.idsrc_login as user_id',
-            'srcusers.users.loginname as name',
-            'srcusers.users.emailadd as email',
-            'ams_recommend.id as id',
-            'ams_recommend.remarks as remarks',
-            'ams_recommend.user_status as status',
-            'ams_recommend.case_status as case_status',
-            'ams_recommend.recommend_user_id as recommend_user_id',
-            'ams_recommend.updated_at as date'
-        ];
+    //select for history
+    $select_recommend_history = [
+      'srcusers.users.idsrc_login as user_id',
+      'srcusers.users.loginname as name',
+      'srcusers.users.emailadd as email',
+      'ams_recommend.id as id',
+      'ams_recommend.remarks as remarks',
+      'ams_recommend.user_status as status',
+      'ams_recommend.case_status as case_status',
+      'ams_recommend.recommend_user_id as recommend_user_id',
+      'ams_recommend.updated_at as date'
+    ];
 
-        $select_approver_history = [
-            'srcusers.users.idsrc_login as user_id',
-            'srcusers.users.loginname as name',
-            'srcusers.users.emailadd as email',
-            'ams_approver_person.id as id',
-             'ams_approver_person.group_id as group_id',
-            'ams_approver_person.position as position',
-            'ams_approver_person.remarks as remarks',
-            'ams_approver_person.status as status',
-            'ams_approver_person.case_status as case_status',
-            'ams_approver_person.updated_at as date'
-        ];
+    $select_approver_history = [
+      'srcusers.users.idsrc_login as user_id',
+      'srcusers.users.loginname as name',
+      'srcusers.users.emailadd as email',
+      'ams_approver_person.id as id',
+      'ams_approver_person.group_id as group_id',
+      'ams_approver_person.position as position',
+      'ams_approver_person.remarks as remarks',
+      'ams_approver_person.status as status',
+      'ams_approver_person.case_status as case_status',
+      'ams_approver_person.updated_at as date'
+    ];
 
-        $select_cc_history = [
-            'srcusers.users.idsrc_login as id',
-            'srcusers.users.loginname as name',
-            'srcusers.users.emailadd as email',
-            'ams_cc_person.id as id',
-            'ams_cc_person.remarks as remarks',
-            'ams_cc_person.status as status',
-            'ams_cc_person.case_status as case_status',
-            'ams_cc_person.updated_at as date'
-        ];
+    $select_cc_history = [
+      'srcusers.users.idsrc_login as id',
+      'srcusers.users.loginname as name',
+      'srcusers.users.emailadd as email',
+      'ams_cc_person.id as id',
+      'ams_cc_person.remarks as remarks',
+      'ams_cc_person.status as status',
+      'ams_cc_person.case_status as case_status',
+      'ams_cc_person.updated_at as date'
+    ];
 
-        //select for only approver and cc
-        $select_only_approver = [
-            'ams_approver_person.id as approver_id',
-            'ams_approver_person.remarks as approver_remarks',
-            'ams_approver_person.status as approver_status',
-            'ams_approver_person.position as approver_position',
-            'ams_approver_person.case_status as approver_case_status',
-            'ams_approver_person.read as approver_read',
-            'ams_approver_person.updated_at as approver_date'
-        ];
+    //select for only approver and cc
+    $select_only_approver = [
+      'ams_approver_person.id as approver_id',
+      'ams_approver_person.remarks as approver_remarks',
+      'ams_approver_person.status as approver_status',
+      'ams_approver_person.position as approver_position',
+      'ams_approver_person.case_status as approver_case_status',
+      'ams_approver_person.read as approver_read',
+      'ams_approver_person.updated_at as approver_date'
+    ];
 
-        $select_only_cc = [
-            'ams_cc_person.id as ccperson_id',
-            'ams_cc_person.remarks as ccperson_remarks',
-            'ams_cc_person.status as ccperson_status',
-            'ams_cc_person.case_status as ccperson_case_status',
-            'ams_cc_person.updated_at as ccperson_date'
-        ];
+    $select_only_cc = [
+      'ams_cc_person.id as ccperson_id',
+      'ams_cc_person.remarks as ccperson_remarks',
+      'ams_cc_person.status as ccperson_status',
+      'ams_cc_person.case_status as ccperson_case_status',
+      'ams_cc_person.updated_at as ccperson_date'
+		];
 
-        $user_id = \Auth::User()->idsrc_login;
-        $role = \Auth::User()->roleid;
+    $user_id = \Auth::User()->idsrc_login;
+    $role = \Auth::User()->roleid;
 
-        $checkapp = ModelFactory::getInstance('Application')
-                    ->where('ams_applications.id', '=', $id)
-                    ->where('ams_applications.created_id', '=', $user_id)
-                    ->first();
+    $checkapp = ModelFactory::getInstance('Application')
+                ->where('ams_applications.id', '=', $id)
+                ->where('ams_applications.created_id', '=', $user_id)
+                ->first();
 
-        if( !is_null($checkapp) ){
+    if( !is_null($checkapp) )
+		{
+    	//Creator
+      $this->view->action_url =  'closeapp';
+      $this->view->mark = 'creator';
+      $this->view->title_page = 'Case Closing';
 
-        //Creator
-        $this->view->action_url =  'closeapp';
-        $this->view->mark = 'creator';
-        $this->view->title_page = 'Case Closing';
-
-        $app = ModelFactory::getInstance('Application')
+      $app = ModelFactory::getInstance('Application')
             ->join('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_applications.created_id')
             ->where('ams_applications.created_id', '=', $user_id)
             ->where('ams_applications.id', '=', $id)
             ->get($select);
+      }
 
-        } else {
+			else
+			{
+        $checkapprover = ModelFactory::getInstance('Approver')
+				                 ->where('ams_approver_person.app_id', '=', $id)
+				                 ->where('ams_approver_person.user_id', '=', $user_id)
+				                 ->first();
 
-            $checkapprover = ModelFactory::getInstance('Approver')
-					                    ->where('ams_approver_person.app_id', '=', $id)
-					                    ->where('ams_approver_person.user_id', '=', $user_id)
-					                    ->first();
+        $checkgroupapprover = ModelFactory::getInstance('Approver')
+							             		->leftjoin('ams_flexigroup', 'ams_flexigroup.id', '=', 'ams_approver_person.group_id')
+											        ->leftjoin('ams_flexigroup_person', 'ams_flexigroup_person.group_id', '=', 'ams_flexigroup.id')
+											        ->where('ams_approver_person.group_id', '>', 0)
+											        ->where('ams_flexigroup_person.user_id', '=', $user_id)
+											        ->where('ams_approver_person.app_id', '=', $id)
+											        ->first($select_idonly);
 
-             $checkgroupapprover = ModelFactory::getInstance('Approver')
-											             	->leftjoin('ams_flexigroup', 'ams_flexigroup.id', '=', 'ams_approver_person.group_id')
-											            	->leftjoin('ams_flexigroup_person', 'ams_flexigroup_person.group_id', '=', 'ams_flexigroup.id')
-											             	->where('ams_approver_person.group_id', '>', 0)
-											            	->where('ams_flexigroup_person.user_id', '=', $user_id)
-											            	->where('ams_approver_person.app_id', '=', $id)
-											            	->first($select_idonly);
-
-              $checkfinalapprover = ModelFactory::getInstance('Approver')
-							                    	->where('ams_approver_person.app_id', '=', $id)
-							                     	->orderby('position','DESC')
-							                    	->first();
-
-
-            if( !is_null($checkapprover) || !is_null($checkgroupapprover) ){
-
-            //check approver
-                 if( !is_null($checkapprover))
-                 {
-                 $this->view->currentapprover= $checkapprover->id;
-                 }elseif (!is_null($checkgroupapprover))
-                 {
-                 $this->view->currentapprover= $checkgroupapprover->id;
-
-                 }
-                $this->view->finalapprover= $checkfinalapprover->id;
-            $this->view->action_url =  'approveapp';
-            $this->view->mark = 'approver';
-            $this->view->title_page = 'Application Processing';
-
-            $app = ModelFactory::getInstance('Application')
-		                ->join('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_applications.created_id')
-		                ->where('ams_applications.id', '=', $id)
-		                ->get($select);
-
-            $get_approver = ModelFactory::getInstance('Approver')
-				                		->where('ams_approver_person.app_id', '=', $id)
-				                    ->where('ams_approver_person.user_id', '=', $user_id)
-				                		->first($select_only_approver);
-
-              $get_groupapprover = ModelFactory::getInstance('Approver')
-											             	->leftjoin('ams_flexigroup', 'ams_flexigroup.id', '=', 'ams_approver_person.group_id')
-											            	->leftjoin('ams_flexigroup_person', 'ams_flexigroup_person.group_id', '=', 'ams_flexigroup.id')
-											             	->where('ams_approver_person.group_id', '>', 0)
-											            	->where('ams_flexigroup_person.user_id', '=', $user_id)
-											            	->where('ams_approver_person.app_id', '=', $id)
-											            	->first($select_only_approver);
-
-                    if( !is_null($get_approver))
-                 {
-
-                 $this->view->one_approver=  $get_approver;
-                 }elseif (!is_null($get_groupapprover))
-                 {
-                $this->view->one_approver= $get_groupapprover;
-
-                 }
+        $checkfinalapprover = ModelFactory::getInstance('Approver')
+				                    	->where('ams_approver_person.app_id', '=', $id)
+				                     	->orderby('position','DESC')
+				                    	->first();
 
 
+        if( !is_null($checkapprover) || !is_null($checkgroupapprover) )
+				{
+          //check approver
+          if( !is_null($checkapprover))
+          {
+            $this->view->currentapprover = $checkapprover->id;
+          }
 
+					elseif (!is_null($checkgroupapprover))
+          {
+            $this->view->currentapprover = $checkgroupapprover->id;
+          }
 
-            } else {
-                //check ccperson
-                 $checkccperson = ModelFactory::getInstance('Ccperson')
-                    ->where('ams_cc_person.app_id', '=', $id)
-                    ->where('ams_cc_person.user_id', '=', $user_id)
-                    ->first();
+					$this->view->finalapprover = $checkfinalapprover->id;
+          $this->view->action_url = 'approveapp';
+          $this->view->mark = 'approver';
+          $this->view->title_page = 'Application Processing';
 
-                    if( !is_null($checkccperson) ){
-                    //Ccperson
+          $app = ModelFactory::getInstance('Application')
+		             ->join('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_applications.created_id')
+		             ->where('ams_applications.id', '=', $id)
+		             ->get($select);
 
-                    $this->view->action_url =  'commentapp';
-                    $this->view->mark = 'ccperson';
-                    $this->view->title_page = 'Cc Person Make Comment';
+          $get_approver = ModelFactory::getInstance('Approver')
+				              		->where('ams_approver_person.app_id', '=', $id)
+				                  ->where('ams_approver_person.user_id', '=', $user_id)
+				              		->first($select_only_approver);
 
-                    $app = ModelFactory::getInstance('Application')
-                        ->join('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_applications.created_id')
-                        ->where('ams_applications.id', '=', $id)
-                        ->get($select);
+          $get_groupapprover = ModelFactory::getInstance('Approver')
+								             		->leftjoin('ams_flexigroup', 'ams_flexigroup.id', '=', 'ams_approver_person.group_id')
+											          ->leftjoin('ams_flexigroup_person', 'ams_flexigroup_person.group_id', '=', 'ams_flexigroup.id')
+											          ->where('ams_approver_person.group_id', '>', 0)
+											          ->where('ams_flexigroup_person.user_id', '=', $user_id)
+											          ->where('ams_approver_person.app_id', '=', $id)
+											          ->first($select_only_approver);
 
-                    $get_ccperson = ModelFactory::getInstance('Ccperson')
-                        ->where('ams_cc_person.app_id', '=', $id)
-                        ->where('ams_cc_person.user_id', '=', $user_id)
-                        ->get($select_only_cc);
+          if( !is_null($get_approver))
+          {
+            $this->view->one_approver = $get_approver;
+          }
 
-                    $this->view->one_ccperson =  $get_ccperson;
-                    }
-
-                    else {
-
-                        //check recommend
-                        $checkrecommend = ModelFactory::getInstance('Recommend')
-                        ->where('ams_recommend.app_id', '=', $id)
-                        ->where('ams_recommend.user_id', '=', $user_id)
-                        ->first();
-
-                        if(!is_null($checkrecommend)){
-                            $this->view->action_url =  '';
-                            $this->view->mark = '';
-                            $this->view->title_page = 'View Details';
-
-                             $app = ModelFactory::getInstance('Application')
-                            ->join('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_applications.created_id')
-                            ->where('ams_applications.id', '=', $id)
-                            ->get($select);
-
-                        }
-                        else {
-                            return redirect('/dashboard');
-                        }
-                    }
-            }
-
+					elseif (!is_null($get_groupapprover))
+          {
+            $this->view->one_approver = $get_groupapprover;
+          }
         }
-        /**
-         * forms conditions
-         * @var [type]
-         */
-            $application_form_name = ModelFactory::getInstance('Forms')
-                    ->where('id',$app[0]->type_form)
-                    ->first(['name']);
-            $application_form_message = ModelFactory::getInstance('Forms')
-                    ->where('id',$app[0]->type_form)
-                    ->first(['message']);
 
-            if($app[0]->type_form == 2)
-            {
-                $form = ModelFactory::getInstance('FormRcp')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-            }
-            else if($app[0]->type_form == 3)
-            {
-                $form = ModelFactory::getInstance('FormRca')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-            }
-            else if($app[0]->type_form == 4)
-            {
-                $form = ModelFactory::getInstance('FormArea')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-            }
-            else if($app[0]->type_form == 5)
-            {
-                $form = ModelFactory::getInstance('FormArge')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-            }
-            else if($app[0]->type_form == 6)
-            {
-                $form = ModelFactory::getInstance('FormCdsaa')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-            }
-             else if($app[0]->type_form == 7)
-            {
-                $form = ModelFactory::getInstance('FormRdra')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-            }
-             else if($app[0]->type_form == 8)
-            {
-                $form = ModelFactory::getInstance('FormAtac')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-            }
-             else if($app[0]->type_form == 9)
-            {
-                $form = ModelFactory::getInstance('FormHphcrf')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-            }
-             else if($app[0]->type_form == 10)
-            {
-                $form = ModelFactory::getInstance('FormMjr')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-            }
-            else if($app[0]->type_form == 11)
-            {
-                $form = ModelFactory::getInstance('FormPgvbf')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-            }
-            else if($app[0]->type_form == 12)
-            {
-                $form = ModelFactory::getInstance('FormSorapfca')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
+				else
+				{
+          //check ccperson
+          $checkccperson = ModelFactory::getInstance('Ccperson')
+                						->where('ams_cc_person.app_id', '=', $id)
+				                    ->where('ams_cc_person.user_id', '=', $user_id)
+				                    ->first();
 
-                 $formlineitem = ModelFactory::getInstance('LineItemSorapfca')
-                        ->where('app_id',$app[0]->id)
-                        ->get();
+          if( !is_null($checkccperson) )
+					{
+            //Ccperson
+            $this->view->action_url = 'commentapp';
+            $this->view->mark = 'ccperson';
+            $this->view->title_page = 'Cc Person Make Comment';
 
-                 $this->view->formlineitem =  $formlineitem;
+          	$app = ModelFactory::getInstance('Application')
+                  	->join('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_applications.created_id')
+                    ->where('ams_applications.id', '=', $id)
+                    ->get($select);
+
+            $get_ccperson = ModelFactory::getInstance('Ccperson')
+		                        ->where('ams_cc_person.app_id', '=', $id)
+		                        ->where('ams_cc_person.user_id', '=', $user_id)
+		                        ->get($select_only_cc);
+
+            $this->view->one_ccperson = $get_ccperson;
+          }
+
+          else
+					{
+						//check recommend
+            $checkrecommend = ModelFactory::getInstance('Recommend')
+			                        ->where('ams_recommend.app_id', '=', $id)
+			                        ->where('ams_recommend.user_id', '=', $user_id)
+			                        ->first();
+
+            if(!is_null($checkrecommend))
+						{
+              $this->view->action_url =  '';
+              $this->view->mark = '';
+              $this->view->title_page = 'View Details';
+
+              $app = ModelFactory::getInstance('Application')
+                    	->join('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_applications.created_id')
+                      ->where('ams_applications.id', '=', $id)
+                      ->get($select);
             }
-            else if($app[0]->type_form == 13)
-            {
-                $form = ModelFactory::getInstance('FormAca')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
+
+						else
+						{
+              return redirect('/dashboard');
             }
-            else if($app[0]->type_form == 14)
-            {
-                $form = ModelFactory::getInstance('FormPcmcf')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
+          }
+        }
+      }
 
-                 $formlineitem = ModelFactory::getInstance('LineItemPcmcf')
-                        ->where('app_id',$app[0]->id)
-                        ->get();
+			/**
+       * forms conditions
+       * @var [type]
+      	*/
+        $application_form_name = ModelFactory::getInstance('Forms')
+							                    ->where('id',$app[0]->type_form)
+							                    ->first(['name']);
 
-                 $this->view->formlineitem =  $formlineitem;
+        $application_form_message = ModelFactory::getInstance('Forms')
+								                    ->where('id',$app[0]->type_form)
+								                    ->first(['message']);
 
-            }
-             else if($app[0]->type_form == 20)
-            {
-                $form = ModelFactory::getInstance('FormPcmcf2')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
+        if($app[0]->type_form == 2)
+        {
+        	$form = ModelFactory::getInstance('FormRcp')
+                  ->where('app_id',$app[0]->id)
+                  ->first();
+        }
 
-                 $formlineitem = ModelFactory::getInstance('LineItemPcmcf2')
-                        ->where('app_id',$app[0]->id)
-                        ->get();
+				else if($app[0]->type_form == 3)
+        {
+          $form = ModelFactory::getInstance('FormRca')
+                  ->where('app_id',$app[0]->id)
+                  ->first();
+        }
 
-                 $this->view->formlineitem =  $formlineitem;
+				else if($app[0]->type_form == 4)
+        {
+          $form = ModelFactory::getInstance('FormArea')
+                  ->where('app_id',$app[0]->id)
+                	->first();
+        }
 
-            }
-            else if($app[0]->type_form == 15)
-            {
-                $form = ModelFactory::getInstance('FormMrf')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-            }
-               else if($app[0]->type_form == 16)
-            {
-                $form = ModelFactory::getInstance('FormTsw')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
+				else if($app[0]->type_form == 5)
+        {
+          $form = ModelFactory::getInstance('FormArge')
+                  ->where('app_id',$app[0]->id)
+                  ->first();
+        }
 
-                  $formlineitem = ModelFactory::getInstance('LineItemTsw')
-                        ->where('app_id',$app[0]->id)
-                        ->get();
+				else if($app[0]->type_form == 6)
+        {
+          $form = ModelFactory::getInstance('FormCdsaa')
+                	->where('app_id',$app[0]->id)
+                  ->first();
+        }
 
-                 $this->view->formlineitem =  $formlineitem;
-            }
-              else if($app[0]->type_form == 17)
-            {
-                $form = ModelFactory::getInstance('FormIrfi')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-            }
-            else if($app[0]->type_form == 18)
-            {
-                $form = ModelFactory::getInstance('FormCoprpo')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
-            }
-            else if($app[0]->type_form == 19)
-            {
-                $form = ModelFactory::getInstance('FormEoq')
-                        ->where('app_id',$app[0]->id)
-                        ->first();
+				else if($app[0]->type_form == 7)
+        {
+          $form = ModelFactory::getInstance('FormRdra')
+                  ->where('app_id',$app[0]->id)
+                  ->first();
+        }
 
-                 $formlineitem = ModelFactory::getInstance('LineItemEoq')
-                        ->where('app_id',$app[0]->id)
-                        ->get();
+				else if($app[0]->type_form == 8)
+        {
+          $form = ModelFactory::getInstance('FormAtac')
+                  ->where('app_id',$app[0]->id)
+                  ->first();
+        }
 
-                 $this->view->formlineitem =  $formlineitem;
-            }
-            else
-            {
-                $form = (object) [];
-            }
+				else if($app[0]->type_form == 9)
+        {
+          $form = ModelFactory::getInstance('FormHphcrf')
+                  ->where('app_id',$app[0]->id)
+                  ->first();
+        }
+
+				else if($app[0]->type_form == 10)
+        {
+          $form = ModelFactory::getInstance('FormMjr')
+                  ->where('app_id',$app[0]->id)
+                  ->first();
+        }
+
+				else if($app[0]->type_form == 11)
+        {
+          $form = ModelFactory::getInstance('FormPgvbf')
+                  ->where('app_id',$app[0]->id)
+                  ->first();
+        }
+
+				else if($app[0]->type_form == 12)
+        {
+        	$form = ModelFactory::getInstance('FormSorapfca')
+                  ->where('app_id',$app[0]->id)
+                  ->first();
+
+          $formlineitem = ModelFactory::getInstance('LineItemSorapfca')
+                        	->where('app_id',$app[0]->id)
+                        	->get();
+
+          $this->view->formlineitem = $formlineitem;
+        }
+
+				else if($app[0]->type_form == 13)
+        {
+          $form = ModelFactory::getInstance('FormAca')
+                  ->where('app_id',$app[0]->id)
+                  ->first();
+        }
+
+				else if($app[0]->type_form == 14)
+        {
+          $form = ModelFactory::getInstance('FormPcmcf')
+                  ->where('app_id',$app[0]->id)
+                  ->first();
+
+          $formlineitem = ModelFactory::getInstance('LineItemPcmcf')
+                        	->where('app_id',$app[0]->id)
+                        	->get();
+
+          $this->view->formlineitem =  $formlineitem;
+        }
+
+				else if($app[0]->type_form == 20)
+        {
+          $form = ModelFactory::getInstance('FormPcmcf2')
+                  ->where('app_id',$app[0]->id)
+                  ->first();
+
+          $formlineitem = ModelFactory::getInstance('LineItemPcmcf2')
+	                        ->where('app_id',$app[0]->id)
+	                        ->get();
+
+          $this->view->formlineitem =  $formlineitem;
+        }
+
+				else if($app[0]->type_form == 15)
+        {
+          $form = ModelFactory::getInstance('FormMrf')
+                  ->where('app_id',$app[0]->id)
+                  ->first();
+        }
+
+				else if($app[0]->type_form == 16)
+        {
+          $form = ModelFactory::getInstance('FormTsw')
+                  ->where('app_id',$app[0]->id)
+                  ->first();
+
+          $formlineitem = ModelFactory::getInstance('LineItemTsw')
+	                        ->where('app_id',$app[0]->id)
+	                        ->get();
+
+          $this->view->formlineitem =  $formlineitem;
+        }
+
+				else if($app[0]->type_form == 17)
+      	{
+          $form = ModelFactory::getInstance('FormIrfi')
+                  ->where('app_id',$app[0]->id)
+                  ->first();
+        }
+
+				else if($app[0]->type_form == 18)
+        {
+          $form = ModelFactory::getInstance('FormCoprpo')
+                  ->where('app_id',$app[0]->id)
+                  ->first();
+        }
+
+				else if($app[0]->type_form == 19)
+        {
+          $form = ModelFactory::getInstance('FormEoq')
+                  ->where('app_id',$app[0]->id)
+                  ->first();
+
+        	$formlineitem = ModelFactory::getInstance('LineItemEoq')
+	                        ->where('app_id',$app[0]->id)
+	                        ->get();
+
+          $this->view->formlineitem =  $formlineitem;
+        }
+
+				else
+        {
+        	$form = (object) [];
+        }
+
         /**
          * end form conditions
          * @var [type]
          */
+
         $doc = ModelFactory::getInstance('Documents')
-            ->join('ams_applications', 'ams_documents.app_id', '=', 'ams_applications.id')
-            ->where('ams_documents.app_id', '=', $id)
-            ->select($select_doc)->get();
+		            ->join('ams_applications', 'ams_documents.app_id', '=', 'ams_applications.id')
+		            ->where('ams_documents.app_id', '=', $id)
+		            ->select($select_doc)->get();
 
         $files = ModelFactory::getInstance('File')
-            ->join('ams_applications', 'ams_files.app_id', '=', 'ams_applications.id')
-            ->where('ams_files.app_id', '=', $id)
-            ->select($select_files)->get();
-
+			            ->join('ams_applications', 'ams_files.app_id', '=', 'ams_applications.id')
+			            ->where('ams_files.app_id', '=', $id)
+			            ->select($select_files)->get();
 
         $approver = ModelFactory::getInstance('Approver')
-            ->leftjoin('ams_applications', 'ams_approver_person.app_id', '=', 'ams_applications.id')
-            ->leftjoin('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_approver_person.user_id')
-                ->leftjoin('ams_flexigroup', 'ams_flexigroup.id', '=', 'ams_approver_person.group_id')
-
-            ->where('ams_approver_person.app_id', '=', $id)
-            ->orderBy('ams_approver_person.position', 'asc')
-            ->select($select_approver)->get();
-
-
+				            ->leftjoin('ams_applications', 'ams_approver_person.app_id', '=', 'ams_applications.id')
+				            ->leftjoin('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_approver_person.user_id')
+				            ->leftjoin('ams_flexigroup', 'ams_flexigroup.id', '=', 'ams_approver_person.group_id')
+				            ->where('ams_approver_person.app_id', '=', $id)
+				            ->orderBy('ams_approver_person.position', 'asc')
+				            ->select($select_approver)->get();
 
         $ccpersonData = ModelFactory::getInstance('Ccperson')
-            ->join('ams_applications', 'ams_cc_person.app_id', '=', 'ams_applications.id')
-            ->join('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_cc_person.user_id')
-            ->where('ams_cc_person.app_id', '=', $id)
-            ->select($select_cc)->get()->toArray();
+						            ->join('ams_applications', 'ams_cc_person.app_id', '=', 'ams_applications.id')
+						            ->join('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_cc_person.user_id')
+						            ->where('ams_cc_person.app_id', '=', $id)
+						            ->select($select_cc)->get()->toArray();
 
         $result = array();
-        foreach ($ccpersonData as $val) {
-            if (!isset($result[$val['ccperson_user_id']]))
-                $result[$val['ccperson_user_id']] = $val;
+
+        foreach ($ccpersonData as $val)
+				{
+          if (!isset($result[$val['ccperson_user_id']]))
+					{
+						$result[$val['ccperson_user_id']] = $val;
+					}
         }
+
         $ccperson = array_values($result);
 
         //special request from Jerry when 20042017 to show special word comment on non approver
          $approverhistorycommenter = ModelFactory::getInstance('Approver')
-            ->leftjoin('ams_applications', 'ams_approver_person.app_id', '=', 'ams_applications.id')
-            ->leftjoin('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_approver_person.user_id')
-            ->where('ams_approver_person.app_id', '=', $id)
-            ->where('ams_approver_person.read', '=', 1)
-            ->where('ams_approver_person.id','!=', DB::raw("(select max(`id`) from ams_approver_person where app_id=".$id.")"))
+													            ->leftjoin('ams_applications', 'ams_approver_person.app_id', '=', 'ams_applications.id')
+													            ->leftjoin('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_approver_person.user_id')
+													            ->where('ams_approver_person.app_id', '=', $id)
+													            ->where('ams_approver_person.read', '=', 1)
+													            ->where('ams_approver_person.id','!=', DB::raw("(select max(`id`) from ams_approver_person where app_id=".$id.")"))
+            													->select($select_approver_history)->get()->toArray();
 
-            ->select($select_approver_history)->get()->toArray();
-
-         if($approverhistorycommenter){
-             foreach($approverhistorycommenter as $column => $commenter)
-             {
-        $approverhistorycommenter[$column]['status'] = 5;
-         $approverhistorycommenter[$column]['case_status'] = 5;
-         }
+         if($approverhistorycommenter)
+				 {
+        		foreach($approverhistorycommenter as $column => $commenter)
+            {
+        			$approverhistorycommenter[$column]['status'] = 5;
+         			$approverhistorycommenter[$column]['case_status'] = 5;
+         		}
          }
 
         $approverhistoryapprover = ModelFactory::getInstance('Approver')
-            ->leftjoin('ams_applications', 'ams_approver_person.app_id', '=', 'ams_applications.id')
-            ->leftjoin('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_approver_person.user_id')
-            ->where('ams_approver_person.app_id', '=', $id)
-            ->where('ams_approver_person.read', '=', 1)
-            ->where('ams_approver_person.id','=', DB::raw("(select max(`id`) from ams_approver_person where app_id=".$id.")"))
-            ->orderby('position','desc')
-            ->select($select_approver_history)->get()->toArray();
+												            ->leftjoin('ams_applications', 'ams_approver_person.app_id', '=', 'ams_applications.id')
+												            ->leftjoin('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_approver_person.user_id')
+												            ->where('ams_approver_person.app_id', '=', $id)
+												            ->where('ams_approver_person.read', '=', 1)
+												            ->where('ams_approver_person.id','=', DB::raw("(select max(`id`) from ams_approver_person where app_id=".$id.")"))
+												            ->orderby('position','desc')
+												            ->select($select_approver_history)->get()->toArray();
 
-           $approverhistory = ModelFactory::getInstance('Approver')
-            ->leftjoin('ams_applications', 'ams_approver_person.app_id', '=', 'ams_applications.id')
-            ->leftjoin('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_approver_person.user_id')
-            ->where('ams_approver_person.app_id', '=', $id)
-            ->where('ams_approver_person.read', '=', 1)
-              ->select($select_approver_history)->get()->toArray();
-
+        $approverhistory = ModelFactory::getInstance('Approver')
+								            ->leftjoin('ams_applications', 'ams_approver_person.app_id', '=', 'ams_applications.id')
+								            ->leftjoin('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_approver_person.user_id')
+								            ->where('ams_approver_person.app_id', '=', $id)
+								            ->where('ams_approver_person.read', '=', 1)
+								            ->select($select_approver_history)->get()->toArray();
 
         $ccpersonhistory = ModelFactory::getInstance('Ccperson')
-            ->join('ams_applications', 'ams_cc_person.app_id', '=', 'ams_applications.id')
-            ->join('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_cc_person.user_id')
-            ->where('ams_cc_person.app_id', '=', $id)
-            ->where('ams_cc_person.status', '=', 5)
-            ->select($select_cc_history)->get()->toArray();
+								            ->join('ams_applications', 'ams_cc_person.app_id', '=', 'ams_applications.id')
+								            ->join('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_cc_person.user_id')
+								            ->where('ams_cc_person.app_id', '=', $id)
+								            ->where('ams_cc_person.status', '=', 5)
+								            ->select($select_cc_history)->get()->toArray();
+
         $recommendhistory = ModelFactory::getInstance('Recommend')
-            ->join('ams_applications', 'ams_recommend.app_id', '=', 'ams_applications.id')
-            ->join('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_recommend.user_id')
-            ->where('ams_recommend.app_id', '=', $id)
-            ->where('ams_recommend.user_status', '=', 4)
-            ->select($select_recommend_history)->get()->toArray();
+								            ->join('ams_applications', 'ams_recommend.app_id', '=', 'ams_applications.id')
+								            ->join('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_recommend.user_id')
+								            ->where('ams_recommend.app_id', '=', $id)
+								            ->where('ams_recommend.user_status', '=', 4)
+								            ->select($select_recommend_history)->get()->toArray();
 
-           if($app[0]['status']== 1 && !$approverhistoryapprover){
-
-             $app[0]['status'] = 5;
-
-
+      	if($app[0]['status']== 1 && !$approverhistoryapprover)
+				{
+          $app[0]['status'] = 5;
         }
 
         $this->view->myapplist =  $app;
-
-
         $this->view->forminfo =  $form;
         $this->view->afm =  $application_form_name;
         $this->view->afmesage =  $application_form_message;
-
         $this->view->doclist =  $doc;
         $this->view->filelist =  $files;
         $this->view->approverlist =  $approver;
         $this->view->ccpersonlist =  $ccperson;
+
+				// dd($this->view->forminfo->toArray());
+
         $merge_history = array();
-         $merge_history = array_merge($merge_history, $approverhistoryapprover);
+        $merge_history = array_merge($merge_history, $approverhistoryapprover);
         $merge_history = array_merge($merge_history, $approverhistorycommenter);
         $merge_history = array_merge($merge_history, $ccpersonhistory);
 
         $recdump = array();
-        foreach ($recommendhistory as $key => $value) {
-            $recdump[$key]['user_id'] = $value['user_id'];
-            $recdump[$key]['name'] = $value['name'];
-            $recdump[$key]['email'] = $value['email'];
-            $recdump[$key]['id'] = $value['id'];
-            $recdump[$key]['remarks'] = $value['remarks'];
-            $recdump[$key]['status'] = $value['status'];
-            $recdump[$key]['case_status'] = $value['case_status'];
-            $recdump[$key]['recommend_user_id'] = $this->selectUserBy($value['recommend_user_id'],array('loginname as name'))->toArray();
-            $recdump[$key]['date'] = $value['date'];
+
+        foreach ($recommendhistory as $key => $value)
+				{
+          $recdump[$key]['user_id'] = $value['user_id'];
+          $recdump[$key]['name'] = $value['name'];
+          $recdump[$key]['email'] = $value['email'];
+          $recdump[$key]['id'] = $value['id'];
+          $recdump[$key]['remarks'] = $value['remarks'];
+          $recdump[$key]['status'] = $value['status'];
+          $recdump[$key]['case_status'] = $value['case_status'];
+          $recdump[$key]['recommend_user_id'] = $this->selectUserBy($value['recommend_user_id'],array('loginname as name'))->toArray();
+          $recdump[$key]['date'] = $value['date'];
         }
+
         $merge_history = array_merge($merge_history, $recdump);
 
         //sort merge by date
-        usort($merge_history, function ($a, $b) {
-            if ($a['date'] == $b['date']) {
-                return 0;
-            }
-                return ($a['date'] < $b['date']) ? -1 : 1;
-        });
-        $this->view->historylist = $merge_history;
+        usort($merge_history, function ($a, $b)
+				{
+          if ($a['date'] == $b['date'])
+					{
+            return 0;
+          }
 
+					return ($a['date'] < $b['date']) ? -1 : 1;
+        });
+
+        $this->view->historylist = $merge_history;
         $this->view->title = 'View Details';
+
+				if($request->has('download'))
+				{
+					if($app[0]->type_form == 12 || $app[0]->type_form == 14 || $app[0]->type_form == 16 || $app[0]->type_form == 19 || $app[0]->type_form == 20)
+					{
+						$data = [
+					    'title' =>  $this->view->title,
+					    'title_page' => $this->view->title_page,
+					    'myapplist' => $this->view->myapplist,
+					    'action_url' => $this->view->action_url,
+					    'afm' => $this->view->afm,
+					    'afmesage' => $this->view->afmesage,
+					    'approverlist' => $this->view->approverlist,
+					    'forminfo' => $this->view->forminfo,
+							'formlineitem' => $this->view->formlineitem,
+					    'mark' => $this->view->mark,
+					    'filelist' => $this->view->filelist,
+					    'doclist' => $this->view->doclist,
+					    'historylist' => $this->view->historylist,
+							'today' => Carbon::parse()->format('d/m/Y g:i A')
+					  ];
+					}
+
+					else
+					{
+						$data = [
+					    'title' =>  $this->view->title,
+					    'title_page' => $this->view->title_page,
+					    'myapplist' => $this->view->myapplist,
+					    'action_url' => $this->view->action_url,
+					    'afm' => $this->view->afm,
+					    'afmesage' => $this->view->afmesage,
+					    'approverlist' => $this->view->approverlist,
+					    'forminfo' => $this->view->forminfo,
+					    'mark' => $this->view->mark,
+					    'filelist' => $this->view->filelist,
+					    'doclist' => $this->view->doclist,
+					    'historylist' => $this->view->historylist,
+							'today' => Carbon::parse()->format('d/m/Y g:i A')
+					  ];
+					}
+
+					$pdf_name = str_replace('/', '_', $this->view->myapplist[0]->case_number);
+				  $pdf_name = $pdf_name . '.pdf';
+
+					// return $this->view('print.view', $data);
+
+				  PDF::loadView('print.view', $data)->save('samplepdfs/' . $pdf_name)->stream();
+					//
+					// $fileId = '1YLo6kmxfFfRfvXd-hwa4qRe29dVb6v7M';
+					// $response = $driveService->files->get($fileId, array(
+					//     				'alt' => 'media'));
+					//
+					// dd($response);
+					// $content = $response->getBody()->getContents();
+
+
+					// Merge PDF
+				  $pdf = PdfMerger::addPDF('samplepdfs/' . $pdf_name);
+				  $pdf = PdfMerger::addPDF('samplepdfs/one.pdf');
+				  $pdf = PdfMerger::addPDF('samplepdfs/two.pdf');
+
+				  PdfMerger::merge('browser', 'samplepdfs/TEST2.pdf');
+				}
+
         return $this->view('application.view');
     }
 
-    public function viewReports($id)
+    public function viewReports(Request $request, $id)
     {
       $select = [
         'srcusers.users.idsrc_login as creator_id',
@@ -2364,144 +2584,202 @@ class ApplicationPresenter extends PresenterCore
         $this->view->action_url =  'print';
         $this->view->title_page = 'Detail Reports';
         $this->view->title = 'View Details - Reports';
+
+				if($request->has('download'))
+				{
+					$data = [
+						'title' =>  $this->view->title,
+						'title_page' => $this->view->title_page,
+						'myapplist' => $this->view->myapplist,
+						'action_url' => $this->view->action_url,
+						'afm' => $this->view->afm,
+						'afmesage' => $this->view->afmesage,
+						'approverlist' => $this->view->approverlist,
+						'forminfo' => $this->view->forminfo,
+						// 'formlineitem' => $this->view->formlineitem,
+						'mark' => $this->view->mark,
+						'filelist' => $this->view->filelist,
+						'doclist' => $this->view->doclist,
+						'historylist' => $this->view->historylist
+					];
+
+					$pdf_name = str_replace('/', '_', $this->view->myapplist[0]->case_number);
+					$pdf_name = $pdf_name . '.pdf';
+
+					PDF::loadView( 'print.hr_print', $data)->save('samplepdfs/' . $pdf_name)->stream();
+
+					// dd($doc[0]->document_link);
+
+					// Merge PDF
+					$pdf = PdfMerger::addPDF('samplepdfs/' . $pdf_name);
+					$pdf = PdfMerger::addPDF($doc[0]->document_link);
+			    $pdf = PdfMerger::addPDF('samplepdfs/two.pdf');
+
+			    PdfMerger::merge('browser', 'samplepdfs/TEST2.pdf');
+				}
+
         return $this->view('application.view_reports');
     }
 
-    public function file($name){
+	public function file($name)
+	{
+    $filePath = public_path().'/uploads/final/'.$name;
 
-    $filePath   = public_path().'/uploads/final/'.$name;
+    if(file_exists($filePath))
+		{
+      $fileName = basename($filePath);
+      $fileSize = filesize($filePath);
 
-    if(file_exists($filePath)) {
-            $fileName = basename($filePath);
-            $fileSize = filesize($filePath);
+      // Output headers.
+      header("Cache-Control: private");
+      header("Content-Type: application/stream");
+      header("Content-Length: ".$fileSize);
+      header("Content-Disposition: attachment; filename=".$fileName);
 
-            // Output headers.
-            header("Cache-Control: private");
-            header("Content-Type: application/stream");
-            header("Content-Length: ".$fileSize);
-            header("Content-Disposition: attachment; filename=".$fileName);
-
-            // Output file.
-            readfile ($filePath);
-            exit();
-        }
-        else {
-            die('The provided file path is not valid.');
-        }
+      // Output file.
+      readfile ($filePath);
+      exit();
     }
 
+		else
+		{
+      die('The provided file path is not valid.');
+    }
+  }
 
-    public function Tmpfile($name){
+  public function Tmpfile($name)
+	{
+    $filePath = public_path().'/uploads/tmp/'.$name;
 
-    	$filePath   = public_path().'/uploads/tmp/'.$name;
+    if(file_exists($filePath))
+		{
+    	$fileName = basename($filePath);
+    	$fileSize = filesize($filePath);
 
-    	if(file_exists($filePath)) {
-    		$fileName = basename($filePath);
-    		$fileSize = filesize($filePath);
+    	// Output headers.
+    	header("Cache-Control: private");
+    	header("Content-Type: application/stream");
+    	header("Content-Length: ".$fileSize);
+    	header("Content-Disposition: attachment; filename=".$fileName);
 
-    		// Output headers.
+    	// Output file.
+    	readfile ($filePath);
+    	exit();
+    }
+
+		else
+		{
+    	die('The provided file path is not valid.');
+    }
+  }
+
+  public function viewFile($name, $mime)
+	{
+    // Fetch the file info.
+    $filePath = public_path().'/uploads/final/'.$name;
+    $host = request()->root().'/uploads/final/'.$name;
+
+    if(file_exists($filePath))
+		{
+      $fileName = basename($filePath);
+      $fileSize = filesize($filePath);
+
+			if($mime == 'pdf')
+			{
+        // View File
+        header("Cache-Control: private");
+        header("Content-Type: application/".$mime);
+        header("Content-Length: ".$fileSize);
+        header("Content-Disposition: inline; filename=".$fileName);
+
+				// Output file.
+        readfile ($filePath);
+        exit();
+      }
+
+			else
+			{
+        return redirect('https://docs.google.com/viewer?url='.$host.'&embedded=true');
+      }
+    }
+    else
+		{
+      die('The provided file path is not valid.');
+    }
+  }
+
+  public function viewTmpFile($name, $mime)
+	{
+    // Fetch the file info.
+    $filePath = public_path().'/uploads/tmp/'.$name;
+    $host = request()->root().'/uploads/tmp/'.$name;
+
+    if(file_exists($filePath))
+		{
+    	$fileName = basename($filePath);
+    	$fileSize = filesize($filePath);
+
+			if($mime == 'pdf')
+			{
+    		// View File
     		header("Cache-Control: private");
-    		header("Content-Type: application/stream");
+    		header("Content-Type: application/".$mime);
     		header("Content-Length: ".$fileSize);
-    		header("Content-Disposition: attachment; filename=".$fileName);
+    		header("Content-Disposition: inline; filename=".$fileName);
 
-    		// Output file.
+				// Output file.
     		readfile ($filePath);
     		exit();
     	}
-    	else {
-    		die('The provided file path is not valid.');
+
+			else
+			{
+    		return redirect('https://docs.google.com/viewer?url='.$host.'&embedded=true');
     	}
     }
 
-    public function viewFile($name, $mime){
-
-    // Fetch the file info.
-    $filePath   = public_path().'/uploads/final/'.$name;
-    $host = request()->root().'/uploads/final/'.$name;
-
-    if(file_exists($filePath)) {
-            $fileName = basename($filePath);
-            $fileSize = filesize($filePath);
-                if($mime == 'pdf'){
-                    // View File
-                    header("Cache-Control: private");
-                    header("Content-Type: application/".$mime);
-                    header("Content-Length: ".$fileSize);
-                    header("Content-Disposition: inline; filename=".$fileName);
-                     // Output file.
-                    readfile ($filePath);
-                    exit();
-                }
-                else{
-                    return redirect('https://docs.google.com/viewer?url='.$host.'&embedded=true');
-                }
-        }
-        else {
-            die('The provided file path is not valid.');
-        }
+		else
+		{
+    	die('The provided file path is not valid.');
     }
+  }
 
-
-    public function viewTmpFile($name, $mime){
-
-    	// Fetch the file info.
-    	$filePath   = public_path().'/uploads/tmp/'.$name;
-    	$host = request()->root().'/uploads/tmp/'.$name;
-
-    	if(file_exists($filePath)) {
-    		$fileName = basename($filePath);
-    		$fileSize = filesize($filePath);
-    		if($mime == 'pdf'){
-    			// View File
-    			header("Cache-Control: private");
-    			header("Content-Type: application/".$mime);
-    			header("Content-Length: ".$fileSize);
-    			header("Content-Disposition: inline; filename=".$fileName);
-    			// Output file.
-    			readfile ($filePath);
-    			exit();
-    		}
-    		else{
-    			return redirect('https://docs.google.com/viewer?url='.$host.'&embedded=true');
-    		}
-    	}
-    	else {
-    		die('The provided file path is not valid.');
-    	}
-    }
-
-    public function viewMinutesFile($name){
-
-         // Fetch the file info.
+  public function viewMinutesFile($name)
+	{
+		// Fetch the file info.
     $filePath = public_path().'/uploads/final/'.$name;
 
-    if(file_exists($filePath)) {
-            return file_get_contents($filePath);
-            exit();
-        }
-        else {
-            die('The provided file path is not valid.');
-        }
+    if(file_exists($filePath))
+		{
+      return file_get_contents($filePath);
+      exit();
     }
 
-    public function selectUserBy($id, $select){
-        return ModelFactory::getInstance('User')
-                    ->where('idsrc_login', '=', $id)
-                    ->first($select);
+		else
+		{
+      die('The provided file path is not valid.');
     }
+  }
 
-		public function fillFeedbackForm($id){
-			$app_id = $id;
-			$course_id = \App\Http\Models\FormTsw::select("course_id")->where("app_id","=",$app_id)->first()['course_id'];
-			$questionnaire_id = \App\Http\Models\Questionnaire::select("id")->where("course_id","=",$course_id)->first()['id'];
-			$this->view->selected_questionnaire = \App\Http\Models\Questionnaire::selectedQuestionnaire($questionnaire_id);
-			$this->view->selected_questionnaire_detail = \App\Http\Models\QuestionnaireDetail::selectedQuestionnaireDetail($questionnaire_id);
-			$this->view->app_id = $app_id;
-			$this->view->questionnaire_id = $questionnaire_id;
-			$this->view->title = 'Fill in the form';
+  public function selectUserBy($id, $select)
+	{
+    return ModelFactory::getInstance('User')
+          	->where('idsrc_login', '=', $id)
+            ->first($select);
+  }
 
-			return $this->view('application.feedback');
-		}
+	public function fillFeedbackForm($id)
+	{
+		$app_id = $id;
+		$course_id = \App\Http\Models\FormTsw::select("course_id")->where("app_id","=",$app_id)->first()['course_id'];
+		$this->view->course = ModelFactory::getInstance('Course')->where("id","=",$course_id)->select('name')->first();
+		// $questionnaire_id = \App\Http\Models\Questionnaire::select("id")->where("course_id","=",$course_id)->first()['id'];
+		// $this->view->selected_questionnaire = \App\Http\Models\Questionnaire::selectedQuestionnaire($questionnaire_id);
+		$this->view->selected_questionnaire_detail = \App\Http\Models\QuestionnaireDetail::selectedQuestionnaireDetail($course_id);
+		$this->view->app_id = $app_id;
+		$this->view->course_id = $course_id;
+		$this->view->title = 'Fill in the form';
 
+		return $this->view('application.feedback');
+	}
 }

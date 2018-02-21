@@ -4,271 +4,369 @@ $(function () {
   * start date and end date
   * @type {date}
   */
-$('.from_date').datetimepicker({
-	format:'YYYY-MM-DD',
-	sideBySide:true,
-});
-$('.to_date').datetimepicker({
-	format:'YYYY-MM-DD',
-	sideBySide:true,
-	useCurrent: false,
-});
-$(".from_date").on("dp.change", function (e) {
-	$('.to_date').data("DateTimePicker").minDate(e.date);
-});
-$(".to_date").on("dp.change", function (e) {
-	$('.from_date').data("DateTimePicker").maxDate(e.date);
-});
 
- /**
-  * start date and end date
-  * @type {date}
-  */
-$('.start_date').datetimepicker({
-	format:'YYYY-MM-DD h:mm:ss a',
-	sideBySide:true,
-	defaultDate: new Date()
-});
-$('.end_date').datetimepicker({
-	format:'YYYY-MM-DD h:mm:ss a',
-	sideBySide:true,
-	useCurrent: false, //Important! See issue #1075
-	defaultDate : new Date()
-});
-$(".start_date").on("dp.change", function (e) {
-	$('.end_date').data("DateTimePicker").minDate(e.date);
-});
-$(".end_date").on("dp.change", function (e) {
-	$('.start_date').data("DateTimePicker").maxDate(e.date);
-});
+	$('.from_date').datetimepicker({
+		format:'YYYY-MM-DD',
+		sideBySide:true,
+	});
 
+	$('.to_date').datetimepicker({
+		format:'YYYY-MM-DD',
+		sideBySide:true,
+		useCurrent: false,
+	});
 
-/**
-  * only date
-  * @type {date}
-  */
-$('.start_date_only').datetimepicker({
-	format:'YYYY-MM-DD',
-	sideBySide:true,
-	defaultDate: new Date()
-});
-$('.end_date_only').datetimepicker({
-	format:'YYYY-MM-DD',
-	sideBySide:true,
-	useCurrent: false, //Important! See issue #1075
-	defaultDate : new Date()
-});
-$(".start_date_only").on("dp.change", function (e) {
-	$('.end_date_only').data("DateTimePicker").minDate(e.date);
-});
-$(".end_date_only").on("dp.change", function (e) {
-	$('.start_date_only').data("DateTimePicker").maxDate(e.date);
-});
+	$(".from_date").on("dp.change", function (e) {
+
+		$('.to_date').data("DateTimePicker").minDate(e.date);
+
+	});
+
+	$(".to_date").on("dp.change", function (e) {
+
+		$('.from_date').data("DateTimePicker").maxDate(e.date);
+
+	});
+
+	 /**
+	  * start date and end date
+	  * @type {date}
+	  */
+	$('.start_date').datetimepicker({
+		format:'YYYY-MM-DD h:mm:ss a',
+		sideBySide:true,
+		defaultDate: new Date()
+	});
+
+	$('.end_date').datetimepicker({
+		format:'YYYY-MM-DD h:mm:ss a',
+		sideBySide:true,
+		useCurrent: false, //Important! See issue #1075
+		defaultDate : new Date()
+	});
+
+	$(".start_date").on("dp.change", function (e) {
+		$('.end_date').data("DateTimePicker").minDate(e.date);
+	});
+
+	$(".end_date").on("dp.change", function (e) {
+		$('.start_date').data("DateTimePicker").maxDate(e.date);
+	});
 
 
-/**
- * only hours without conditions
- * @type {String}
- */
-$('.start_date_nh').datetimepicker({
-	format:'YYYY-MM-DD h a',
-	sideBySide:true,
-	defaultDate: new Date()
-});
-$('.end_date_nh').datetimepicker({
-	format:'YYYY-MM-DD h a',
-	sideBySide:true,
-	useCurrent: false, //Important! See issue #1075
-	defaultDate : new Date()
-});
-$(".start_date_nh").on("dp.change", function (e) {
-	$('.end_date_nh').data("DateTimePicker").minDate(e.date);
-});
-$(".end_date_nh").on("dp.change", function (e) {
-	$('.start_date_nh').data("DateTimePicker").maxDate(e.date);
-});
+	/**
+	  * only date
+	  * @type {date}
+	  */
+	$('.start_date_only').datetimepicker({
+		format:'YYYY-MM-DD',
+		sideBySide:true,
+		defaultDate: new Date()
+	});
 
-/**
- * only hours with conditions
- */
-$('.start_date_hour').datetimepicker({
-	format:'YYYY-MM-DD h:mm a',
-	sideBySide:true,
-	defaultDate: new Date()
-});
-$('.end_date_hour').datetimepicker({
-	format:'YYYY-MM-DD h:mm a',
-	sideBySide:true,
-	useCurrent: false, //Important! See issue #1075
-	defaultDate : new Date()
-});
+	$('.end_date_only').datetimepicker({
+		format:'YYYY-MM-DD',
+		sideBySide:true,
+		useCurrent: false, //Important! See issue #1075
+		defaultDate : new Date()
+	});
+
+	$(".start_date_only").on("dp.change", function (e) {
+		$('.end_date_only').data("DateTimePicker").minDate(e.date);
+	});
+
+	$(".end_date_only").on("dp.change", function (e) {
+		$('.start_date_only').data("DateTimePicker").maxDate(e.date);
+	});
+
+	/**
+	 * only hours without conditions
+	 * @type {String}
+	 */
+	$('.start_date_nh').datetimepicker({
+		format:'YYYY-MM-DD h a',
+		sideBySide:true,
+		defaultDate: new Date()
+	});
+
+	$('.end_date_nh').datetimepicker({
+		format:'YYYY-MM-DD h a',
+		sideBySide:true,
+		useCurrent: false, //Important! See issue #1075
+		defaultDate : new Date()
+	});
+
+	$(".start_date_nh").on("dp.change", function (e) {
+		$('.end_date_nh').data("DateTimePicker").minDate(e.date);
+	});
+
+	$(".end_date_nh").on("dp.change", function (e) {
+		$('.start_date_nh').data("DateTimePicker").maxDate(e.date);
+	});
+
+	/**
+	 * only hours with conditions
+	 */
+	$('.start_date_hour').datetimepicker({
+		format:'YYYY-MM-DD h:mm a',
+		sideBySide:true,
+		defaultDate: new Date()
+	});
+
+	$('.end_date_hour').datetimepicker({
+		format:'YYYY-MM-DD h:mm a',
+		sideBySide:true,
+		useCurrent: false, //Important! See issue #1075
+		defaultDate : new Date()
+	});
+
+	var now  = moment($('.start_date_hour').val(), ["YYYY-MM-DD hh:mm:ss a"]);
+	var then = moment($('.end_date_hour').val(), ["YYYY-MM-DD hh:mm:ss a"]);
+	calculateTime(now,then);
 
 
-var now  = moment($('.start_date_hour').val(), ["YYYY-MM-DD hh:mm:ss a"]);
-var then = moment($('.end_date_hour').val(), ["YYYY-MM-DD hh:mm:ss a"]);
-calculateTime(now,then);
+	$(".start_date_hour").on("dp.change", function (e) {
 
-
-$(".start_date_hour").on("dp.change", function (e) {
-     var getVal =  $(this).val();
-        var mydate = new Date(getVal);
+		var getVal =  $(this).val();
+    var mydate = new Date(getVal);
     var n = mydate.getDay();
 
     var rates = document.getElementsByName('driver_requested');
-var rate_value;
-for(var i = 0; i < rates.length; i++){
-    if(rates[i].checked){
-        getdriver = rates[i].value;
+		var rate_value;
+		for(var i = 0; i < rates.length; i++)
+		{
+	    if(rates[i].checked){
+	        getdriver = rates[i].value;
+	    }
+		}
+
+		$('.end_date_hour').data("DateTimePicker").minDate(e.date);
+
+		var now  = moment($('.start_date_hour').val(), ["YYYY-MM-DD hh:mm:ss a"]);
+		var then = moment($('.end_date_hour').val(), ["YYYY-MM-DD hh:mm:ss a"]);
+
+		if( n == 6 || n == 0 )
+		{
+			calculateTime(now,then);
+
+			if(getdriver =='2' || getdriver=='3')
+			{
+				total = 0;
+				$('#total_amount').val(total.toFixed(2));
+ 			}
+
+			else
+ 			{
+  			calculateTotalAmountVan();
+ 			}
+		}
+
+		else
+		{
+			calculateTime(now,then);
+			calculateTotalAmountVan();
     }
-}
-	$('.end_date_hour').data("DateTimePicker").minDate(e.date);
-	var now  = moment($('.start_date_hour').val(), ["YYYY-MM-DD hh:mm:ss a"]);
-	var then = moment($('.end_date_hour').val(), ["YYYY-MM-DD hh:mm:ss a"]);
-          if( n == 6 || n == 0 ){
+	});
 
-calculateTime(now,then);
- if(getdriver =='2' || getdriver=='3'){
-total = 0;
-$('#total_amount').val(total.toFixed(2));
- }else
- {
-  calculateTotalAmountVan();
- }
+	$(".end_date_hour").on("dp.change", function (e) {
 
-
-}
-else{
-
-	calculateTime(now,then);
-	calculateTotalAmountVan();
-    }
-});
-$(".end_date_hour").on("dp.change", function (e) {
-        var getVal  = moment($('.start_date_hour').val(), ["YYYY-MM-DD hh:mm:ss a"]);
+		var getVal  = moment($('.start_date_hour').val(), ["YYYY-MM-DD hh:mm:ss a"]);
 	  var getdriver =  $('input[name=driver_requested]').val();
-
-         var mydate = new Date(getVal);
+  	var mydate = new Date(getVal);
     var n = mydate.getDay();
 
-	$('.start_date_hour').data("DateTimePicker").maxDate(e.date);
-	var now  = moment($('.start_date_hour').val(), ["YYYY-MM-DD hh:mm:ss a"]);
-	var then = moment($('.end_date_hour').val(), ["YYYY-MM-DD hh:mm:ss a"]);
-	      if( n == 6 || n == 0 ){
+		$('.start_date_hour').data("DateTimePicker").maxDate(e.date);
 
-calculateTime(now,then);
-total = 0;
- $('#total_amount').val(total.toFixed(2));
-}
-else{
+		var now  = moment($('.start_date_hour').val(), ["YYYY-MM-DD hh:mm:ss a"]);
+		var then = moment($('.end_date_hour').val(), ["YYYY-MM-DD hh:mm:ss a"]);
 
-	calculateTime(now,then);
-	calculateTotalAmountVan();
+		if( n == 6 || n == 0 )
+		{
+			calculateTime(now,then);
+			total = 0;
+ 			$('#total_amount').val(total.toFixed(2));
+		}
+
+		else
+		{
+			calculateTime(now,then);
+			calculateTotalAmountVan();
     }
-});
+	});
 
-function calculateTotalAmountVan(){
-	if($('input[name=vehicle_type]').is(':checked')){
-		var getInitial =  $('input[name=number_of_minutes]').val();
+	function calculateTotalAmountVan()
+	{
+		if($('input[name=vehicle_type]').is(':checked'))
+		{
+			var getInitial =  $('input[name=number_of_minutes]').val();
 	    getMin = (getInitial != '' ? getInitial : 0 );
+
 	    total = parseFloat(getMin, 10) * parseFloat(0.33333334, 10);
 	    $('#total_amount').val(total.toFixed(2));
 	 }
-}
-
-function calculateTime(now, then){
-	var diff = moment.duration(moment(then).diff(moment(now)));
-	var hrs = parseInt(diff.asHours());
-	var mins = Math.floor(diff.asMinutes()) - hrs * 60;
-	$('input[name=number_of_hours]').val(hrs + ' hours and ' + mins + ' minutes');
-
-	var calulcatedMinute = parseInt(diff.asMinutes());
-	$('input[name=number_of_minutes]').val(calulcatedMinute);
-}
-
-
-/**
- * general date and time
- * @type {date and time}
- */
-$('.datetimepicker').datetimepicker({
-    format:'YYYY-MM-DD h:mm:ss a',
-    sideBySide: true
-});
-
-window.setTimeout(function() {
-  $(".flash").fadeTo(500, 0).slideUp(500, function(){
-      $(this).remove();
-  });
-}, 5000);
-
-$('.btn-toggle .btn').click(function(e) {
-	e.preventDefault();
-	$('.success-settings').find('.alert-success').remove();
-	$('.btn-toggle .btn').removeClass('active');
-	$(this).addClass('active');
-
-	if($(this).text() == 'ON'){
-		$('.ooo-value').find('input').val('1');
-	} else {
-		$('.ooo-value').find('input').val('0');
 	}
 
-	var oooval = $('.ooo-value').find('input').val();
-	var form = $('form.accountsettings');
-	var action = form.attr('action');
-	var method = form.attr('method');
-	var formdata = new FormData(form[0]);
+	function calculateTime(now, then)
+	{
+		var diff = moment.duration(moment(then).diff(moment(now)));
+		var hrs = parseInt(diff.asHours());
+		var mins = Math.floor(diff.asMinutes()) - hrs * 60;
 
-	$.ajaxSetup({
-      headers: {
-	          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-	      }
+		$('input[name=number_of_hours]').val(hrs + ' hours and ' + mins + ' minutes');
+
+		var calulcatedMinute = parseInt(diff.asMinutes());
+		$('input[name=number_of_minutes]').val(calulcatedMinute);
+	}
+
+	/**
+	 * general date and time
+	 * @type {date and time}
+	 */
+	$('.datetimepicker').datetimepicker({
+		format:'YYYY-MM-DD h:mm:ss a',
+	  sideBySide: true
 	});
 
-	console.log();
+	window.setTimeout(function() {
+	  $(".flash").fadeTo(500, 0).slideUp(500, function(){
+	      $(this).remove();
+	  });
+	}, 5000);
 
-	$.ajax({
-      url     : action,
-      type    : method,
-      data    : formdata,
-      dataType: "json",
-      processData: false,
-      contentType: false,
-      beforeSend:function(){
-         $('.panel-heading').find('h4').append(' <span class="processing-time"><i class="fa fa-spinner fa-spin"></i></span>');
-      },
-      success : function ( data )
-      {
-      	    $('.panel-heading').find('h4').find('.processing-time').remove();
-            $('.success-settings').append(' <span class="alert-success save-stat-set">SAVE!</span> ');
+	$('.btn-toggle .btn').click(function(e)
+	{
+		e.preventDefault();
 
-	        setTimeout(function(){
-	            $('.save-stat-set').fadeOut();
-	        }, 2000);
+		$('.success-settings').find('.alert-success').remove();
+		$('.btn-toggle .btn').removeClass('active');
+		$(this).addClass('active');
 
-            if(oooval == 1){
-				$('.ooo-header').fadeIn(500);
-			} else {
-				$('.ooo-header').fadeOut(1000);
+		if($(this).text() == 'ON')
+		{
+			$('.ooo-value').find('input').val('1');
+		}
+
+		else
+		{
+			$('.ooo-value').find('input').val('0');
+		}
+
+		// if ( $(this).hasClass('active') ) {
+		// 	$(this).closest('.button').css( 'cursor', 'default' );
+		// 		return false;
+		// }
+
+		var oooval = $('.ooo-value').find('input').val();
+		var form = $('form.accountsettings');
+		var action = form.attr('action');
+		var method = form.attr('method');
+		var formdata = new FormData(form[0]);
+
+		$.ajaxSetup({
+      headers: {
+	    	'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	    }
+		});
+
+		console.log();
+
+		$.ajax({
+	  	url     : action,
+	    type    : method,
+	    data    : formdata,
+	    dataType: "json",
+	    processData: false,
+	    contentType: false,
+
+			beforeSend:function()
+			{
+	    	$('.panel-heading').find('h4').append(' <span class="processing-time"><i class="fa fa-spinner fa-spin"></i></span>');
+	    },
+
+			success : function ( data )
+	    {
+	      $('.panel-heading').find('h4').find('.processing-time').remove();
+	    	$('.success-settings').append(' <span class="alert-success save-stat-set">SAVE!</span> ');
+
+		    setTimeout(function() {
+		    	$('.save-stat-set').fadeOut();
+		    }, 2000);
+
+	      if(oooval == 1)
+				{
+					$('.ooo-header').fadeIn(500);
+
+					$(".approver").empty();
+
+					if(data.temp_approval_user.length > 0)
+					{
+						$.each(data.temp_approval_user, function(index, data) {
+							$('.approver').append(
+								'<div class="form-check"><label class="form-check-label">' +
+								'<input type="radio" class="form-check-input temp_approver_id" name="temp_approver_id" value="' + data.idsrc_login + '"> ' +
+								data.loginname +
+								'</label></div>');
+						});
+					}
+
+					$('#temp-approver-list').modal('toggle');
+				}
+
+				else
+				{
+					$('.ooo-header').fadeOut(1000);
+				}
+	    }
+
+	  });
+	});
+
+	// $(".btn-toggle .active").attr('disabled', true);
+
+	$('body').on('input', '.temp_approver_id', function() {
+    $("#temp_approver_btn").attr('disabled', false);
+  });
+
+	$("#temp_approver_btn").click(function() {
+
+		$("#temp-approver-list").modal('hide');
+
+		var temp_approver_id = $("input[name='temp_approver_id']:checked").val();
+
+		var formData = {
+			_token: $('meta[name="csrf-token"]').attr('content'),
+			temp_approver_id: temp_approver_id,
+		};
+
+		$.ajax({
+			type: 'POST',
+			url: '/controller/tempapproveruser',
+			data: formData,
+			dataType: 'json',
+
+			success: function(response)
+			{
+				$('#approver-success-message').modal('toggle');
+			},
+
+			error: function (response) {
+				console.log(response);
 			}
-
-      }
-  	});
-
+		});
+	});
 
 
-});
+  $('[data-toggle="tooltip"]').tooltip();
 
-  	$('[data-toggle="tooltip"]').tooltip();
-
-  	// $('.input-daterange').datepicker({ format: 'yyyy-mm-dd' });
-    $(".clickable-row, .clickable-div").click(function() {
-        window.document.location = $(this).data("href");
-    });
+  // $('.input-daterange').datepicker({ format: 'yyyy-mm-dd' });
+  $(".clickable-row, .clickable-div").click(function() {
+  	window.document.location = $(this).data("href");
+  });
 
 	$.fn.editable.defaults.mode = 'popup';
 	$('.xedit').editable();
-	$(document).on('click','.editable-submit',function(){
+	$(document).on('click','.editable-submit',function() {
+
 		var w = $(this).closest('td').children('span').attr('data-name');
 		var x = $(this).closest('td').children('span').attr('id');
 		var y = $('.input-cs').val();
@@ -306,40 +404,36 @@ $('.btn-toggle .btn').click(function(e) {
 	    contentType: "application/json; charset=utf-8",
 	    type: 'GET',
 
-
 	    onSelect: function (suggestion) {
 	        getselector = $(this);
 
 	        if(suggestion.data.id != '') {
-		        switch (getselector.attr('id')) {
+		        switch (getselector.attr('id'))
+						{
 			        case 'approver':
 			            $('.approver-selected').html('<div class="approver-selected-row"><b>You selected: </b>' +suggestion.value+ ' - '+suggestion.data.email+' <a class="add-approver" id="add-approver">[ADD]</a></div>');
 		    			loadAddPerson('.add-approver', '.approver-selected-row', '.approver-added', '.approver-selected', suggestion, approver_limit, cc_limit);
 		    			break;
 
-		    		 case 'approver_project_claims':
+		    		 	case 'approver_project_claims':
 			          $('.approver-selected').html('<div class="approver-selected-row"><b>You selected: </b>' +suggestion.value+ ' - '+suggestion.data.email+' <a class="add-approver_project_claims" id="add-approver_project_claims">[ADD]</a></div>');
 		    			loadAddPerson('.add-approver_project_claims', '.approver-selected-row', '.approver-added1', '.approver-selected', suggestion, approver_limit, cc_limit);
 		    			break;
 
-                                 case 'approver_cashadvance_acquittal':
+            	case 'approver_cashadvance_acquittal':
 			          $('.approver-selected').html('<div class="approver-selected-row"><b>You selected: </b>' +suggestion.value+ ' - '+suggestion.data.email+' <a class="add-approver_cashadvance_acquittal" id="add-approver_cashadvance_acquittal">[ADD]</a></div>');
 		    			loadAddPerson('.add-approver_cashadvance_acquittal', '.approver-selected-row', '.approver-added1', '.approver-selected', suggestion, approver_limit, cc_limit);
 		    			break;
 
-
-
-			        case 'ccperson':
+			      	case 'ccperson':
 			            $('.ccperson-selected').html('<div class="ccperson-selected-row"><b>You selected: </b>' +suggestion.value+ ' - '+suggestion.data.email+' <a class="add-ccperson" id="add-ccperson">[ADD]</a></div>');
 		    			loadAddPerson('.add-ccperson', '.ccperson-selected-row', '.ccperson-added', '.ccperson-selected', suggestion, approver_limit, cc_limit);
 
-			            break;
-
-			    }
-			}
-
-
+			        break;
+			    	}
+					}
 	    },
+
 	    onInvalidateSelection: function() {
 	        getselector = $(this);
 
@@ -351,10 +445,9 @@ $('.btn-toggle .btn').click(function(e) {
 		        case 'ccperson':
 		          	$('.ccperson-selected').html('<b>You selected: </b>none');
 		            break;
-
 		    }
-
 	    },
+
 	    showNoSuggestionNotice: true,
 	    noSuggestionNotice: 'Sorry, no matching results'
 	});
@@ -367,7 +460,6 @@ $('.btn-toggle .btn').click(function(e) {
 	    contentType: "application/json; charset=utf-8",
 	    type: 'GET',
 
-
 	    onSelect: function (suggestion) {
 	        getselector = $(this);
 
@@ -377,12 +469,10 @@ $('.btn-toggle .btn').click(function(e) {
 			            $('.approver-selected').html('<div class="approver-selected-row"><b>You selected: </b>' +suggestion.value+ ' - '+suggestion.data.email+' <a class="add-approver" id="add-approver">[ADD]</a></div>');
 		    			loadAddPerson('.add-approver', '.approver-selected-row', '.approver-added', '.approver-selected', suggestion, approver_limit, cc_limit);
 		    			break;
+			    	}
+					}
+	   	},
 
-			    }
-			}
-
-
-	    },
 	    onInvalidateSelection: function() {
 	        getselector = $(this);
 
@@ -390,15 +480,12 @@ $('.btn-toggle .btn').click(function(e) {
 		        case 'flexigroup':
 		          	$('.approver-selected').html('<b>You selected: </b>none');
 		            break;
-
-
 		    }
-
 	    },
+
 	    showNoSuggestionNotice: true,
 	    noSuggestionNotice: 'Sorry, no matching results'
 	});
-
 
 	$('.approver-with-me').autocomplete({
 
@@ -406,7 +493,6 @@ $('.btn-toggle .btn').click(function(e) {
 	    dataType: 'json',
 	    contentType: "application/json; charset=utf-8",
 	    type: 'GET',
-
 
 	    onSelect: function (suggestion) {
 	        getselector = $(this);
@@ -638,7 +724,24 @@ function existPerson(a,b){
 function appendSelected(a,b,c,d){
 	$('span.numbering_method').remove();
 
-	$(a).append('<div><i class="glyphicon glyphicon-minus-sign minus-'+d+'"></i> '+c.value+ ' <small><b>'+c.data.email+'</b></small><input type="hidden" name="'+d+'[]" value="'+c.data.id+'" /></div>');
+	if(c.temp_approver_data.temp_approver_id > 0)
+	{
+		$(a).append(
+			'<div><i class="glyphicon glyphicon-minus-sign minus-'+d+'"></i> '+
+			c.value + ' <small><b>'+c.data.email+'</b></small><input type="hidden" name="'+d+'[]" value="'+c.data.id+'" /><br>' +
+			'<span class="numbering_method"><strong>[Replacer]</strong></span> ' + c.temp_approver_data.temp_approver_name + ' <small><b>'+ c.temp_approver_data.temp_approver_email +'</b></small><input type="hidden" name="temp_approver[]" value="'+c.temp_approver_data.temp_approver_id+'" />' +
+			'</div>');
+	}
+
+	else
+	{
+		$(a).append(
+			'<div><i class="glyphicon glyphicon-minus-sign minus-'+d+'"></i> '+
+			c.value+ ' <small><b>'+c.data.email+'</b></small><input type="hidden" name="'+d+'[]" value="'+c.data.id+'" />' +
+			'<span class="numbering_method"></span><input type="hidden" name="temp_approver[]" value="" />' +
+			'</div>');
+	}
+
 	$(b).hide();
 	loadRemovePerson('.minus-'+d);
 

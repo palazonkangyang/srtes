@@ -1,6 +1,11 @@
 <div class="form-group">
   <label for="designation">Present Designation  (*)</label>
-  {!! Form::text('designation',NULL,['class'=>'form-control ', 'id'=>'designation']) !!}
+  <select class="form-control" name="designation" id="designation">
+    <option value="">-- Select Designation --</option>
+      @foreach($designation as $data)
+      <option value="{{ $data->name }}">{{ $data->name }}</option>
+      @endforeach
+  </select>
 </div>
 
 <div class="form-group">

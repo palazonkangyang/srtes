@@ -3,7 +3,6 @@
 @section('content')
 
 <div class="row">
-
     <div class="col-md-12"><h4 class="page-head-line">Case  <small>#{{$myapplist[0]->case_number}}</small> {{-- $title_page --}}</h4></div>
 </div>
 
@@ -174,7 +173,6 @@ N/A
 @endif
 </div>
 </div>
-
 
 @if($myapplist[0]->type_form == 2)
   @include('viewforms.form_rcp')
@@ -464,15 +462,18 @@ N/A
 
 <div class="history">
   <div class="headhistory">History</div>
-  <div class="printhistory"><a href="javascript:window.print()" id="print-page" class="btn btn-default">print</a></div>
+  <div class="printhistory">
+    <a href="javascript:window.print()" id="print-page" class="btn btn-default">print</a>
+    <a href="/application/view_details/{{$myapplist[0]->id}}?download=pdf" class="btn btn-default">print all</a>
+  </div>
 
   <table class="table" id="table-history">
     <tr>
       <td style="width:12%">Date</td>
-       <td style="width:12%">User</td>
-        <td style="width:12%">Action</td>
-        <td style="width:12%">Status</td>
-        <td style="width:52%">Remarks</td>
+      <td style="width:12%">User</td>
+      <td style="width:12%">Action</td>
+      <td style="width:12%">Status</td>
+      <td style="width:52%">Remarks</td>
     </tr>
     <tr>
       <td>{{ date('d/m/Y', strtotime($myapplist[0]->created_at)) }} {{ date('h:i A', strtotime($myapplist[0]->created_at)) }}</td>
@@ -495,7 +496,7 @@ N/A
           @else
           {{ $history['name'] }}
           @endif
-               </td>
+        </td>
         <td>
           @if($history['status'] == 0)
             Pending
@@ -521,11 +522,10 @@ N/A
           @endif
         </td>
         <td>
-
-            <div>
-              <div>@if(isset($history['recommend_user_id']))<strong> Forwarded to {{$history['recommend_user_id']['name']}} </strong> <br /> <br /> Remarks:</div> @endif
+          <div>
+            <div>@if(isset($history['recommend_user_id']))<strong> Forwarded to {{$history['recommend_user_id']['name']}} </strong> <br /> <br /> Remarks:</div> @endif
               {!! $history['remarks'] !!}
-            </div>
+          </div>
         </td>
       </tr>
     @endforeach

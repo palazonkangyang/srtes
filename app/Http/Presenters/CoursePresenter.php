@@ -46,25 +46,25 @@ class CoursePresenter extends PresenterCore
                      'tes_course.questionnaire_id'
                     );
 
-    $result = $prepare->get();
-
-    foreach($result as $data)
-    {
-      array_push($course_array, $data->id);
-    }
-
     // add search filter for course
     $searchFilter = FilterFactory::getInstance('Text','Search');
     $prepare = $searchFilter->addFilter($prepare,'search','searchCourse');
     $this->view->searchFilter = $searchFilter;
     $this->view->course_list = $this->paginate($prepare);
+
+    // calculate register and complete status
+    for($i = 0; $i < count($this->view->course_list); $i++)
+    {
+      array_push($course_array, $this->view->course_list[$i]->id);
+    }
+
     $this->view->title = 'Course List';
 
     for($i = 0; $i < count($course_array); $i++)
     {
-      $result = ModelFactory::getInstance('FormTsw')->where('course_id')->first();
+      $data = ModelFactory::getInstance('FormTsw')->where('course_id', $course_array[$i])->get();
 
-      if($result)
+      if(count($data) > 0)
       {
         $this->view->course_list[$i]->register = ModelFactory::getInstance('FormTsw')->where('course_id', $course_array[$i])->count();
       }
@@ -82,20 +82,25 @@ class CoursePresenter extends PresenterCore
     }
 
     $this->view->questionarie_answer_no = ModelFactory::getInstance('QuestionnaireAnswer')
-                                          ->select('questionnaire_id')
-                                          ->groupBy('questionnaire_id')
+                                          ->select('course_id')
+                                          ->groupBy('course_id')
                                           ->get();
+
+    // dd($this->view->questionarie_answer_no->toArray());
+    // dd($this->view->course_list->toArray());
 
     for($i = 0; $i < count($this->view->course_list); $i++)
     {
       for($j = 0; $j < count($this->view->questionarie_answer_no); $j++)
       {
-        if($this->view->course_list[$i]->questionnaire_id == $this->view->questionarie_answer_no[$j]->questionnaire_id)
+        if($this->view->course_list[$i]->id == $this->view->questionarie_answer_no[$j]->course_id)
         {
           $this->view->course_list[$i]->hasreport = "true";
         }
       }
     }
+
+    // dd($this->view->course_list->toArray());
 
     return $this->view('tes.course.course-list.index');
   }
@@ -105,17 +110,21 @@ class CoursePresenter extends PresenterCore
     // add search filter for course
     $user_id = \Auth::User()->idsrc_login;
     $role = \Auth::User()->roleid;
-    $questionnaire = Questionnaire::find($id);
-    $this->view->selected_course_list = Course::selectedCourseList($questionnaire->course_id);
+    // $questionnaire = Questionnaire::find($id);
+    $this->view->selected_course_list = Course::selectedCourseList($id);
 
     $this->view->QuestionnaireDetailList = ModelFactory::getInstance("QuestionnaireDetail")
-                                           ->where('questionnaire_id', $id)
+                                           ->where('course_id', $id)
                                            ->get();
+
+    // dd($this->view->QuestionnaireDetailList->toArray());
 
     $this->view->QuestionnaireAnswerList = ModelFactory::getInstance("QuestionnaireAnswer")
                                             ->leftjoin('tes_questionnaire_detail', 'tes_questionnaire_detail.id', '=', 'tes_questionnaire_answer.questionnairedetail_id')
-                                            ->where('tes_questionnaire_detail.questionnaire_id', $id)
+                                            ->where('tes_questionnaire_detail.course_id', $id)
                                             ->get();
+
+    // dd($this->view->QuestionnaireAnswerList->toArray());
 
     // show 15 questionnaire list
     for ($z = 0; $z < count($this->view->QuestionnaireDetailList); $z++)
@@ -125,7 +134,7 @@ class CoursePresenter extends PresenterCore
         $this->view->answerReport1 = ModelFactory::getInstance('QuestionnaireAnswer')
                                       ->leftjoin('tes_questionnaire_detail', 'tes_questionnaire_answer.questionnairedetail_id', '=', 'tes_questionnaire_detail.id')
                                       ->where('tes_questionnaire_answer.questionnairedetail_id', '=', $this->view->QuestionnaireAnswerList[$z]->id)
-                                      ->where('tes_questionnaire_detail.questionnaire_id', '=', $id)
+                                      ->where('tes_questionnaire_detail.course_id', '=', $id)
                                       ->get();
       }
 
@@ -134,7 +143,7 @@ class CoursePresenter extends PresenterCore
         $this->view->answerReport2 = ModelFactory::getInstance('QuestionnaireAnswer')
                                       ->leftjoin('tes_questionnaire_detail', 'tes_questionnaire_answer.questionnairedetail_id', '=', 'tes_questionnaire_detail.id')
                                       ->where('tes_questionnaire_answer.questionnairedetail_id', '=', $this->view->QuestionnaireAnswerList[$z]->id)
-                                      ->where('tes_questionnaire_detail.questionnaire_id', '=', $id)
+                                      ->where('tes_questionnaire_detail.course_id', '=', $id)
                                       ->get();
       }
 
@@ -143,7 +152,7 @@ class CoursePresenter extends PresenterCore
         $this->view->answerReport3 = ModelFactory::getInstance('QuestionnaireAnswer')
                                       ->leftjoin('tes_questionnaire_detail', 'tes_questionnaire_answer.questionnairedetail_id', '=', 'tes_questionnaire_detail.id')
                                       ->where('tes_questionnaire_answer.questionnairedetail_id', '=', $this->view->QuestionnaireAnswerList[$z]->id)
-                                      ->where('tes_questionnaire_detail.questionnaire_id', '=', $id)
+                                      ->where('tes_questionnaire_detail.course_id', '=', $id)
                                       ->get();
       }
 
@@ -152,7 +161,7 @@ class CoursePresenter extends PresenterCore
         $this->view->answerReport4 = ModelFactory::getInstance('QuestionnaireAnswer')
                                       ->leftjoin('tes_questionnaire_detail', 'tes_questionnaire_answer.questionnairedetail_id', '=', 'tes_questionnaire_detail.id')
                                       ->where('tes_questionnaire_answer.questionnairedetail_id', '=', $this->view->QuestionnaireAnswerList[$z]->id)
-                                      ->where('tes_questionnaire_detail.questionnaire_id', '=', $id)
+                                      ->where('tes_questionnaire_detail.course_id', '=', $id)
                                       ->get();
       }
 
@@ -161,7 +170,7 @@ class CoursePresenter extends PresenterCore
         $this->view->answerReport5 = ModelFactory::getInstance('QuestionnaireAnswer')
                                       ->leftjoin('tes_questionnaire_detail', 'tes_questionnaire_answer.questionnairedetail_id', '=', 'tes_questionnaire_detail.id')
                                       ->where('tes_questionnaire_answer.questionnairedetail_id', '=', $this->view->QuestionnaireAnswerList[$z]->id)
-                                      ->where('tes_questionnaire_detail.questionnaire_id', '=', $id)
+                                      ->where('tes_questionnaire_detail.course_id', '=', $id)
                                       ->get();
       }
 
@@ -170,7 +179,7 @@ class CoursePresenter extends PresenterCore
         $this->view->answerReport6 = ModelFactory::getInstance('QuestionnaireAnswer')
                                       ->leftjoin('tes_questionnaire_detail', 'tes_questionnaire_answer.questionnairedetail_id', '=', 'tes_questionnaire_detail.id')
                                       ->where('tes_questionnaire_answer.questionnairedetail_id', '=', $this->view->QuestionnaireAnswerList[$z]->id)
-                                      ->where('tes_questionnaire_detail.questionnaire_id', '=', $id)
+                                      ->where('tes_questionnaire_detail.course_id', '=', $id)
                                       ->get();
       }
 
@@ -179,7 +188,7 @@ class CoursePresenter extends PresenterCore
         $this->view->answerReport7 = ModelFactory::getInstance('QuestionnaireAnswer')
                                       ->leftjoin('tes_questionnaire_detail', 'tes_questionnaire_answer.questionnairedetail_id', '=', 'tes_questionnaire_detail.id')
                                       ->where('tes_questionnaire_answer.questionnairedetail_id', '=', $this->view->QuestionnaireAnswerList[$z]->id)
-                                      ->where('tes_questionnaire_detail.questionnaire_id', '=', $id)
+                                      ->where('tes_questionnaire_detail.course_id', '=', $id)
                                       ->get();
       }
 
@@ -188,7 +197,7 @@ class CoursePresenter extends PresenterCore
         $this->view->answerReport8 = ModelFactory::getInstance('QuestionnaireAnswer')
                                       ->leftjoin('tes_questionnaire_detail', 'tes_questionnaire_answer.questionnairedetail_id', '=', 'tes_questionnaire_detail.id')
                                       ->where('tes_questionnaire_answer.questionnairedetail_id', '=', $this->view->QuestionnaireAnswerList[$z]->id)
-                                      ->where('tes_questionnaire_detail.questionnaire_id', '=', $id)
+                                      ->where('tes_questionnaire_detail.course_id', '=', $id)
                                       ->get();
       }
 
@@ -197,7 +206,7 @@ class CoursePresenter extends PresenterCore
         $this->view->answerReport9 = ModelFactory::getInstance('QuestionnaireAnswer')
                                       ->leftjoin('tes_questionnaire_detail', 'tes_questionnaire_answer.questionnairedetail_id', '=', 'tes_questionnaire_detail.id')
                                       ->where('tes_questionnaire_answer.questionnairedetail_id', '=', $this->view->QuestionnaireAnswerList[$z]->id)
-                                      ->where('tes_questionnaire_detail.questionnaire_id', '=', $id)
+                                      ->where('tes_questionnaire_detail.course_id', '=', $id)
                                       ->get();
       }
 
@@ -206,7 +215,7 @@ class CoursePresenter extends PresenterCore
         $this->view->answerReport10 = ModelFactory::getInstance('QuestionnaireAnswer')
                                       ->leftjoin('tes_questionnaire_detail', 'tes_questionnaire_answer.questionnairedetail_id', '=', 'tes_questionnaire_detail.id')
                                       ->where('tes_questionnaire_answer.questionnairedetail_id', '=', $this->view->QuestionnaireAnswerList[$z]->id)
-                                      ->where('tes_questionnaire_detail.questionnaire_id', '=', $id)
+                                      ->where('tes_questionnaire_detail.course_id', '=', $id)
                                       ->get();
       }
 
@@ -232,7 +241,16 @@ class CoursePresenter extends PresenterCore
     $searchFilter = FilterFactory::getInstance('Text','Search');
     $this->view->searchFilter = $searchFilter;
     $this->view->questionnaire_list = $this->paginate($prepare);
-    $this->view->title = 'Questionnaire Report - '.$this->view->selected_course_list->name.'('.$this->view->selected_course_list->code.')';
+
+    if(!isset($this->view->selected_course_list))
+    {
+      $this->view->title = 'Questionnaire Report';
+    }
+
+    else
+    {
+      $this->view->title = 'Questionnaire Report - '.$this->view->selected_course_list->name.' ('.$this->view->selected_course_list->code.')';
+    }
 
     return $this->view('tes.course.course-list.questionnaire_report');
   }
@@ -257,15 +275,15 @@ class CoursePresenter extends PresenterCore
 
   public function editquestionnaire($id)
   {
-    $questionnaire = Questionnaire::find($id);
-    $this->view->selected_course_list = Course::selectedCourseList($questionnaire->course_id);
+    $this->view->selected_course_list = Course::selectedCourseList($id);
+
     $this->view->QuestionnaireDetailList = ModelFactory::getInstance("QuestionnaireDetail")
-                                           ->where('questionnaire_id', $id)
+                                           ->where('course_id', $id)
                                            ->get();
 
     $this->view->QuestionnaireAnswerList = ModelFactory::getInstance("QuestionnaireAnswer")
-                                           ->leftjoin('tes_questionnaire_detail', 'tes_questionnaire_detail.id', '=', 'tes_questionnaire_answer.questionnairedetail_id')
-                                           ->where('tes_questionnaire_detail.questionnaire_id', $id)
+                                           ->leftjoin('tes_questionnaire_detail', 'tes_questionnaire_detail.course_id', '=', 'tes_questionnaire_answer.course_id')
+                                           ->where('tes_questionnaire_detail.course_id', $id)
                                            ->get();
 
     $this->view->title = 'Edit Questionnaire';
