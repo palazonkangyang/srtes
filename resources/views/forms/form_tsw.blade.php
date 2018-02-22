@@ -26,7 +26,7 @@
 </div>
 
 <div class="form-group">
-  <label for="select-programme">Course (*)</label>
+  <label for="select-programme">Course</label>
   {!! Form::select('course-id',$course_list_array,'',array('id'=>'select-programme','placeholder' => '-- Select Programme --','class' => 'form-control')) !!}
   {!! Form::hidden('course_id','',array('id'=>'course_id')) !!}
   {!! Form::hidden('title','',array('id'=>'title')) !!}
@@ -183,6 +183,12 @@ $( "#select-programme" ).change(function() {
       console.log($("#select-timetable :selected").data('fromdate'));
       $("#to_date").val($("#select-timetable :selected").data('todate'));
     });
+
+
+
+
+
+
   });
 
   request.fail(function(jqXHR, textStatus) {

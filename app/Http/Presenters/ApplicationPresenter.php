@@ -235,14 +235,12 @@ class ApplicationPresenter extends PresenterCore
                           ->orderByRaw(DB::raw("FIELD(idsrc_login, $userlist)"))
                           ->get();
 
-					// dd($approverlist->toArray());
-
           foreach($list as $key => $listitem)
           {
             if($listitem != 0)
 						{
               $approverlistindividual = ModelFactory::getInstance("User")
-                                  			->where('idsrc_login','=', $listitem)
+                                  			->where('idsrc_login','=',$listitem)
                                   			->first();
 
               $approverlist_mod[$key]['emailadd'] = $approverlistindividual->emailadd;
@@ -253,7 +251,7 @@ class ApplicationPresenter extends PresenterCore
 							// append temporary approver lists
 							for($i = 0; $i < count($approverlist_mod); $i++)
 							{
-								if(isset($approverlist_mod[$i]['temp_approver_id']))
+								if($approverlist_mod[$i]['temp_approver_id'] != null)
 								{
 									$tempapproverlist = ModelFactory::getInstance("User")
 																			->where('idsrc_login', $approverlist_mod[$i]['temp_approver_id'])
@@ -266,8 +264,9 @@ class ApplicationPresenter extends PresenterCore
 
 								else
 								{
-									$approverlist_mod[$i]['temp_approver_loginname'] = NULL;
-									$approverlist_mod[$i]['temp_approver_emailadd'] = NULL;
+									$approverlist_mod[$i]->temp_approver_idsrc_login = NULL;
+									$approverlist_mod[$i]->temp_approver_loginname = NULL;
+									$approverlist_mod[$i]->temp_approver_emailadd = NULL;
 								}
 							}
             }
@@ -865,6 +864,25 @@ class ApplicationPresenter extends PresenterCore
         'ams_forms.name as form_name'
       ];
 
+			// 0 for group
+      $firstprepare = ModelFactory::getInstance('Approver')
+					         		->leftjoin('ams_applications', 'ams_applications.id', '=', 'ams_approver_person.app_id')
+					            ->leftjoin('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_applications.created_id')
+											->leftjoin('srcusers.users as u2', 'u2.idsrc_login', '=', 'ams_approver_person.temp_approver_id')
+					            ->leftjoin('ams_forms', 'ams_forms.id', '=', 'ams_applications.type_form')
+					            ->leftjoin('ams_flexigroup', 'ams_flexigroup.id', '=', 'ams_approver_person.group_id')
+					            ->leftjoin('ams_flexigroup_person', 'ams_flexigroup_person.group_id', '=', 'ams_flexigroup.id')
+					            ->where('ams_approver_person.user_id', '=', 0)
+					            ->where('ams_approver_person.read', '=', 0)
+					            ->where('ams_approver_person.forward', '=', 1)
+					            ->where('ams_approver_person.group_id', '>', 0)
+					            ->whereNotIn('ams_applications.status', [ 2, 3 ])
+					            ->where('ams_applications.drafts', '=', 0)
+					            ->where('ams_flexigroup_person.user_id', '=', $user_id)
+					            ->orWhere('ams_applications.created_id', '=', $user_id)
+					            ->distinct()
+					            ->whereNotIn( 'ams_applications.status', [0, 1, 2, 3, 4, 7])
+					            ->select($select);
 
 			$secondprepare = ModelFactory::getInstance('Approver')
 						            ->leftjoin('ams_applications', 'ams_applications.id', '=', 'ams_approver_person.app_id')
@@ -884,14 +902,16 @@ class ApplicationPresenter extends PresenterCore
 						            ->whereNotIn('ams_applications.status', [0, 1, 2, 3, 4, 6, 7])
 						            ->select($select);
 
-			$prepare = $secondprepare->get();
+			// dd($secondprepare->get()->toArray());
+
+			$prepare = $firstprepare->unionAll($secondprepare)->get();
 
       //add search filter
       $this->view->pendinglist = $prepare;
 
 			$this->view->title = 'Out of Office - Pending List';
 
-      return $this->view('application.out_of_office_pending_lists');
+      return $this->view('application.outofoffice_pending_lists');
 		}
 
 		public function pendingStatus(Request $request)
@@ -1428,17 +1448,17 @@ class ApplicationPresenter extends PresenterCore
 
     if( !is_null($checkapp) )
 		{
-			//Creator
-			$this->view->action_url = 'closeapp';
-			$this->view->mark = 'creator';
-			$this->view->title_page = 'Case Closing';
+    	//Creator
+      $this->view->action_url =  'closeapp';
+      $this->view->mark = 'creator';
+      $this->view->title_page = 'Case Closing';
 
-			$app = ModelFactory::getInstance('Application')
-						->join('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_applications.created_id')
-						->where('ams_applications.created_id', '=', $user_id)
-						->where('ams_applications.id', '=', $id)
-						->get($select);
-    }
+      $app = ModelFactory::getInstance('Application')
+            ->join('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_applications.created_id')
+            ->where('ams_applications.created_id', '=', $user_id)
+            ->where('ams_applications.id', '=', $id)
+            ->get($select);
+      }
 
 			else
 			{
@@ -1838,48 +1858,16 @@ class ApplicationPresenter extends PresenterCore
           $app[0]['status'] = 5;
         }
 
-				// check temporary approver lists
-				$temp_approver_list = ModelFactory::getInstance('Approver')
-															 ->where('app_id', $app[0]['id'])
-															 ->select('user_id', 'temp_approver_id')
-															 ->get()
-															 ->toArray();
+        $this->view->myapplist =  $app;
+        $this->view->forminfo =  $form;
+        $this->view->afm =  $application_form_name;
+        $this->view->afmesage =  $application_form_message;
+        $this->view->doclist =  $doc;
+        $this->view->filelist =  $files;
+        $this->view->approverlist =  $approver;
+        $this->view->ccpersonlist =  $ccperson;
 
-				foreach($temp_approver_list as $list)
-				{
-					if($list['user_id'] == $user_id)
-					{
-						if($list['temp_approver_id'] == 0)
-						{
-							$this->view->pending_status = '';
-						}
-						else
-						{
-							$this->view->pending_status = 'Yes';
-						}
-					}
-
-					else
-					{
-						if($list['temp_approver_id'] == 0)
-						{
-							$this->view->pending_status = '';
-						}
-						else
-						{
-							$this->view->pending_status = 'Yes';
-						}
-					}
-				}
-
-        $this->view->myapplist = $app;
-        $this->view->forminfo = $form;
-        $this->view->afm = $application_form_name;
-        $this->view->afmesage = $application_form_message;
-        $this->view->doclist = $doc;
-        $this->view->filelist = $files;
-        $this->view->approverlist = $approver;
-        $this->view->ccpersonlist = $ccperson;
+				// dd($this->view->forminfo->toArray());
 
         $merge_history = array();
         $merge_history = array_merge($merge_history, $approverhistoryapprover);
@@ -1919,9 +1907,6 @@ class ApplicationPresenter extends PresenterCore
 
 				if($request->has('download'))
 				{
-
-					// dd($this->view->one_approver);
-
 					if($app[0]->type_form == 12 || $app[0]->type_form == 14 || $app[0]->type_form == 16 || $app[0]->type_form == 19 || $app[0]->type_form == 20)
 					{
 						$data = [
@@ -1956,9 +1941,6 @@ class ApplicationPresenter extends PresenterCore
 					    'mark' => $this->view->mark,
 					    'filelist' => $this->view->filelist,
 					    'doclist' => $this->view->doclist,
-							'one_approver' => $this->view->one_approver,
-							'finalapprover' => $this->view->finalapprover,
-							'currentapprover' => $this->view->currentapprover,
 					    'historylist' => $this->view->historylist,
 							'today' => Carbon::parse()->format('d/m/Y g:i A')
 					  ];
