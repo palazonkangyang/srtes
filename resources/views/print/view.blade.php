@@ -231,7 +231,7 @@ table th[class*="col-"] {
 
   <div class="row">
     <div class="col-md-12 print-heading">
-      <span>AMS: {{ $myapplist[0]->case_number }}</span>
+      <span>AMS: #</span>
     </div>
 
     <div class="col-md-12 print-heading">
@@ -278,6 +278,11 @@ table th[class*="col-"] {
       <span class="alert-danger">Rejected</span>
     @endif
   </div><!-- end visible-print -->
+  @endif
+
+
+  @if($myapplist[0]->status != 2 && $myapplist[0]->status != 3 && $myapplist[0]->status != 4 && $mark == 'approver' && $one_approver->approver_read == 0)
+
   @endif
 
   <div class="row bg-cc-only">
@@ -550,6 +555,7 @@ table th[class*="col-"] {
       <span class="alert-success">Commented</span>
       @elseif($myapplist[0]->status == 6)
       <span class="alert-warning">Feedback Required</span>
+      <div><a href="/application/view_details/{{ $myapplist[0]->id }}/feedback">click here to fill in survey form</a></div>
       @elseif($myapplist[0]->status == 7)
       <span class="alert-success">Feedback Given</span>
       @endif
@@ -758,178 +764,5 @@ table th[class*="col-"] {
   </div><!-- end history -->
 
 </div><!-- end wrap-content -->
-
-<script type="text/javascript">
-
-  creator_id = $('input[name="creator_id"]').val();
-  prepend_view();
-   prepend_view19();
-  check_submit = $('.recommend-added-list').find('.recommend_final').attr('class');
-  if(check_submit == undefined) {
-    $('.radio_recommend').prop('checked', false);
-  }
-
-  $(".click_open").on('click',function(){
-      var sib = $(this).siblings('.remarks-history').html();
-      $('.open_remarks').find('.remarks-body').append(sib);
-  });
-
-  $('.open_remarks').on('hidden.bs.modal', function () {
-    $(this).find('.remarks-body').empty();
-  });
-
-$(function () {
-
-  CKEDITOR.config.removePlugins = 'about,link';
-
-  $('#recommend_name').autocomplete({
-      serviceUrl: '/application/getjsonuser',
-      dataType: 'json',
-      contentType: "application/json; charset=utf-8",
-      type: 'GET',
-
-      onSelect: function (suggestion) {
-        getselector = $(this);
-        if(suggestion.data.id != '') {
-            switch (getselector.attr('id')) {
-              case 'recommend_name':
-                $('.recommend-selected').html('<div class="recommend-selected-row"><b>Email Address: </b>'+suggestion.data.email+' <input type="hidden" id="email_address" value="'+suggestion.data.email+'" /><input type="hidden" id="recommend_selected_id" value="'+suggestion.data.id+'" /><input type="hidden" id="recommend_selected_name" value="'+suggestion.value+'" /></div>');
-                 break;
-          }
-        } else{
-           $('.recommend-selected-row').remove();
-        }
-
-      },
-      onInvalidateSelection: function() {
-          getselector = $(this);
-            switch (getselector.attr('id')) {
-            case 'recommend_name':
-                $('.recommend_name').html('<b>Name not found</b>none');
-                break;
-        }
-      }
-  });
-
-  //recommend status
-  $('div.add_recommend').on('hidden.bs.modal', function () {
-    $('input#recommend_name').val(''); $('.recommend-selected > div').remove(); $('input#recommend_name').focus();
-    rec_final = $('.recommend-added-list').find('.recommend_final').attr('class');
-
-    if(rec_final == undefined) {
-        $('.radio_recommend').prop('checked', false);
-    }
-
-  });
-
-  $(".submit_recommend").on('click', function(e) {
-    e.preventDefault();
-    selected_email = $('input#email_address').val();
-    selected_name = $('input#recommend_selected_name').val();
-    selected_id = $('input#recommend_selected_id').val();
-    check_approver_list = true;
-
-    $('.recommend_final').remove();
-
-    $( "[name^='approver_id_check']" ).each(function() {
-      var aValue = $(this).val();
-      if(aValue == selected_id) check_approver_list = false;
-    });
-
-  if(creator_id != selected_id){
-        if(selected_email != undefined) {
-          if(check_approver_list){
-            $(".recommend-added-list").css('display','block');
-            $('.recommend-added-list').find('span').append('<span class="recommend_final"><i class="glyphicon glyphicon-minus-sign remove_recommend"></i> <span class="unap alert-info">'+selected_name+' <small>('+selected_email+')</small></span>  <input type="hidden" value="'+selected_id+'" name="selected_recommend"></span>');
-            $('.add_recommend').modal('hide');
-            $('.radio_recommend').prop('checked', true);
-          } else {
-           $('.recommend-selected > alert').remove();
-           $('.recommend-selected').html('<div class="alert alert-danger"> Person exist on the approver chain. </div>');
-          }
-        } else {
-          $('.recommend-selected > alert').remove();
-          $('.recommend-selected').html('<div class="alert alert-danger"> Please select user on the search field. </div>');
-        }
-    } else {
-        $('.recommend-selected > alert').remove();
-        $('.recommend-selected').html('<div class="alert alert-danger"> You cant choose owner as forward person. </div>');
-    }
-  });
-
-  $('.recommend-added-list').on('click','span span i', function(){
-      $(".recommend-added-list").css('display','none');
-      $(this).parent().remove();
-      $('.radio_recommend').prop('checked', false);
-  });
-
-   $('.radio_approve, .radio_reject').on('click',function(){
-      find_final = $('.recommend-added-list').find('.recommend_final').attr('class');
-
-      if(find_final != undefined) {
-        $(".recommend-added-list").css('display','none');
-        $('.recommend-added-list').find('.recommend_final').remove();
-      }
-
-   });
-
-})
-
-function prepend_view(){
-var $set = $('.approver-list > span');
-var len = $set.length;
-  $(".approver-list > span").each(function(i) {
-
-
-
-if (i == len - 1) {
-           $(this).find("a").prepend('<span class="numbering_method"> <strong>[Approver] </strong> <span>');
-
-          }else{
-              if(i == 0)    {
-       $(this).find("a").prepend('<span class="numbering_method"> <strong>[1st Verify] </strong> <span>');
-
-    }
-    else if (i == 1) {
-           $(this).find("a").prepend('<span class="numbering_method"> <strong>[2nd Verify] </strong> <span>');
-
-          }
-       else if (i == 2) {
-           $(this).find("a").prepend('<span class="numbering_method"> <strong>[3rd Verify] </strong> <span>');
-
-          }
-
-              }
-  });
-}
-function prepend_view19(){
-var $set = $('.approver-list-19 > span');
-var len = $set.length;
-
-  $(".approver-list-19 > span").each(function(i) {
-
-
-
-if (i == len - 1) {
-           $(this).find("a").prepend('<span class="numbering_method"> <strong>[Approver] </strong> <span>');
-
-          }else{
-              if(i == 0)    {
-       $(this).find("a").prepend('<span class="numbering_method"> <strong>[1st Verify] </strong> <span>');
-
-    }
-    else if (i == 1) {
-           $(this).find("a").prepend('<span class="numbering_method"> <strong>[2nd Verify] </strong> <span>');
-
-          }
-       else if (i == 2) {
-           $(this).find("a").prepend('<span class="numbering_method"> <strong>[3rd Verify] </strong> <span>');
-
-          }
-
-              }
-  });
-}
-</script>
 
 </body>

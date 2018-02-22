@@ -1,39 +1,12 @@
-<div style="width:1000px; border:1px solid black; padding:20px;">
+<div style="width:500px; margin:0 auto; border:1px solid black; padding:20px;">
 
-  <p style="font-family: Arial, sans-serif; font-size:13px; line-height:22px;">
-		Dear <?php echo e($receiver_name); ?>,
-	</p>
+  <?php for($i = 0; $i < count($questions['title']); $i++): ?>
 
-	<p style="font-family: Arial, sans-serif; font-size:13px; line-height:22px;">
-    Below are Summary of Questionnaire Answers. This form is submitted by <?php echo e($sender_name); ?> (<?php echo e($sender_email); ?>).
-	</p><br />
-
-  <?php for($i = 0; $i < count($feedback['questions']); $i++): ?>
-
-    <?php if($feedback['answer_input_type'][$i] != 5): ?>
-
-    <div style="font-family: Arial, sans-serif; font-size:13px; line-height:22px;">
-      <h4>Q: <?php echo e($feedback['questions'][$i]); ?></h4>
-      <p>A: <?php echo e($feedback['answers'][$i]); ?></p>
-    </div>
-
-    <?php else: ?>
-
-    <div style="font-family: Arial, sans-serif; font-size:13px; line-height:22px;">
-      <h4>Q: <?php echo e($feedback['questions'][$i]); ?></h4>
-
-      <?php for($j = 0; $j < count($feedback['answers'][$i]); $j++): ?>
-      <p><?php echo e($feedback['description_title'][$i][$j]); ?> : <?php echo e($feedback['answers'][$i][$j]); ?></p>
-      <?php endfor; ?>
-    </div>
-
-    <?php endif; ?>
+  <div style="font-family: Arial, sans-serif; font-size:13px; line-height:22px;">
+    <p>Q: $questions['title'][$i]</p>
+    <p>A: $questions['answer'][$i]</p>
+  </div>
 
   <?php endfor; ?>
-
-  <br /><br />
-  <p style="font-family: Arial, sans-serif; font-size:13px; line-height:22px;">
-		Approval Management System<br />Singapore Red Cross
-	</p>
 
 </div>

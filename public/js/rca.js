@@ -729,7 +729,7 @@ function appendSelected(a,b,c,d){
 		$(a).append(
 			'<div><i class="glyphicon glyphicon-minus-sign minus-'+d+'"></i> '+
 			c.value + ' <small><b>'+c.data.email+'</b></small><input type="hidden" name="'+d+'[]" value="'+c.data.id+'" /><br>' +
-			'<span class="temp_approver"><strong>[Replacer]</strong></span> ' + c.temp_approver_data.temp_approver_name + ' <small><b>'+ c.temp_approver_data.temp_approver_email +'</b></small><input type="hidden" name="temp_approver[]" value="'+c.temp_approver_data.temp_approver_id+'" />' +
+			'<span class="numbering_method"><strong>[Replacer]</strong></span> ' + c.temp_approver_data.temp_approver_name + ' <small><b>'+ c.temp_approver_data.temp_approver_email +'</b></small><input type="hidden" name="temp_approver[]" value="'+c.temp_approver_data.temp_approver_id+'" />' +
 			'</div>');
 	}
 
@@ -738,7 +738,7 @@ function appendSelected(a,b,c,d){
 		$(a).append(
 			'<div><i class="glyphicon glyphicon-minus-sign minus-'+d+'"></i> '+
 			c.value+ ' <small><b>'+c.data.email+'</b></small><input type="hidden" name="'+d+'[]" value="'+c.data.id+'" />' +
-			'<span class="temp_approver"></span><input type="hidden" name="temp_approver[]" value="" />' +
+			'<span class="numbering_method"></span><input type="hidden" name="temp_approver[]" value="" />' +
 			'</div>');
 	}
 
@@ -746,6 +746,7 @@ function appendSelected(a,b,c,d){
 	loadRemovePerson('.minus-'+d);
 
 	append_numbering();
+
 }
 
 

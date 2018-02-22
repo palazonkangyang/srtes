@@ -911,7 +911,7 @@ table tr.clickable-row:hover{
   background: #f1f1f1;
 }
 
-.numbering_method, .temp_approver{
+.numbering_method{
   font-size: 12px;
   color:#666;
 }
