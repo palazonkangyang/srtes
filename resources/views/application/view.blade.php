@@ -351,7 +351,9 @@ N/A
   <span class="alert-success">Commented</span>
   @elseif($myapplist[0]->status == 6)
   <span class="alert-warning">Feedback Required</span>
+  @if($pending_status == '')
   <div><a href="/application/view_details/{{ $myapplist[0]->id }}/feedback">click here to fill in survey form</a></div>
+  @endif
   @elseif($myapplist[0]->status == 7)
   <span class="alert-success">Feedback Given</span>
   @endif
@@ -359,7 +361,7 @@ N/A
 </div>
 
 @if($approverlist->count() != 0)
-        @if($myapplist[0]->status == 0 && $mark == 'creator')
+        @if($myapplist[0]->status == 0 && $mark == 'creator' && $pending_status == '')
           <div class="row bg-cc-only hidden-print">
           <div class="col-md-2 bg-cc">Cancel Case (*)</div>
           <div class="col-md-10 bg-ff">
@@ -382,7 +384,7 @@ N/A
    @endif
 @endif
 
-@if($myapplist[0]->status != 2 && $myapplist[0]->status != 3 && $myapplist[0]->status != 4 && $mark == 'approver' && $one_approver->approver_read == 0)
+@if($myapplist[0]->status != 2 && $myapplist[0]->status != 3 && $myapplist[0]->status != 4 && $mark == 'approver' && $one_approver->approver_read == 0 && $pending_status == '')
 
 {!! Form::hidden('approver_id', $one_approver->approver_id )!!}
 

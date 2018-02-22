@@ -42,7 +42,6 @@ class SocialAuthController extends Controller
 
   public function callback()
   {
-    dd('here');
     $googleuser = Socialite::driver('google')->user();
     $client = new \Google_Client();
     $client->setApplicationName('Redcross');
