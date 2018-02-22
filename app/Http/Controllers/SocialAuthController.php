@@ -32,13 +32,11 @@ class SocialAuthController extends Controller
     return Socialite::driver('google')->redirect();
   }
 
-
 /**
  * Expands the home directory alias '~' to the full path.
  * @param string $path the path to expand.
  * @return string the expanded path.
  */
-
 
   public function callback()
   {
