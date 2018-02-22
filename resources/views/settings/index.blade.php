@@ -106,7 +106,7 @@
     <div class="col-md-3 col-sm-3 col-xs-6">
       <a href="/settings/glcode_setting" class="magic-link">
         <div class="dashboard-div-wrapper bk-clr-two">
-          <i class="fa fa-code dashboard-div-icon" ></i>
+          <i class="fa fa-code dashboard-div-icon"></i>
             <div class="progress progress-striped active">
               <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
               </div>
