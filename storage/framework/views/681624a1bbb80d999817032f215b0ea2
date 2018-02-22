@@ -2,131 +2,148 @@
 <?php $__env->startSection('content'); ?>
 
 <script type="text/javascript">
-    $(function() {
-        $('.filter-select').change(function() {
-            this.form.submit();
-        });
+  $(function() {
+    $('.filter-select').change(function() {
+      this.form.submit();
     });
+  });
 </script>
 
 <div class="row pos-rel">
-    <div class="col-md-12"><h4 class="page-head-line">Admin Reports</h4></div>
-    <div class="print-table">
-      <?php if(count($reports)): ?>
-        <a download="reports.xls" href="#" onclick="return ExcellentExport.excel(this, 'xls-table', 'Report');" class="btn btn-default">export to Excel</a>
-        <a download="reports.csv" href="#" onclick="return ExcellentExport.csv(this, 'xls-table');" class="btn btn-default">export to CSV</a>
-        <a href="javascript:window.print()" id="print-page" class="btn btn-default">print</a>
-      <?php endif; ?>
-    </div>
-</div>
+  <div class="col-md-12">
+    <h4 class="page-head-line">Admin Reports</h4>
+  </div><!-- end col-md-12 -->
+
+  <div class="print-table">
+    <?php if(count($reports)): ?>
+      <a download="reports.xls" href="#" onclick="return ExcellentExport.excel(this, 'xls-table', 'Report');" class="btn btn-default">export to Excel</a>
+      <a download="reports.csv" href="#" onclick="return ExcellentExport.csv(this, 'xls-table');" class="btn btn-default">export to CSV</a>
+      <a href="javascript:window.print()" id="print-page" class="btn btn-default">print</a>
+    <?php endif; ?>
+  </div><!-- end print-table -->
+</div><!-- end row -->
 
 
 <div class="wrap-content">
 
-    <div class="hide"><?php echo e($grant_total = 0); ?> </div>
-<?php echo Form::open(['class'=>'form-horizontal filter_field fontsizing']); ?> 
-<div class="form-group">
-  <label class="col-md-1 control-label" for="textinput">Filter</label>  
-  <div class="col-md-10">
-      <div class="form-inline">
- <?php echo Form::select('department', $departmentFilter->getOptions(), $departmentFilter->getValue(), ['class'=>'form-control filter-select']  ); ?> 
-          <?php echo Form::select('forms', $formsFilter->getOptions(), $formsFilter->getValue(), ['class'=>'form-control filter-select']  ); ?>
+  <div class="hide"><?php echo e($grant_total = 0); ?> </div>
 
-     
+  <?php echo Form::open(['class'=>'form-horizontal filter_field fontsizing']); ?>
+
+
+  <div class="form-group">
+    <label class="col-md-1 control-label" for="textinput">Filter</label>
+    <div class="col-md-10">
+      <div class="form-inline">
+        <?php echo Form::select('department', $departmentFilter->getOptions(), $departmentFilter->getValue(), ['class'=>'form-control filter-select']  ); ?>
+
+        <?php echo Form::select('forms', $formsFilter->getOptions(), $formsFilter->getValue(), ['class'=>'form-control filter-select']  ); ?>
+
         <?php echo Form::select('urgency', $urgencyFilter->getOptions(), $urgencyFilter->getValue(), ['class'=>'form-control filter-select'] ); ?>
 
         <?php echo Form::select('status', $statusFilter->getOptions(), $statusFilter->getValue(), ['class'=>'form-control filter-select'] ); ?>
 
-      </div>
-</div>
-</div>
-<div class="form-group">
-<label class="col-md-1 control-label" for="textinput">Date: </label>  
-<div class="col-md-3">
-    <div class="input-daterange input-group" id="datepicker">
+      </div><!-- end form-inline -->
+    </div><!-- end col-md-10 -->
+  </div><!-- end form-group -->
+
+  <div class="form-group">
+    <label class="col-md-1 control-label" for="textinput">Date: </label>
+    <div class="col-md-3">
+      <div class="input-daterange input-group" id="datepicker">
         <input class="input-sm form-control from_date" name="startdate" value="<?php echo e($fromtoFilter->getfrom()); ?>" type="text">
         <span class="input-group-addon">to</span>
         <input class="input-sm form-control to_date" name="startdate_to" value="<?php echo e($fromtoFilter->getto()); ?>" type="text">
-    </div>
-</div>
-<label class="col-md-3 control-label" for="search_field">Keyword: </label>
-  <div class="col-md-5"> 
-    <?php echo Form::text('search',$searchFilter->getValue(),['class'=>'form-control','id'=>'search_field']); ?>
+      </div><!-- end input-daterange -->
+    </div><!-- end col-md-3 -->
 
-    <?php echo Form::submit('Search',['class'=>'btn btn-default btn-cs search_btn']); ?> 
-    <a href="" class="btn btn-default btn-cs">Clear</a>
-  </div>
-</div>
-<?php echo Form::close(); ?>  
+    <label class="col-md-3 control-label" for="search_field">Keyword: </label>
+    <div class="col-md-5">
+      <?php echo Form::text('search',$searchFilter->getValue(),['class'=>'form-control','id'=>'search_field']); ?>
+
+      <?php echo Form::submit('Search',['class'=>'btn btn-default btn-cs search_btn']); ?>
+
+      <a href="" class="btn btn-default btn-cs">Clear</a>
+    </div><!-- end col-md-5 -->
+  </div><!-- end form-group -->
+
+  <?php echo Form::close(); ?>
 
 
+  <?php if(count($reports)): ?>
 
-<?php if(count($reports)): ?>
-<div class="row">
-<div id="no-more-tables">
- <table class="col-md-12 table-bordered table-striped table-condensed cf" id="xls-table">
-    <thead class="cf">
-         <th><?php echo $reports->sortColumn('created_at','Date'); ?></th>
-        <th><?php echo $reports->sortColumn('case_number','S/N'); ?></th>
-         <th>Title</th>
-        <th>Urgency</th>
-        <th>Department</th>
-        <th><?php echo $reports->sortColumn('status','Status'); ?></th>
-         <th>Total</th>
-    </thead>
+  <div class="row">
+    <div id="no-more-tables">
+      <table class="col-md-12 table-bordered table-striped table-condensed cf" id="xls-table">
+        <thead class="cf">
+          <th><?php echo $reports->sortColumn('created_at','Date'); ?></th>
+          <th><?php echo $reports->sortColumn('case_number','S/N'); ?></th>
+          <th>Title</th>
+          <th>Urgency</th>
+          <th>Department</th>
+          <th><?php echo $reports->sortColumn('status','Status'); ?></th>
+          <th>Total</th>
+        </thead>
 
-    <tbody>
-         
+        <tbody>
+
         <?php foreach($reports as $report): ?>
         <tr class="clickable-row" data-href="/application/view_reports/<?php echo e($report->id); ?>">
-
-            <td data-title="Date"><?php echo e(date('d/m/Y', strtotime($report->created_at))); ?></td>
-            <td data-title="S/N"><?php echo e($report->case_number); ?></td>
-             <td data-title="Title"><?php if($report->title): ?><?php echo e($report->title); ?> <?php else: ?> <?php echo e($report->form_name); ?> <?php endif; ?></td>
-            <td data-title="Urgency">
-                    <?php if($report->urgency == 1): ?> 
-                        Normal
-                    <?php else: ?> 
-                        Urgent
-                    <?php endif; ?>
+          <td data-title="Date"><?php echo e(date('d/m/Y', strtotime($report->created_at))); ?></td>
+          <td data-title="S/N"><?php echo e($report->case_number); ?></td>
+          <td data-title="Title"><?php if($report->title): ?><?php echo e($report->title); ?> <?php else: ?> <?php echo e($report->form_name); ?> <?php endif; ?></td>
+          <td data-title="Urgency">
+            <?php if($report->urgency == 1): ?>
+              Normal
+            <?php else: ?>
+              Urgent
+            <?php endif; ?>
+          </td>
+          <td data-title="Department"><?php echo e($report->department); ?></td>
+          <td data-title="Status">
+            <?php if($report->status == 0): ?>
+              <span class="alert-black">Pending</span>
+            <?php elseif($report->status == 1): ?>
+              <span class="alert-black">Approved</span>
+            <?php elseif($report->status == 2): ?>
+              <span class="alert-black">Rejected</span>
+            <?php elseif($report->status == 3): ?>
+              <span class="alert-black">Cancelled</span>
+            <?php elseif($report->status == 4): ?>
+              <span class="alert-black">Forwarded</span>
+            <?php endif; ?>
             </td>
-            <td data-title="Department"><?php echo e($report->department); ?></td>
-            <td data-title="Status">
-                <?php if($report->status == 0): ?> 
-                    <span class="alert-black">Pending</span>
-                <?php elseif($report->status == 1): ?>
-                    <span class="alert-black">Approved</span>
-                <?php elseif($report->status == 2): ?>
-                    <span class="alert-black">Rejected</span>
-                <?php elseif($report->status == 3): ?>
-                    <span class="alert-black">Cancelled</span>
-                 <?php elseif($report->status == 4): ?>
-                    <span class="alert-black">Forwarded</span>
-                <?php endif; ?>
-            </td>
-              <td data-title="Total"><?php echo e($report->total); ?></td>
-    <div class='hide'><?php echo e($grant_total =$grant_total + $report->total); ?></div>
-          
+            <td data-title="Total"><?php echo e($report->total); ?></td>
+            <div class='hide'><?php echo e($grant_total =$grant_total + $report->total); ?></div>
         </tr>
         <?php endforeach; ?>
-    <td></td><td></td> <td></td><td></td> <td></td> <td>Grant Total:</td><td><?php echo e($grant_total); ?></td>
-    </tbody>
-</table>
-</div>
-</div>
+
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>Grant Total:</td>
+          <td><?php echo e(number_format( $grant_total, 2)); ?></td>
+        </tbody>
+      </table>
+    </div><!-- end no-more-tables -->
+  </div><!-- end row -->
 
 <span style="display:none">
-    <?php echo $reports->sortColumn('',''); ?>
+  <?php echo $reports->sortColumn('',''); ?>
 
 </span>
+
 <?php echo $reports->paginate(); ?>
 
+
 <?php else: ?>
-    <span class="no-data-display">No data to display.</span>
+  <span class="no-data-display">No data to display.</span>
 <?php endif; ?>
 
 </div>
 
-
 <?php $__env->stopSection(); ?>
+
 <?php echo $__env->make('layout.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

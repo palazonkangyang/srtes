@@ -245,7 +245,11 @@
                                              <span class="numbering_method"> <strong></strong> <span></span></span>
                                              {{ $appr['loginname'] }} <small><b>{{ $appr['emailadd'] }}</b></small>
                                              <input type="hidden" name="approver[]" id="approverfield_{{$keynote+1}}" value="{{ $appr['idsrc_login'] }}"><br />
+                                             @if(isset($appr['temp_approver_emailadd']))
                                              <span class="numbering_method"> <strong>[Replacer]</strong> <span></span></span>
+                                             @else
+                                             <span class="numbering_method"><span></span></span>
+                                             @endif
                                              {{ $appr['temp_approver_loginname'] }} <small><b>{{ $appr['temp_approver_emailadd'] }}</b></small>
                                              <input type="hidden" name="temp_approver[]" value="{{ $appr['temp_approver_id'] }}">
                                            </div>
@@ -537,8 +541,6 @@ $('form').submit(function(event) {
     var form = $(this);
     var formdata = new FormData($("form")[0]);
     var progressTrigger;
-
-    alert(JSON.stringify(formdata));
 
     $.ajaxSetup({
         headers: {

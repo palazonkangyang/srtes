@@ -2,7 +2,6 @@
 <?php $__env->startSection('content'); ?>
 
 <div class="row">
-
     <div class="col-md-12"><h4 class="page-head-line">Case  <small>#<?php echo e($myapplist[0]->case_number); ?></small> <?php /* $title_page */ ?></h4></div>
 </div>
 
@@ -188,7 +187,6 @@ N/A
 </div>
 </div>
 
-
 <?php if($myapplist[0]->type_form == 2): ?>
   <?php echo $__env->make('viewforms.form_rcp', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php elseif($myapplist[0]->type_form == 3): ?>
@@ -370,7 +368,9 @@ N/A
   <span class="alert-success">Commented</span>
   <?php elseif($myapplist[0]->status == 6): ?>
   <span class="alert-warning">Feedback Required</span>
+  <?php if($pending_status == ''): ?>
   <div><a href="/application/view_details/<?php echo e($myapplist[0]->id); ?>/feedback">click here to fill in survey form</a></div>
+  <?php endif; ?>
   <?php elseif($myapplist[0]->status == 7): ?>
   <span class="alert-success">Feedback Given</span>
   <?php endif; ?>
@@ -378,7 +378,7 @@ N/A
 </div>
 
 <?php if($approverlist->count() != 0): ?>
-        <?php if($myapplist[0]->status == 0 && $mark == 'creator'): ?>
+        <?php if($myapplist[0]->status == 0 && $mark == 'creator' && $pending_status == ''): ?>
           <div class="row bg-cc-only hidden-print">
           <div class="col-md-2 bg-cc">Cancel Case (*)</div>
           <div class="col-md-10 bg-ff">
@@ -402,7 +402,7 @@ N/A
    <?php endif; ?>
 <?php endif; ?>
 
-<?php if($myapplist[0]->status != 2 && $myapplist[0]->status != 3 && $myapplist[0]->status != 4 && $mark == 'approver' && $one_approver->approver_read == 0): ?>
+<?php if($myapplist[0]->status != 2 && $myapplist[0]->status != 3 && $myapplist[0]->status != 4 && $mark == 'approver' && $one_approver->approver_read == 0 && $pending_status == ''): ?>
 
 <?php echo Form::hidden('approver_id', $one_approver->approver_id ); ?>
 
@@ -486,15 +486,18 @@ N/A
 
 <div class="history">
   <div class="headhistory">History</div>
-  <div class="printhistory"><a href="javascript:window.print()" id="print-page" class="btn btn-default">print</a></div>
+  <div class="printhistory">
+    <a href="javascript:window.print()" id="print-page" class="btn btn-default">print</a>
+    <a href="/application/view_details/<?php echo e($myapplist[0]->id); ?>?download=pdf" class="btn btn-default">print all</a>
+  </div>
 
   <table class="table" id="table-history">
     <tr>
       <td style="width:12%">Date</td>
-       <td style="width:12%">User</td>
-        <td style="width:12%">Action</td>
-        <td style="width:12%">Status</td>
-        <td style="width:52%">Remarks</td>
+      <td style="width:12%">User</td>
+      <td style="width:12%">Action</td>
+      <td style="width:12%">Status</td>
+      <td style="width:52%">Remarks</td>
     </tr>
     <tr>
       <td><?php echo e(date('d/m/Y', strtotime($myapplist[0]->created_at))); ?> <?php echo e(date('h:i A', strtotime($myapplist[0]->created_at))); ?></td>
@@ -518,7 +521,7 @@ N/A
           <?php echo e($history['name']); ?>
 
           <?php endif; ?>
-               </td>
+        </td>
         <td>
           <?php if($history['status'] == 0): ?>
             Pending
@@ -544,12 +547,11 @@ N/A
           <?php endif; ?>
         </td>
         <td>
-
-            <div>
-              <div><?php if(isset($history['recommend_user_id'])): ?><strong> Forwarded to <?php echo e($history['recommend_user_id']['name']); ?> </strong> <br /> <br /> Remarks:</div> <?php endif; ?>
+          <div>
+            <div><?php if(isset($history['recommend_user_id'])): ?><strong> Forwarded to <?php echo e($history['recommend_user_id']['name']); ?> </strong> <br /> <br /> Remarks:</div> <?php endif; ?>
               <?php echo $history['remarks']; ?>
 
-            </div>
+          </div>
         </td>
       </tr>
     <?php endforeach; ?>

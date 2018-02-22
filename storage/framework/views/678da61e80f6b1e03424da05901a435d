@@ -247,7 +247,19 @@
 		      			<?php endif; ?>
                                         <?php endif; ?>
                                         <?php if($appr['emailadd'] !='url'): ?>
-		      			<div class="approver-list" id="approver_<?php echo e($keynote+1); ?>" ><i class="glyphicon glyphicon-minus-sign minus-approver-disabled"></i><span class="numbering_method"> <strong></strong> <span></span></span> <?php echo e($appr['loginname']); ?> <small><b><?php echo e($appr['emailadd']); ?></b></small><input type="hidden" name="approver[]" id="approverfield_<?php echo e($keynote+1); ?>"  value="<?php echo e($appr['idsrc_login']); ?>"></div>
+		      			                           <div class="approver-list" id="approver_<?php echo e($keynote+1); ?>" >
+                                             <i class="glyphicon glyphicon-minus-sign minus-approver-disabled"></i>
+                                             <span class="numbering_method"> <strong></strong> <span></span></span>
+                                             <?php echo e($appr['loginname']); ?> <small><b><?php echo e($appr['emailadd']); ?></b></small>
+                                             <input type="hidden" name="approver[]" id="approverfield_<?php echo e($keynote+1); ?>" value="<?php echo e($appr['idsrc_login']); ?>"><br />
+                                             <?php if(isset($appr['temp_approver_emailadd'])): ?>
+                                             <span class="numbering_method"> <strong>[Replacer]</strong> <span></span></span>
+                                             <?php else: ?>
+                                             <span class="numbering_method"><span></span></span>
+                                             <?php endif; ?>
+                                             <?php echo e($appr['temp_approver_loginname']); ?> <small><b><?php echo e($appr['temp_approver_emailadd']); ?></b></small>
+                                             <input type="hidden" name="temp_approver[]" value="<?php echo e($appr['temp_approver_id']); ?>">
+                                           </div>
                                         <?php else: ?>
                                         <div class="approver-list" id="approver_<?php echo e($keynote+1); ?>" ><i class="glyphicon glyphicon-minus-sign minus-approver-disabled"></i><span class="numbering_method"> <strong></strong> <span></span></span> <?php echo e($appr['loginname']); ?> <a target="_blank" href="<?php echo e(url('/flexigroup/viewflexigroup/'.$appr['idsrc_login'])); ?>">click to view</a> <input type="hidden" name="approver[]" id="approverfield_<?php echo e($keynote+1); ?>"  value="group_<?php echo e($appr['idsrc_login']); ?>"></div>
                                         <?php endif; ?>
@@ -331,23 +343,23 @@
 		 	<?php echo $__env->make('forms.form_mjr', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 		<?php elseif($form[0]->id == 11): ?>
 		 	<?php echo $__env->make('forms.form_pgvbf', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-                <?php elseif($form[0]->id == 12): ?>
+    <?php elseif($form[0]->id == 12): ?>
 		 	<?php echo $__env->make('forms.form_sorapfca', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-                <?php elseif($form[0]->id == 13): ?>
+    <?php elseif($form[0]->id == 13): ?>
 		 	<?php echo $__env->make('forms.form_aca', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-                <?php elseif($form[0]->id == 14): ?>
-		 	<?php echo $__env->make('forms.form_pcmcf', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-                <?php elseif($form[0]->id == 20): ?>
+    <?php elseif($form[0]->id == 14): ?>
+			<?php echo $__env->make('forms.form_pcmcf', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+    <?php elseif($form[0]->id == 20): ?>
 		 	<?php echo $__env->make('forms.form_pcmcf2', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-                <?php elseif($form[0]->id == 15): ?>
-		 	<?php echo $__env->make('forms.form_mrf', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-                <?php elseif($form[0]->id == 16): ?>
+    <?php elseif($form[0]->id == 15): ?>
+			<?php echo $__env->make('forms.form_mrf', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+    <?php elseif($form[0]->id == 16): ?>
 		 	<?php echo $__env->make('forms.form_tsw', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-                <?php elseif($form[0]->id == 17): ?>
+    <?php elseif($form[0]->id == 17): ?>
 		 	<?php echo $__env->make('forms.form_irfi', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-                <?php elseif($form[0]->id == 18): ?>
+    <?php elseif($form[0]->id == 18): ?>
 		 	<?php echo $__env->make('forms.form_coprpo', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-                <?php elseif($form[0]->id == 19): ?>
+    <?php elseif($form[0]->id == 19): ?>
 		 	<?php echo $__env->make('forms.form_eoq', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 
 		<?php else: ?>

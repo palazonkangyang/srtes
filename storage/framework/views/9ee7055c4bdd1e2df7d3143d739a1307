@@ -1,0 +1,110 @@
+  <div class="row bg-cc-only"> 
+  <div class="col-md-2 bg-cc">Cancelled Item(s)</div>
+<div class="radio col-md-10 bg-ff">   
+            <label>
+                <?php if($forminfo->chk_pr == 1): ?> 
+                <?php echo Form::checkbox('chk_pr',1, true, ['id' => 'chk_pr2','disabled' =>'true']); ?> Purchase Requisition (PR)
+                <?php else: ?>
+                  <?php echo Form::checkbox('chk_pr',1, null, ['id' => 'chk_pr2','disabled' =>'true']); ?> Purchase Requisition (PR)
+                <?php endif; ?>
+            </label>
+            <label>
+                  <?php if($forminfo->chk_po == 1): ?> 
+                <?php echo Form::checkbox('chk_po',1, true, ['id' => 'chk_po2','disabled' =>'true']); ?> Purchase Order (PO)
+                <?php else: ?>
+                  <?php echo Form::checkbox('chk_po',1, null, ['id' => 'chk_po2','disabled' =>'true']); ?> Purchase Order (PO)
+                <?php endif; ?>
+             </label>
+            <label>
+                    <?php if($forminfo->chk_grn == 1): ?> 
+                <?php echo Form::checkbox('chk_grn',1, true, ['id' => 'chk_grn2','disabled' =>'true']); ?> Receiving Slip (GRN)
+                <?php else: ?>
+                  <?php echo Form::checkbox('chk_grn',1, null, ['id' => 'chk_grn2','disabled' =>'true']); ?> Receiving Slip (GRN)
+                <?php endif; ?>
+              </label>
+            <label>
+                           <?php if($forminfo->chk_inv == 1): ?> 
+                <?php echo Form::checkbox('chk_inv',1, true, ['id' => 'chk_inv2','disabled' =>'true']); ?> Invoice (INV)
+                <?php else: ?>
+                  <?php echo Form::checkbox('chk_inv',1, null, ['id' => 'chk_inv2','disabled' =>'true']); ?> Invoice (INV)
+                <?php endif; ?>
+
+            </label>
+        </div>
+  </div>
+ <div class="row bg-cc-only"> 
+  <div class="col-md-2 bg-cc"></div>
+<div class="radio col-md-10 bg-ff">  noted: only checked item(s) needed to be cancelled, items' no. shown below is for references only.
+    </div>
+  </div>
+  <?php if($forminfo->pr_no != ""): ?>
+  <div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">PR No.</div>
+  <div class="col-md-10 bg-ff">
+    <?php echo $forminfo->pr_no; ?>
+
+  </div>
+  </div>
+<?php endif; ?>
+ 
+  <?php if($forminfo->po_no != ""): ?>
+  <div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">PO No.</div>
+  <div class="col-md-10 bg-ff">
+    <?php echo $forminfo->po_no; ?>
+
+  </div>
+  </div>
+<?php endif; ?>
+
+  <?php if($forminfo->grn_no != ""): ?>
+  <div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">GRN No.</div>
+  <div class="col-md-10 bg-ff">
+    <?php echo $forminfo->grn_no; ?>
+
+  </div>
+  </div>
+<?php endif; ?>
+
+ <?php if($forminfo->inv_no != ""): ?>
+  <div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">INV No.</div>
+  <div class="col-md-10 bg-ff">
+    <?php echo $forminfo->inv_no; ?>
+
+  </div>
+  </div>
+<?php endif; ?>
+
+  <div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Description</div>
+  <div class="col-md-10 bg-ff">
+    <?php echo $forminfo->desc_purchased; ?>
+
+  </div>
+  </div>
+
+ <div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Reasons</div>
+  <div class="col-md-10 bg-ff">
+    <?php echo $forminfo->reasons; ?>
+
+  </div>
+  </div>
+
+ <div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Vendor</div>
+  <div class="col-md-10 bg-ff">
+    <?php echo $forminfo->vendor; ?>
+
+  </div>
+  </div>
+
+ <div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Amount</div>
+  <div class="col-md-10 bg-ff">
+    <?php echo $forminfo->amount; ?>
+
+  </div>
+  </div>

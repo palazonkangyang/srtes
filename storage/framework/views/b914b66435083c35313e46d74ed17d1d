@@ -18,7 +18,7 @@
 				<div class="panel-heading">
 					<h4>Edit questionnaire form</h4>
 					<span class="pos-add-back pull-right">
-						<a href="/tes/form-management/questionnaire-list">Back to Course List</a>
+						<a href="/tes/course/course-list">Back to Course List</a>
 					</span>
 				</div><!-- end panel-heading -->
 
@@ -46,8 +46,7 @@
 					</div><!-- end alert-danger -->
 					<?php endif; ?>
 
-					<?php echo Form::open(['url'=>'/controller/tes/course/course-list/edit-questionnaire/'.$selected_course_list->questionnaire_id,'class'=>'',]); ?>
-
+					<?php echo Form::open(['url'=>'/controller/tes/course/course-list/edit-questionnaire/'.$selected_course_list->id,'class'=>'',]); ?>
 
 
 					<div class="form-group">
@@ -59,15 +58,13 @@
 
 					<?php if(count($QuestionnaireAnswerList) != 0): ?>
 						<div style='color:red;'>
-							Currently there is submitter on this questionnaire, changes is not allow
+							Currently there is submitter on this questionnaire, changes are not allowed.
 						</div>
 					<?php endif; ?>
 
 					<hr/>
 
-					<input type="hidden" name="course_id" value="<?php echo $selected_course_list->id; ?>"/>
-					<input type="hidden" name="questionnaire_id" value="<?php echo $selected_course_list->questionnaire_id; ?>"/>
-
+					<input type="hidden" name="course_id" value="<?php echo $selected_course_list->id; ?>" />
 
 					<div class="form-group">
 
@@ -111,41 +108,41 @@
 							 			</div><!-- end form-group -->
 
 										<hr/>
- 								</div><!-- end question-row -->
- 		   					<?php endforeach; ?>
+ 									</div><!-- end question-row -->
+ 		   						<?php endforeach; ?>
 
 								<?php else: ?>
 
 								<div class="question-row">
 								</div><!-- end question-row -->
 
-    					<?php endif; ?>
-						</div><!-- end questionnaire-builder -->
+    						<?php endif; ?>
+							</div><!-- end questionnaire-builder -->
 
-	 					<?php if(count($QuestionnaireAnswerList) == 0): ?>
-							<a href="#" id="addRowBtn" class="btn btn-success"><i class="glyphicon glyphicon-plus"></i> Add Question</a>
-						<?php endif; ?>
-
-						<hr/>
-					</div><!-- end form-group -->
-
-					<div class="form-group row">
-						<div class="col-sm-12" style="text-align:center">
-							<?php if(count($QuestionnaireAnswerList) == 0): ?>
-								<button type="submit" class="btn btn-default">Edit Questionnaire</button>
+	 						<?php if(count($QuestionnaireAnswerList) == 0): ?>
+								<a href="#" id="addRowBtn" class="btn btn-success"><i class="glyphicon glyphicon-plus"></i> Add Question</a>
 							<?php endif; ?>
-						</div><!-- end col-sm-12 -->
-					</div><!-- end form-group -->
 
-					<?php echo Form::close(); ?>
+							<hr/>
+						</div><!-- end form-group -->
+
+						<div class="form-group row">
+							<div class="col-sm-12" style="text-align:center">
+								<?php if(count($QuestionnaireAnswerList) == 0): ?>
+									<button type="submit" class="btn btn-default">Edit Questionnaire</button>
+								<?php endif; ?>
+							</div><!-- end col-sm-12 -->
+						</div><!-- end form-group -->
+
+						<?php echo Form::close(); ?>
 
 
-				</div><!-- end panel-body -->
+					</div><!-- end panel-body -->
 
-			</div><!-- end panel -->
+				</div><!-- end panel -->
 
-		</div><!-- end col-md-12 -->
-	</div><!-- end row -->
+			</div><!-- end col-md-12 -->
+		</div><!-- end row -->
 </div><!-- end wrap-content -->
 
 <script type="text/javascript">

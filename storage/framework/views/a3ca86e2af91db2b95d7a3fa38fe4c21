@@ -1,0 +1,97 @@
+<?php $__env->startSection('title', $title); ?>
+<?php $__env->startSection('content'); ?>
+
+<?php if(Session::has('success')): ?>
+
+<div class="container">
+	<div class="alert alert-success alert-dismissible fade in fixed-error">
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">×</span>
+		</button>
+		<strong> <?php echo e(Session::get('success')); ?></strong>
+	</div>
+</div>
+
+<?php endif; ?>
+
+<div class="row">
+	<div class="col-md-12">
+		<h4 class="page-head-line">Course Type List</h4>
+	</div>
+</div><!-- end row -->
+
+<div class="wrap-content">
+
+  <?php echo Form::open(['class'=>'form-horizontal filter_field']); ?>
+
+
+  	<div class="form-group">
+  		<label class="col-md-1 control-label" for="search_field">Search</label>
+  		<div class="col-md-5">
+        <?php echo Form::text('search','',['class'=>'form-control','id'=>'search_field']); ?>
+
+        <?php echo Form::submit('Search',['class'=>'btn btn-default btn-cs search_btn']); ?>
+
+      </div><!-- end col-md-5 -->
+
+  		<div class="col-md-6">
+  			<span class="pull-right">
+  				<a href="/tes/course/course-type/add-course-type" id="add-button" class="btn btn-default">Add Course Type</a>
+  			</span>
+  		</div><!-- end col-md-6 -->
+  	</div><!-- end form-group -->
+
+  <?php echo Form::close(); ?>
+
+
+  <?php if(count($course_type_list)): ?>
+
+  <div class="row">
+
+    <div id="no-more-tables">
+
+      <table class="col-md-12 table-bordered table-striped table-condensed cf">
+        <thead class="cf">
+          <th><?php echo $course_type_list->sortColumn('id','ID'); ?></th>
+          <th><?php echo $course_type_list->sortColumn('name','Name'); ?></th>
+          <th>Action</th>
+        </thead>
+
+        <tbody>
+
+					<?php foreach($course_type_list as $coursetype): ?>
+					<tr class="clickable-row" data-href="/tes/course/course-type/edit-course-type/<?php echo e($coursetype->id); ?>">
+						<td data-title="id"><?php echo e($coursetype->id); ?></td>
+						<td data-title="name"><?php echo e($coursetype->name); ?></td>
+						<td class="special-td">
+							<a title='Edit Questionnaire' href="/tes/course/course-type/edit-questionnaire/<?php echo e($coursetype->id); ?>" class='btn btn-default btn-xs'><i class="glyphicon glyphicon-edit"></i></a>
+          	</td>
+					</tr>
+					<?php endforeach; ?>
+
+				</tbody>
+      </table>
+
+    </div><!-- end no-more-tables -->
+
+  </div><!-- end row -->
+
+  <span style="display:none">
+	  <?php echo $course_type_list->sortColumn('',''); ?>
+
+	</span>
+
+	<?php echo $course_type_list->paginate(); ?>
+
+
+  <?php else: ?>
+
+  <span class="no-data-display">No data to display.</span>
+
+  <?php endif; ?>
+
+</div><!-- end wrap-content -->
+
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layout.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

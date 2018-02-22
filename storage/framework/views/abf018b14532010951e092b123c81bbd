@@ -1,6 +1,5 @@
 <?php $__env->startSection('title',$title); ?>
 
-
 <?php $__env->startSection('content'); ?>
   <div class="row">
     <div class="col-md-12"><h4 class="page-head-line align-center">New Application</h4></div>
@@ -137,44 +136,44 @@
 			}
 		});
 
-    $("#submit").click(function() {
-
-      var trueorfalse = false;
-      var type_form = $("#type_form").val();
-
-      var formData = {
-				_token: $('meta[name="csrf-token"]').attr('content'),
-				type_form: type_form
-			};
-
-      $.ajax({
-				type: 'GET',
-				url: "/application/pending-status",
-				data: formData,
-        async: false,
-				dataType: 'json',
-				success: function(response)
-				{
-          if(response['no_of_pending'] == 0)
-          {
-            $('#pending-form').hide();
-            trueorfalse = true;
-          }
-
-          else
-          {
-            $('#pending-form').show();
-            trueorfalse = false;
-          }
-				},
-
-				error: function (response) {
-					console.log(response);
-				}
-			});
-
-      return trueorfalse;
-    });
+    // $("#submit").click(function() {
+    //
+    //   var trueorfalse = false;
+    //   var type_form = $("#type_form").val();
+    //
+    //   var formData = {
+		// 		_token: $('meta[name="csrf-token"]').attr('content'),
+		// 		type_form: type_form
+		// 	};
+    //
+    //   $.ajax({
+		// 		type: 'GET',
+		// 		url: "/application/pending-status",
+		// 		data: formData,
+    //     async: false,
+		// 		dataType: 'json',
+		// 		success: function(response)
+		// 		{
+    //       if(response['no_of_pending'] == 0)
+    //       {
+    //         $('#pending-form').hide();
+    //         trueorfalse = true;
+    //       }
+    //
+    //       else
+    //       {
+    //         $('#pending-form').show();
+    //         trueorfalse = false;
+    //       }
+		// 		},
+    //
+		// 		error: function (response) {
+		// 			console.log(response);
+		// 		}
+		// 	});
+    //
+    //   return trueorfalse;
+    // });
 	});
 </script>
 <?php $__env->stopSection(); ?>

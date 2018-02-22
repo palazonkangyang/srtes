@@ -1,0 +1,63 @@
+<?php $__env->startSection('title', $title); ?>
+<?php $__env->startSection('content'); ?>
+
+<?php if(Session::has('success')): ?>
+
+<div class="container">
+	<div class="alert alert-success alert-dismissible fade in fixed-error">
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true">×</span>
+		</button>
+		<strong> <?php echo e(Session::get('success')); ?></strong>
+	</div>
+</div>
+<?php endif; ?>
+
+<div class="row">
+	<div class="col-md-12">
+		<h4 class="page-head-line">Batch List</h4>
+		<ol class="breadcrumb">
+		  <li class="breadcrumb-item"><a href="/tes/course/course-completion-status">Course List</a></li>
+			<li class="breadcrumb-item"><?php echo e($course['name']); ?></li>
+		</ol>
+	</div>
+</div>
+<div class="wrap-content">
+
+<?php if(count($batch_list)): ?>
+
+	<div class="row">
+		<div id="no-more-tables">
+			<table class="col-md-12 table-bordered table-striped table-condensed cf">
+				<thead class="cf">
+					<th>Batch ID</th>
+					<th>Start Date</th>
+					<th>End Date</th>
+					<th>Location</th>
+					<th>Completion Status</th>
+				</thead>
+				<tbody>
+<?php foreach($batch_list as $batch): ?>
+					<tr>
+						<td data-title="id"><?php echo e($batch->id); ?></td>
+						<td data-title="start_date"><?php echo e($batch->start_date); ?></td>
+						<td data-title="end_date"><?php echo e($batch->end_date); ?></td>
+						<td data-title="location"><?php echo e($batch->location); ?></td>
+						<td data-title="completion_status" class="clickable-row" data-href="/tes/course/course-completion-status/course-<?php echo e($course['id']); ?>/batch-<?php echo e($batch->id); ?>/questionnaire"><?php echo e($batch->completion_status); ?>%</td>
+					</tr>
+<?php endforeach; ?>
+
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+<?php else: ?>
+	<span class="no-data-display">No data to display.</span>
+<?php endif; ?>
+
+</div>
+
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layout.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

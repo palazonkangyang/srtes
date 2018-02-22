@@ -2,494 +2,511 @@
 <?php $__env->startSection('content'); ?>
 
 <div class="row">
-    <div class="col-md-12"><h4 class="page-head-line"><?php echo e($title_page); ?></h4></div>
-</div>
+  <div class="col-md-12"><h4 class="page-head-line"><?php echo e($title_page); ?></h4></div>
+</div><!-- end row -->
 
 <div class="wrap-content">
-<div class="visible-print print-status-position">
-  Status: 
-  <?php if($myapplist[0]->status == 0): ?> 
-    <span class="alert-warning">Pending</span>
-  <?php elseif($myapplist[0]->status == 1): ?>
-    <span class="alert-success">Approved</span>
-  <?php elseif($myapplist[0]->status == 2): ?>
-    <span class="alert-danger">Rejected</span>
-  <?php elseif($myapplist[0]->status == 3): ?>
-    <span class="alert-info">Cancelled</span>
-  <?php elseif($myapplist[0]->status == 4): ?>
-    <span class="alert-success">Forwarded</span>
-  <?php endif; ?>
-</div>
-
-<?php echo Form::open(['url'=>'/controller/application/reports/'.$action_url,'class'=>'form-horizontal fsize', 'files'=>true]); ?> 
-<?php echo Form::hidden('app_id', $myapplist[0]->id ); ?>
-
-<?php echo Form::hidden('case_number', $myapplist[0]->case_number ); ?>
-
-<?php echo Form::hidden('creator_id', $myapplist[0]->id ); ?>
-
-<?php echo Form::hidden('case_status', $myapplist[0]->status ); ?>
-
- 
-<div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Case Number</div>
-<div class="col-md-10 bg-ff">
-  <?php echo e($myapplist[0]->case_number); ?>
-
-</div>
-</div>
-
-<div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Creator</div>
-<div class="col-md-10 bg-ff">
-  <?php echo e($myapplist[0]->creator_name); ?>
-
-</div>
-</div>
-
-<div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Type of Request</div>
-<div class="col-md-10 bg-ff">
-  <?php echo e($myapplist[0]->type_request); ?>
-
-</div>
-</div>
-
-<div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Type of Form</div>
-<div class="col-md-10 bg-ff">
-  <?php echo e($afm->name); ?>
-
-</div>
-</div>
-
-<div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Department</div>
-<div class="col-md-10 bg-ff">
-  <?php echo e($myapplist[0]->department); ?>
-
-</div>
-</div>
-
-<div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Urgency</div>
-<div class="col-md-10 bg-ff">
-    <?php if($myapplist[0]->urgency == 1): ?>
-      Normal
-    <?php else: ?>
-      Urgent
+  <div class="visible-print print-status-position">
+    Status:
+    <?php if($myapplist[0]->status == 0): ?>
+      <span class="alert-warning">Pending</span>
+    <?php elseif($myapplist[0]->status == 1): ?>
+      <span class="alert-success">Approved</span>
+    <?php elseif($myapplist[0]->status == 2): ?>
+      <span class="alert-danger">Rejected</span>
+    <?php elseif($myapplist[0]->status == 3): ?>
+      <span class="alert-info">Cancelled</span>
+    <?php elseif($myapplist[0]->status == 4): ?>
+      <span class="alert-success">Forwarded</span>
     <?php endif; ?>
-</div>
-</div>
+  </div><!-- end visible-print -->
 
-<div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Approver(s)</div>
-<div class="col-md-10 bg-ff">
-   <?php if($myapplist[0]->type_form == 19): ?>
-  <div class="approver-list-19">
-   <?php else: ?>
-   <div class="approver-list">
-   <?php endif; ?>
-<?php if($approverlist->count() != 0): ?>
+  <?php echo Form::open(['url'=>'/controller/application/reports/'.$action_url,'class'=>'form-horizontal fsize', 'files'=>true]); ?>
 
-  <input type="hidden" value="<?php echo e($approverlist->count()); ?> " id="approver_count" name="approver_count">
-  <?php foreach($approverlist as $approver): ?>
-      <span class="each_approver">
-        <a class="unap <?php if($approver->approver_status == 1): ?> alert-success <?php endif; ?> <?php if($approver->approver_status == 2): ?> alert-danger <?php endif; ?>" data-toggle="tooltip" data-placement="top" title="<?php echo e($approver->approver_email); ?>">
-          <?php echo e($approver->approver_name); ?>
+  <?php echo Form::hidden('app_id', $myapplist[0]->id ); ?>
 
-          <input name="approver_id_check[]" type="hidden" value="<?php echo e($approver->approver_user_id); ?>" />
-        </a>
-      </span>
-  <?php endforeach; ?>
+  <?php echo Form::hidden('case_number', $myapplist[0]->case_number ); ?>
 
-<?php else: ?> 
-  <span class="no-approver">N/A</span>
-<?php endif; ?>
-  </div>
-</div>
-</div>
+  <?php echo Form::hidden('creator_id', $myapplist[0]->id ); ?>
 
-<div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">CC Person(s)</div>
-<div class="col-md-10 bg-ff">
-<?php if(isset($ccpersonlist) && $ccpersonlist): ?>
-  <?php foreach($ccpersonlist as $ccperson): ?>
-    <a data-toggle="tooltip" data-placement="top" title="<?php echo e($ccperson['ccperson_email']); ?>" class="unap <?php if($ccperson['ccperson_status'] == 1): ?> alert-success <?php endif; ?>"><?php echo e($ccperson['ccperson_name']); ?> </a>
-    <input type="hidden" value="<?php echo e($ccperson['ccperson_user_id']); ?>" name="ccperson_each[]">
-  <?php endforeach; ?>
-<?php else: ?> 
-N/A
-<?php endif; ?>
-</div>
-</div>
-
-<?php if($myapplist[0]->type_form == 2): ?>
-  <?php echo $__env->make('viewforms.form_rcp', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<?php elseif($myapplist[0]->type_form == 3): ?>
-  <?php echo $__env->make('viewforms.form_rca', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<?php elseif($myapplist[0]->type_form == 4): ?>
-  <?php echo $__env->make('viewforms.form_area', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<?php elseif($myapplist[0]->type_form == 5): ?>
-  <?php echo $__env->make('viewforms.form_arge', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<?php elseif($myapplist[0]->type_form == 6): ?>
-  <?php echo $__env->make('viewforms.form_cdsaa', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<?php elseif($myapplist[0]->type_form == 7): ?>
-  <?php echo $__env->make('viewforms.form_rdra', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<?php elseif($myapplist[0]->type_form == 8): ?>
-  <?php echo $__env->make('viewforms.form_atac', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<?php elseif($myapplist[0]->type_form == 9): ?>
-  <?php echo $__env->make('viewforms.form_hphcrf', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<?php elseif($myapplist[0]->type_form == 10): ?>
-  <?php echo $__env->make('viewforms.form_mjr', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<?php elseif($myapplist[0]->type_form == 11): ?>
-  <?php echo $__env->make('viewforms.form_pgvbf', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<?php elseif($myapplist[0]->type_form == 12): ?>
-  <?php echo $__env->make('viewforms.form_sorapfca', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<?php elseif($myapplist[0]->type_form == 13): ?>
-  <?php echo $__env->make('viewforms.form_aca', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<?php elseif($myapplist[0]->type_form == 14): ?>
-  <?php echo $__env->make('viewforms.form_pcmcf', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<?php elseif($myapplist[0]->type_form == 20): ?>
-  <?php echo $__env->make('viewforms.form_pcmcf2', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<?php elseif($myapplist[0]->type_form == 15): ?>
-  <?php echo $__env->make('viewforms.form_mrf', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<?php elseif($myapplist[0]->type_form == 16): ?>
-  <?php echo $__env->make('viewforms.form_tsw', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<?php elseif($myapplist[0]->type_form == 17): ?>
-  <?php echo $__env->make('viewforms.form_irfi', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<?php elseif($myapplist[0]->type_form == 18): ?>
-  <?php echo $__env->make('viewforms.form_coprpo', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<?php elseif($myapplist[0]->type_form == 19): ?>
-  <?php echo $__env->make('viewforms.form_eoq', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<?php else: ?>
-<div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Title</div>
-<div class="col-md-10 bg-ff">
-<?php echo e($myapplist[0]->title); ?>
-
-</div>
-</div>
-<div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Request Details</div>
-<div class="col-md-10 bg-ff">
-<?php echo $myapplist[0]->request_details; ?>
-
-</div>
-</div>
-<?php endif; ?>
-
-<div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Documents</div>
-<div class="col-md-10 bg-ff">
-
-<div class="col-md-8 bg-ff hidden-print">
-<div class="row doc-thumb">
+  <?php echo Form::hidden('case_status', $myapplist[0]->status ); ?>
 
 
-<?php if($filelist->count() == 0 && $doclist->count() == 0): ?>
- N/A
-<?php else: ?> 
-<?php if($doclist): ?>
-  <?php foreach($doclist as $doc): ?>
+  <div class="row bg-cc-only">
+    <div class="col-md-2 bg-cc">Case Number</div><!-- end col-md-2 -->
+    <div class="col-md-10 bg-ff">
+      <?php echo e($myapplist[0]->case_number); ?>
 
-<div class="google-drive"> 
-  <a class="thumbnail text-center" href="<?php echo e($doc->document_link); ?>" target="_blank" data-toggle="tooltip" data-placement="top" title="<?php echo e($doc->document_name); ?>"  class="thumbnail text-center" >
-    <div class="hidden-md hidden-lg hidden-sm doc-size"><?php echo e(str_limit($doc->document_name, $limit = 10, $end = '...')); ?></div>
-  </a>
-</div>
+    </div><!-- end col-md-10 -->
+  </div><!-- end row -->
 
-  <?php endforeach; ?>
-<?php endif; ?>
+  <div class="row bg-cc-only">
+    <div class="col-md-2 bg-cc">Creator</div><!-- end col-md-2 -->
+    <div class="col-md-10 bg-ff">
+      <?php echo e($myapplist[0]->creator_name); ?>
 
-<?php if($filelist): ?>
-  
-  <?php foreach($filelist as $file): ?>
-  <div class="icon-hover"> 
-    <?php if($file->files_mimes == 'application/pdf'): ?>
+    </div><!-- end col-md-10 -->
+  </div><!-- end row -->
 
-    <a href="/application/view/file/<?php echo e($file->files_fileurl); ?>/pdf" target="_blank" data-toggle="tooltip" data-placement="top" title="<?php echo e($file->files_filename); ?>"  class="thumbnail text-center pdf-icon" > 
-      <div class="hidden-md hidden-lg hidden-sm doc-size"><?php echo e(str_limit($file->files_filename, $limit = 10, $end = '...')); ?></div>
-    </a>
+  <div class="row bg-cc-only">
+    <div class="col-md-2 bg-cc">Type of Request</div><!-- end col-md-2 -->
+    <div class="col-md-10 bg-ff">
+      <?php echo e($myapplist[0]->type_request); ?>
 
-    <?php elseif($file->files_mimes == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'): ?>
+    </div><!-- end col-md-10 -->
+  </div><!-- end row -->
 
-    <a href="/application/view/file/<?php echo e($file->files_fileurl); ?>/docx" target="_blank" data-toggle="tooltip" data-placement="top" title="<?php echo e($file->files_filename); ?>"  class="thumbnail text-center doc-icon" >
-      <div class="hidden-md hidden-lg hidden-sm doc-size"><?php echo e(str_limit($file->files_filename, $limit = 10, $end = '...')); ?></div>
-    </a> 
+  <div class="row bg-cc-only">
+    <div class="col-md-2 bg-cc">Type of Form</div><!-- end col-md-2 -->
+    <div class="col-md-10 bg-ff">
+      <?php echo e($afm->name); ?>
 
-     <?php elseif($file->files_mimes == 'application/msword'): ?>
+    </div><!-- end col-md-10 -->
+  </div><!-- end row -->
 
-    <a href="/application/view/file/<?php echo e($file->files_fileurl); ?>/doc" target="_blank" data-toggle="tooltip" data-placement="top" title="<?php echo e($file->files_filename); ?>"  class="thumbnail text-center doc-icon" >
-      <div class="hidden-md hidden-lg hidden-sm doc-size"><?php echo e(str_limit($file->files_filename, $limit = 10, $end = '...')); ?></div>
-    </a> 
+  <div class="row bg-cc-only">
+    <div class="col-md-2 bg-cc">Department</div><!-- end col-md-2 -->
+    <div class="col-md-10 bg-ff">
+      <?php echo e($myapplist[0]->department); ?>
 
-    <?php elseif(($file->files_mimes == 'application/vnd.ms-excel')): ?>
+    </div><!-- end col-md-10 -->
+  </div><!-- end row -->
 
-    <a href="/application/view/file/<?php echo e($file->files_fileurl); ?>/xls" target="_blank" data-toggle="tooltip" data-placement="top" title="<?php echo e($file->files_filename); ?>"  class="thumbnail text-center xls-icon" >
-      <div class="hidden-md hidden-lg hidden-sm doc-size"><?php echo e(str_limit($file->files_filename, $limit = 10, $end = '...')); ?></div>
-    </a>
+  <div class="row bg-cc-only">
+    <div class="col-md-2 bg-cc">Urgency</div><!-- end col-md-2 -->
+    <div class="col-md-10 bg-ff">
+      <?php if($myapplist[0]->urgency == 1): ?>
+        Normal
+      <?php else: ?>
+        Urgent
+      <?php endif; ?>
+    </div><!-- end col-md-10 -->
+  </div><!-- end row -->
 
-    <?php elseif($file->files_mimes == 'image/jpeg' || $file->files_mimes == 'image/png'): ?>
-    
-     <a href="/application/download/file/<?php echo e($file->files_fileurl); ?>" target="_blank" data-toggle="tooltip" data-placement="top" title="<?php echo e($file->files_filename); ?>" data-imagelightbox="bx" class="thumbnail text-center image-icon" > 
-        <img class="hidden-thumb-image" alt="<?php echo e($file->files_filename); ?>" src="/uploads/final/<?php echo e($file->files_fileurl); ?>" />
-        <div class="hidden-md hidden-lg hidden-sm doc-size"><?php echo e(str_limit($file->files_filename, $limit = 10, $end = '...')); ?></div>
-     </a>  
+  <div class="row bg-cc-only">
+    <div class="col-md-2 bg-cc">Approver(s)</div><!-- end col-md-2 -->
+    <div class="col-md-10 bg-ff">
+       <?php if($myapplist[0]->type_form == 19): ?>
+        <div class="approver-list-19">
+       <?php else: ?>
+        <div class="approver-list">
+       <?php endif; ?>
+
+       <?php if($approverlist->count() != 0): ?>
+
+        <input type="hidden" value="<?php echo e($approverlist->count()); ?> " id="approver_count" name="approver_count">
+
+        <?php foreach($approverlist as $approver): ?>
+          <span class="each_approver">
+            <a class="unap <?php if($approver->approver_status == 1): ?> alert-success <?php endif; ?> <?php if($approver->approver_status == 2): ?> alert-danger <?php endif; ?>" data-toggle="tooltip" data-placement="top" title="<?php echo e($approver->approver_email); ?>">
+              <?php echo e($approver->approver_name); ?>
+
+              <input name="approver_id_check[]" type="hidden" value="<?php echo e($approver->approver_user_id); ?>" />
+            </a>
+          </span>
+        <?php endforeach; ?>
+
+      <?php else: ?>
+        <span class="no-approver">N/A</span>
+      <?php endif; ?>
+      </div><!-- end approver-list -->
+      </div><!-- end approver-list-19 -->
+    </div><!-- end col-md-10 -->
+
+  <div class="row bg-cc-only">
+    <div class="col-md-2 bg-cc">CC Person(s)</div><!-- end col-md-2 -->
+    <div class="col-md-10 bg-ff">
+
+    <?php if(isset($ccpersonlist) && $ccpersonlist): ?>
+
+      <?php foreach($ccpersonlist as $ccperson): ?>
+        <a data-toggle="tooltip" data-placement="top" title="<?php echo e($ccperson['ccperson_email']); ?>" class="unap <?php if($ccperson['ccperson_status'] == 1): ?> alert-success <?php endif; ?>"><?php echo e($ccperson['ccperson_name']); ?> </a>
+        <input type="hidden" value="<?php echo e($ccperson['ccperson_user_id']); ?>" name="ccperson_each[]">
+      <?php endforeach; ?>
 
     <?php else: ?>
-    <a href="/application/download/file/<?php echo e($file->files_fileurl); ?>" data-toggle="tooltip" data-placement="top" title="<?php echo e($file->files_filename); ?>"  class="thumbnail text-center unknowned-icon" ></a> 
-      <div class="hidden-md hidden-lg hidden-sm doc-size"><?php echo e(str_limit($file->files_filename, $limit = 10, $end = '...')); ?></div>
+    N/A
     <?php endif; ?>
-  </div>
-  <?php endforeach; ?>
-<?php endif; ?>
-<?php endif; ?>
 
-</div>
-</div>
+    </div><!-- end col-md-10 -->
+  </div><!-- end row -->
 
-<div class="visible-print-block">
-<?php if($filelist->count() == 0 && $doclist->count() == 0): ?>
- N/A
-<?php else: ?> 
-<?php if($doclist): ?>
-  <?php foreach($doclist as $doc): ?>
-    <a href="<?php echo e($doc->document_link); ?>" target="_blank" class="unap"><?php echo e($doc->document_name); ?> </a>
-  <?php endforeach; ?>
-<?php endif; ?>
+  <?php if($myapplist[0]->type_form == 2): ?>
+    <?php echo $__env->make('viewforms.form_rcp', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+  <?php elseif($myapplist[0]->type_form == 3): ?>
+    <?php echo $__env->make('viewforms.form_rca', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+  <?php elseif($myapplist[0]->type_form == 4): ?>
+    <?php echo $__env->make('viewforms.form_area', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+  <?php elseif($myapplist[0]->type_form == 5): ?>
+    <?php echo $__env->make('viewforms.form_arge', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+  <?php elseif($myapplist[0]->type_form == 6): ?>
+    <?php echo $__env->make('viewforms.form_cdsaa', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+  <?php elseif($myapplist[0]->type_form == 7): ?>
+    <?php echo $__env->make('viewforms.form_rdra', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+  <?php elseif($myapplist[0]->type_form == 8): ?>
+    <?php echo $__env->make('viewforms.form_atac', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+  <?php elseif($myapplist[0]->type_form == 9): ?>
+    <?php echo $__env->make('viewforms.form_hphcrf', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+  <?php elseif($myapplist[0]->type_form == 10): ?>
+    <?php echo $__env->make('viewforms.form_mjr', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+  <?php elseif($myapplist[0]->type_form == 11): ?>
+    <?php echo $__env->make('viewforms.form_pgvbf', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+  <?php elseif($myapplist[0]->type_form == 12): ?>
+    <?php echo $__env->make('viewforms.form_sorapfca', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+  <?php elseif($myapplist[0]->type_form == 13): ?>
+    <?php echo $__env->make('viewforms.form_aca', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+  <?php elseif($myapplist[0]->type_form == 14): ?>
+    <?php echo $__env->make('viewforms.form_pcmcf', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+  <?php elseif($myapplist[0]->type_form == 20): ?>
+    <?php echo $__env->make('viewforms.form_pcmcf2', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+  <?php elseif($myapplist[0]->type_form == 15): ?>
+    <?php echo $__env->make('viewforms.form_mrf', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+  <?php elseif($myapplist[0]->type_form == 16): ?>
+    <?php echo $__env->make('viewforms.form_tsw', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+  <?php elseif($myapplist[0]->type_form == 17): ?>
+    <?php echo $__env->make('viewforms.form_irfi', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+  <?php elseif($myapplist[0]->type_form == 18): ?>
+    <?php echo $__env->make('viewforms.form_coprpo', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+  <?php elseif($myapplist[0]->type_form == 19): ?>
+    <?php echo $__env->make('viewforms.form_eoq', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+  <?php else: ?>
 
-<?php if($filelist): ?>
-  <?php foreach($filelist as $file): ?>
-    
-    <a href="/application/file/<?php echo e($file->files_fileurl); ?>" target="_blank" class="unap"><?php echo e($file->files_filename); ?> </a>
-  
-  <?php endforeach; ?>
-<?php endif; ?>
-<?php endif; ?>
-</div>
+  <div class="row bg-cc-only">
+    <div class="col-md-2 bg-cc">Title</div><!-- end col-md-2 -->
+    <div class="col-md-10 bg-ff">
+      <?php echo e($myapplist[0]->title); ?>
 
-</div>
-</div>
+    </div><!-- end col-md-10 -->
+  </div><!-- end row -->
 
-<div class="row bg-cc-only">
-<div class="col-md-2 bg-cc hidden-print">Status</div>
-<div class="col-md-10 bg-ff hidden-print">
-  <?php if($myapplist[0]->status == 0): ?> 
-    <span class="alert-warning">Pending</span>
-  <?php elseif($myapplist[0]->status == 1): ?>
-    <span class="alert-success">Approved</span>
-  <?php elseif($myapplist[0]->status == 2): ?>
-    <span class="alert-danger">Rejected</span>
-  <?php elseif($myapplist[0]->status == 3): ?>
-    <span class="alert-info">Cancelled</span>
-  <?php elseif($myapplist[0]->status == 4): ?>
-    <span class="alert-success">Forwarded</span>
-        <?php elseif($myapplist[0]->status == 5): ?>
-    <span class="alert-success">Commented</span>
+  <div class="row bg-cc-only">
+    <div class="col-md-2 bg-cc">Request Details</div><!-- end col-md-2 -->
+    <div class="col-md-10 bg-ff">
+    <?php echo $myapplist[0]->request_details; ?>
+
+    </div><!-- end col-md-10 -->
+  </div><!-- end row -->
+
   <?php endif; ?>
 
-</div>
+  <div class="row bg-cc-only">
+    <div class="col-md-2 bg-cc">Documents</div>
+    <div class="col-md-10 bg-ff">
+      <div class="col-md-8 bg-ff hidden-print">
+        <div class="row doc-thumb">
+          <?php if($filelist->count() == 0 && $doclist->count() == 0): ?>
+            N/A
+          <?php else: ?>
 
-</div>
-<?php if($myapplist[0]->status == 1 || $myapplist[0]->status == 5): ?>
-<div class="row bg-cc-only">
-<div class="col-md-2 bg-cc hidden-print">PP Status</div>
-<div class="col-md-10 bg-ff hidden-print">
-  <?php if($myapplist[0]->pp_status == 0): ?> 
-    <span class="alert-warning">Pending</span>
-  <?php elseif($myapplist[0]->pp_status == 1): ?>
-    <span class="alert-info">Processing</span>
-  <?php elseif($myapplist[0]->pp_status == 2): ?>
-    <span class="alert-success">Exported</span>
-  <?php elseif($myapplist[0]->pp_status == 3): ?>
-    <span class="alert-info">Ready for Collection</span>
-  <?php elseif($myapplist[0]->pp_status == 4): ?>
-    <span class="alert-success">Collected</span>
-     <?php elseif($myapplist[0]->pp_status == 5): ?>
-    <span class="alert-danger">Rejected</span>
-  
-     <?php endif; ?>
-</div>
-</div>
-<?php endif; ?>
- 
+            <?php if($doclist): ?>
+              <?php foreach($doclist as $doc): ?>
 
-<div class="history">
-  <div class="headhistory">History</div>
-  <div class="printhistory"><a href="javascript:window.print()" id="print-page" class="btn btn-default">print</a></div>
-  
-  <table class="table" id="table-history">
-    <tr>
-      <td style="width:12%">Date</td>
-      <td style="width:12%">User</td>
-     <td style="width:12%">Action</td>
-      <td style="width:12%">Status</td>
-      <td style="width:52%">Remarks</td>
-    </tr>
-    <tr>
-      <td><?php echo e(date('d/m/Y', strtotime($myapplist[0]->created_at))); ?> <?php echo e(date('h:i A', strtotime($myapplist[0]->created_at))); ?></td>
-      <td><?php echo e($myapplist[0]->creator_name); ?></td>
-      <td><?php if($myapplist[0]->user_status == 0): ?>Submission <?php endif; ?>
-      </td>
-      <td>Pending</td>
-      <td>-</td>
-    </tr>
+              <div class="google-drive">
+                <a class="thumbnail text-center" href="<?php echo e($doc->document_link); ?>" target="_blank" data-toggle="tooltip" data-placement="top" title="<?php echo e($doc->document_name); ?>"  class="thumbnail text-center" >
+                  <div class="hidden-md hidden-lg hidden-sm doc-size"><?php echo e(str_limit($doc->document_name, $limit = 10, $end = '...')); ?></div>
+                </a>
+              </div><!-- end google-drive -->
 
-  <?php if($historylist): ?>
-    <?php foreach($historylist as $history): ?>
-      <tr>
-        <td><?php echo e(date('d/m/Y', strtotime($history['date']))); ?> <?php echo e(date('h:i A', strtotime($history['date']))); ?> </td>
-        <td><?php echo e($history['name']); ?></td>
-        <td>
-          <?php if($history['status'] == 0): ?>
-            Pending
-          <?php elseif($history['status'] == 1): ?>
-            Approved
-          <?php elseif($history['status'] == 2): ?>
-            Rejected
-          <?php elseif($history['status'] == 4): ?>
-            Forwarded
-          <?php elseif($history['status'] == 5): ?>
-            Commented
+              <?php endforeach; ?>
+            <?php endif; ?>
+
+            <?php if($filelist): ?>
+
+              <?php foreach($filelist as $file): ?>
+              <div class="icon-hover">
+                <?php if($file->files_mimes == 'application/pdf'): ?>
+
+                <a href="/application/view/file/<?php echo e($file->files_fileurl); ?>/pdf" target="_blank" data-toggle="tooltip" data-placement="top" title="<?php echo e($file->files_filename); ?>"  class="thumbnail text-center pdf-icon" >
+                  <div class="hidden-md hidden-lg hidden-sm doc-size"><?php echo e(str_limit($file->files_filename, $limit = 10, $end = '...')); ?></div>
+                </a>
+
+                <?php elseif($file->files_mimes == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'): ?>
+
+                <a href="/application/view/file/<?php echo e($file->files_fileurl); ?>/docx" target="_blank" data-toggle="tooltip" data-placement="top" title="<?php echo e($file->files_filename); ?>"  class="thumbnail text-center doc-icon" >
+                  <div class="hidden-md hidden-lg hidden-sm doc-size"><?php echo e(str_limit($file->files_filename, $limit = 10, $end = '...')); ?></div>
+                </a>
+
+                 <?php elseif($file->files_mimes == 'application/msword'): ?>
+
+                <a href="/application/view/file/<?php echo e($file->files_fileurl); ?>/doc" target="_blank" data-toggle="tooltip" data-placement="top" title="<?php echo e($file->files_filename); ?>"  class="thumbnail text-center doc-icon" >
+                  <div class="hidden-md hidden-lg hidden-sm doc-size"><?php echo e(str_limit($file->files_filename, $limit = 10, $end = '...')); ?></div>
+                </a>
+
+                <?php elseif(($file->files_mimes == 'application/vnd.ms-excel')): ?>
+
+                <a href="/application/view/file/<?php echo e($file->files_fileurl); ?>/xls" target="_blank" data-toggle="tooltip" data-placement="top" title="<?php echo e($file->files_filename); ?>"  class="thumbnail text-center xls-icon" >
+                  <div class="hidden-md hidden-lg hidden-sm doc-size"><?php echo e(str_limit($file->files_filename, $limit = 10, $end = '...')); ?></div>
+                </a>
+
+                <?php elseif($file->files_mimes == 'image/jpeg' || $file->files_mimes == 'image/png'): ?>
+
+                 <a href="/application/download/file/<?php echo e($file->files_fileurl); ?>" target="_blank" data-toggle="tooltip" data-placement="top" title="<?php echo e($file->files_filename); ?>" data-imagelightbox="bx" class="thumbnail text-center image-icon" >
+                    <img class="hidden-thumb-image" alt="<?php echo e($file->files_filename); ?>" src="/uploads/final/<?php echo e($file->files_fileurl); ?>" />
+                    <div class="hidden-md hidden-lg hidden-sm doc-size"><?php echo e(str_limit($file->files_filename, $limit = 10, $end = '...')); ?></div>
+                 </a>
+
+                <?php else: ?>
+                <a href="/application/download/file/<?php echo e($file->files_fileurl); ?>" data-toggle="tooltip" data-placement="top" title="<?php echo e($file->files_filename); ?>"  class="thumbnail text-center unknowned-icon" ></a>
+                  <div class="hidden-md hidden-lg hidden-sm doc-size"><?php echo e(str_limit($file->files_filename, $limit = 10, $end = '...')); ?></div>
+                <?php endif; ?>
+              </div>
+              <?php endforeach; ?>
+            <?php endif; ?>
           <?php endif; ?>
-        </td>
-        <td>
-          <?php if($history['case_status'] == 0): ?>
-            Pending
-          <?php elseif($history['case_status'] == 1): ?>
-            Approved
-          <?php elseif($history['case_status'] == 2): ?>
-            Rejected
-            <?php elseif($history['case_status'] == 5): ?>
-            Commented
+
+        </div><!-- end row -->
+      </div><!-- end col-md-8 -->
+
+      <div class="visible-print-block">
+        <?php if($filelist->count() == 0 && $doclist->count() == 0): ?>
+         N/A
+
+        <?php else: ?>
+
+          <?php if($doclist): ?>
+            <?php foreach($doclist as $doc): ?>
+              <a href="<?php echo e($doc->document_link); ?>" target="_blank" class="unap"><?php echo e($doc->document_name); ?> </a>
+            <?php endforeach; ?>
           <?php endif; ?>
-        </td>
-        <td>
-           
-            <div>
-              <div><?php if(isset($history['recommend_user_id'])): ?><strong> Forwarded to <?php echo e($history['recommend_user_id']['name']); ?> </strong> <br /> <br /> Remarks:</div> <?php endif; ?>
-              <?php echo $history['remarks']; ?>
 
-            </div>
-        </td>
-      </tr>
-    <?php endforeach; ?>
+          <?php if($filelist): ?>
+            <?php foreach($filelist as $file): ?>
+
+              <a href="/application/file/<?php echo e($file->files_fileurl); ?>" target="_blank" class="unap"><?php echo e($file->files_filename); ?> </a>
+
+            <?php endforeach; ?>
+          <?php endif; ?>
+        <?php endif; ?>
+      </div><!-- end visible-print-block -->
+
+    </div><!-- end col-md-10-->
+  </div><!-- end row -->
+
+  <div class="row bg-cc-only">
+    <div class="col-md-2 bg-cc hidden-print">Status</div><!-- end col-md-2 -->
+    <div class="col-md-10 bg-ff hidden-print">
+      <?php if($myapplist[0]->status == 0): ?>
+        <span class="alert-warning">Pending</span>
+      <?php elseif($myapplist[0]->status == 1): ?>
+        <span class="alert-success">Approved</span>
+      <?php elseif($myapplist[0]->status == 2): ?>
+        <span class="alert-danger">Rejected</span>
+      <?php elseif($myapplist[0]->status == 3): ?>
+        <span class="alert-info">Cancelled</span>
+      <?php elseif($myapplist[0]->status == 4): ?>
+        <span class="alert-success">Forwarded</span>
+      <?php elseif($myapplist[0]->status == 5): ?>
+        <span class="alert-success">Commented</span>
+      <?php endif; ?>
+    </div><!-- end col-md-10 -->
+  </div><!-- end row -->
+
+  <?php if($myapplist[0]->status == 1 || $myapplist[0]->status == 5): ?>
+
+  <div class="row bg-cc-only">
+    <div class="col-md-2 bg-cc hidden-print">PP Status</div>
+    <div class="col-md-10 bg-ff hidden-print">
+      <?php if($myapplist[0]->pp_status == 0): ?>
+        <span class="alert-warning">Pending</span>
+      <?php elseif($myapplist[0]->pp_status == 1): ?>
+        <span class="alert-info">Processing</span>
+      <?php elseif($myapplist[0]->pp_status == 2): ?>
+        <span class="alert-success">Exported</span>
+      <?php elseif($myapplist[0]->pp_status == 3): ?>
+        <span class="alert-info">Ready for Collection</span>
+      <?php elseif($myapplist[0]->pp_status == 4): ?>
+        <span class="alert-success">Collected</span>
+         <?php elseif($myapplist[0]->pp_status == 5): ?>
+        <span class="alert-danger">Rejected</span>
+      <?php endif; ?>
+    </div><!-- end col-md-10 -->
+  </div><!-- end row -->
+
   <?php endif; ?>
 
+  <div class="history">
+    <div class="headhistory">History</div><!-- end headhistory -->
+    <div class="printhistory">
+      <a href="javascript:window.print()" id="print-page" class="btn btn-default">print</a>
+      <a href="/application/view_reports/<?php echo e($myapplist[0]->id); ?>?download=pdf" class="btn btn-default">print all</a>
+    </div><!-- end printhistory -->
 
-  <?php if($myapplist[0]->status == 3): ?>
-  <tr>
-    <td><?php echo e(date('d/m/Y', strtotime($myapplist[0]->updated_at))); ?> <?php echo e(date('h:i A', strtotime($myapplist[0]->updated_at))); ?></td>
-    <td><?php echo e($myapplist[0]->creator_name); ?></td>
-    <td><?php if($myapplist[0]->status == 3): ?> Cancelled <?php endif; ?>
-    </td>
-    <td>Cancelled</td>
-    <td>
-      <?php echo $myapplist[0]->close_remarks; ?>
+      <table class="table" id="table-history">
+        <tr>
+          <td style="width:12%">Date</td>
+          <td style="width:12%">User</td>
+          <td style="width:12%">Action</td>
+          <td style="width:12%">Status</td>
+          <td style="width:52%">Remarks</td>
+        </tr>
+        <tr>
+          <td><?php echo e(date('d/m/Y', strtotime($myapplist[0]->created_at))); ?> <?php echo e(date('h:i A', strtotime($myapplist[0]->created_at))); ?></td>
+          <td><?php echo e($myapplist[0]->creator_name); ?></td>
+          <td>
+            <?php if($myapplist[0]->user_status == 0): ?>
+            Submission
+            <?php endif; ?>
+          </td>
+          <td>Pending</td>
+          <td>-</td>
+        </tr>
 
-    </td>
-  </tr>
+        <?php if($historylist): ?>
 
-  <?php endif; ?>
+          <?php foreach($historylist as $history): ?>
+          <tr>
+            <td><?php echo e(date('d/m/Y', strtotime($history['date']))); ?> <?php echo e(date('h:i A', strtotime($history['date']))); ?> </td>
+            <td><?php echo e($history['name']); ?></td>
+            <td>
+              <?php if($history['status'] == 0): ?>
+                Pending
+              <?php elseif($history['status'] == 1): ?>
+                Approved
+              <?php elseif($history['status'] == 2): ?>
+                Rejected
+              <?php elseif($history['status'] == 4): ?>
+                Forwarded
+              <?php elseif($history['status'] == 5): ?>
+                Commented
+              <?php endif; ?>
+            </td>
+            <td>
+              <?php if($history['case_status'] == 0): ?>
+                Pending
+              <?php elseif($history['case_status'] == 1): ?>
+                Approved
+              <?php elseif($history['case_status'] == 2): ?>
+                Rejected
+                <?php elseif($history['case_status'] == 5): ?>
+                Commented
+              <?php endif; ?>
+            </td>
+            <td>
+              <div>
+                <div><?php if(isset($history['recommend_user_id'])): ?><strong> Forwarded to <?php echo e($history['recommend_user_id']['name']); ?> </strong> <br /> <br /> Remarks:</div> <?php endif; ?>
+                <?php echo $history['remarks']; ?>
 
-  </table>
-</div>
+              </div>
+            </td>
+          </tr>
+          <?php endforeach; ?>
+        <?php endif; ?>
+
+        <?php if($myapplist[0]->status == 3): ?>
+        <tr>
+          <td><?php echo e(date('d/m/Y', strtotime($myapplist[0]->updated_at))); ?> <?php echo e(date('h:i A', strtotime($myapplist[0]->updated_at))); ?></td>
+          <td><?php echo e($myapplist[0]->creator_name); ?></td>
+          <td>
+            <?php if($myapplist[0]->status == 3): ?>
+              Cancelled
+            <?php endif; ?>
+          </td>
+          <td>Cancelled</td>
+          <td><?php echo $myapplist[0]->close_remarks; ?></td>
+        </tr>
+        <?php endif; ?>
+      </table>
+    </div><!-- end history -->
+  </div><!-- end row -->
+
+  <?php echo Form::close(); ?>
 
 
+  <!-- Modal -->
+  <div class="modal fade open_remarks" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-md" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Remarks</h4>
+        </div>
+        <div class="modal-body">
+           <div class="remarks-body">
 
-</div>
-
-<?php echo Form::close(); ?> 
-
-
-<!-- Modal -->
-<div class="modal fade open_remarks" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-md" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Remarks</h4>
+           </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default close-google-pop" data-dismiss="modal">Close</button>
+        </div>
       </div>
-      <div class="modal-body">
-         <div class="remarks-body">
-            
-         </div> 
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default close-google-pop" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
+    </div><!-- end modal-dialog -->
+  </div><!-- end modal -->
 
 <script type="text/javascript">
-$(function () {
-   prepend_view();
-     prepend_view19();
-  $(".click_open").on('click',function(){
-      var sib = $(this).siblings('.remarks-history').html();
-      $('.open_remarks').find('.remarks-body').append(sib);
+  $(function () {
+
+    prepend_view();
+    prepend_view19();
+
+    $(".click_open").on('click',function(){
+        var sib = $(this).siblings('.remarks-history').html();
+        $('.open_remarks').find('.remarks-body').append(sib);
+    });
+
+    $('.open_remarks').on('hidden.bs.modal', function () {
+      $(this).find('.remarks-body').empty();
+    });
   });
 
-  $('.open_remarks').on('hidden.bs.modal', function () {
-    $(this).find('.remarks-body').empty();
-  });
-});
+  function prepend_view()
+  {
+    var $set = $('.approver-list > span');
+    var len = $set.length;
 
-function prepend_view(){
-var $set = $('.approver-list > span');
-var len = $set.length;
-  $(".approver-list > span").each(function(i) {
+    $(".approver-list > span").each(function(i) {
 
+      if (i == len - 1) {
+        $(this).find("a").prepend('<span class="numbering_method"> <strong>[Approver] </strong> <span>');
+      }
+      else
+      {
+        if(i == 0)
+        {
+          $(this).find("a").prepend('<span class="numbering_method"> <strong>[1st Verify] </strong> <span>');
+        }
 
-    
-if (i == len - 1) {
-           $(this).find("a").prepend('<span class="numbering_method"> <strong>[Approver] </strong> <span>');
-    
-          }else{
-              if(i == 0)    {
-       $(this).find("a").prepend('<span class="numbering_method"> <strong>[1st Verify] </strong> <span>');
- 
-    }
-    else if (i == 1) {
+        else if (i == 1)
+        {
            $(this).find("a").prepend('<span class="numbering_method"> <strong>[2nd Verify] </strong> <span>');
-    
-          }
-       else if (i == 2) {
-           $(this).find("a").prepend('<span class="numbering_method"> <strong>[3rd Verify] </strong> <span>');
-    
-          }
-              
-              }
-  });
-}
-function prepend_view19(){
-  $(".approver-list-19 > span").each(function(i) {
+        }
 
-if (i == len - 1) {
-           $(this).find("a").prepend('<span class="numbering_method"> <strong>[Approver] </strong> <span>');
-    
-          }else{
-              if(i == 0)    {
-       $(this).find("a").prepend('<span class="numbering_method"> <strong>[1st Verify] </strong> <span>');
- 
-    }
-    else if (i == 1) {
-           $(this).find("a").prepend('<span class="numbering_method"> <strong>[2nd Verify] </strong> <span>');
-    
-          }
-       else if (i == 2) {
+        else if (i == 2)
+        {
            $(this).find("a").prepend('<span class="numbering_method"> <strong>[3rd Verify] </strong> <span>');
-    
-          }
-              
-              }
-  });
-}
+        }
+      }
+    });
+  }
+
+  function prepend_view19()
+  {
+    $(".approver-list-19 > span").each(function(i) {
+
+      if (i == len - 1)
+      {
+        $(this).find("a").prepend('<span class="numbering_method"> <strong>[Approver] </strong> <span>');
+      }
+
+      else
+      {
+        if(i == 0)
+        {
+          $(this).find("a").prepend('<span class="numbering_method"> <strong>[1st Verify] </strong> <span>');
+        }
+
+        else if (i == 1)
+        {
+          $(this).find("a").prepend('<span class="numbering_method"> <strong>[2nd Verify] </strong> <span>');
+        }
+
+        else if (i == 2)
+        {
+          $(this).find("a").prepend('<span class="numbering_method"> <strong>[3rd Verify] </strong> <span>');
+        }
+      }
+    });
+  }
 </script>
 <?php $__env->stopSection(); ?>
-
-
 
 <?php echo $__env->make('layout.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
