@@ -3,71 +3,77 @@
 @section('content')
 
 <div class="row">
-    <div class="col-md-12"><h4 class="page-head-line">Case  <small>#{{$myapplist[0]->case_number}}</small> {{-- $title_page --}}</h4></div>
-</div>
+  <div class="col-md-12"><h4 class="page-head-line">Case  <small>#{{$myapplist[0]->case_number}}</small> {{-- $title_page --}}</h4></div>
+</div><!-- end row -->
 
 <div class="wrap-content">
-<div class="visible-print print-status-position">
-  Status :
-  @if($myapplist[0]->status == 0)
-    <span class="alert-warning">Pending</span>
-  @elseif($myapplist[0]->status == 1)
-    <span class="alert-success">Approved</span>
-  @elseif($myapplist[0]->status == 2)
-    <span class="alert-danger">Rejected</span>
-  @elseif($myapplist[0]->status == 3)
-    <span class="alert-info">Cancelled</span>
-  @elseif($myapplist[0]->status == 4)
-    <span class="alert-success">Forwarded</span>
+  <div class="visible-print print-status-position">
+    Status :
+    @if($myapplist[0]->status == 0)
+      <span class="alert-warning">Pending</span>
+    @elseif($myapplist[0]->status == 1)
+      <span class="alert-success">Approved</span>
+    @elseif($myapplist[0]->status == 2)
+      <span class="alert-danger">Rejected</span>
+    @elseif($myapplist[0]->status == 3)
+      <span class="alert-info">Cancelled</span>
+    @elseif($myapplist[0]->status == 4)
+      <span class="alert-success">Forwarded</span>
+    @endif
+  </div><!-- end visible-print -->
+
+  @if($myapplist[0]->status == 1 || $myapplist[0]->status == 5)
+  <div class="visible-print print-status-position">
+   PP Status :
+    @if($myapplist[0]->pp_status == 0)
+      <span class="alert-warning">Pending</span>
+    @elseif($myapplist[0]->pp_status == 1)
+      <span class="alert-info">Processing</span>
+    @elseif($myapplist[0]->pp_status == 2)
+      <span class="alert-success">Exported</span>
+    @elseif($myapplist[0]->pp_status == 3)
+      <span class="alert-info">Ready for Collection</span>
+    @elseif($myapplist[0]->pp_status == 4)
+      <span class="alert-success">Collected</span>
+    @elseif($myapplist[0]->pp_status == 5)
+      <span class="alert-danger">Rejected</span>
+    @endif
+  </div><!-- end visible-print -->
+  @endif
+
+  @if(count($errors) > 0)
+  <div class="alert alert-danger alert-dismissible fade in fixed-error">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+    <ul>
+      @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+      @endforeach
+    </ul>
+  </div><!-- end alert -->
+  @endif
+
+  @if(Session::has('success_message'))
+
+  <div class="alert alert-success alert-dismissible fade in fixed-error">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+    <strong>{{Session::get('success_message')}}</strong>
+  </div><!-- end alert -->
+
+  @elseif(Session::has('error_message'))
+
+  <div class="alert alert-danger alert-dismissible fade in fixed-error">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+    <strong>{{Session::get('error_message')}}</strong>
+  </div><!-- end alert -->
+
+  @elseif(Session::has('info_message'))
+
+  <div class="alert alert-info alert-dismissible fade in fixed-error">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+    <strong>{{Session::get('info_message')}}</strong>
+  </div><!-- end alert -->
 
   @endif
-</div>
-  @if($myapplist[0]->status == 1 || $myapplist[0]->status == 5)
-<div class="visible-print print-status-position">
- PP Status :
-  @if($myapplist[0]->pp_status == 0)
-    <span class="alert-warning">Pending</span>
-  @elseif($myapplist[0]->pp_status == 1)
-    <span class="alert-info">Processing</span>
-  @elseif($myapplist[0]->pp_status == 2)
-    <span class="alert-success">Exported</span>
-  @elseif($myapplist[0]->pp_status == 3)
-    <span class="alert-info">Ready for Collection</span>
-  @elseif($myapplist[0]->pp_status == 4)
-    <span class="alert-success">Collected</span>
-  @elseif($myapplist[0]->pp_status == 5)
-    <span class="alert-danger">Rejected</span>
-
-     @endif
-</div>
-    @endif
-@if (count($errors) > 0)
-    <div class="alert alert-danger alert-dismissible fade in fixed-error">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-
-@if(Session::has('success_message'))
-    <div class="alert alert-success alert-dismissible fade in fixed-error">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-        <strong>{{Session::get('success_message')}}</strong>
-    </div>
-@elseif(Session::has('error_message'))
-  <div class="alert alert-danger alert-dismissible fade in fixed-error">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-        <strong>{{Session::get('error_message')}}</strong>
-  </div>
-@elseif(Session::has('info_message'))
-  <div class="alert alert-info alert-dismissible fade in fixed-error">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-        <strong>{{Session::get('info_message')}}</strong>
-  </div>
-@endif
 
 {!!Form::open(['url'=>'/controller/application/'.$action_url,'class'=>'form-horizontal fsize', 'files'=>true])!!}
 {!! Form::hidden('app_id', $myapplist[0]->id )!!}
@@ -78,66 +84,67 @@
 {!! Form::hidden('case_status', $myapplist[0]->status )!!}
 @if($myapplist[0]->status != 2 && $myapplist[0]->status != 3 && $myapplist[0]->status != 4 && $mark == 'approver' && $one_approver->approver_read == 0)
 
-
 @endif
-<div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Case Number</div>
-<div class="col-md-10 bg-ff">
-  {{ $myapplist[0]->case_number }}
-</div>
-</div>
 
 <div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Creator</div>
-<div class="col-md-10 bg-ff">
-  {{ $myapplist[0]->creator_name }}
-</div>
-</div>
+  <div class="col-md-2 bg-cc">Case Number</div>
+  <div class="col-md-10 bg-ff">
+    {{ $myapplist[0]->case_number }}
+  </div>
+</div><!-- end row -->
 
 <div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Type of Request</div>
-<div class="col-md-10 bg-ff">
-  {{ $myapplist[0]->type_request }}
-</div>
-</div>
+  <div class="col-md-2 bg-cc">Creator</div>
+  <div class="col-md-10 bg-ff">
+    {{ $myapplist[0]->creator_name }}
+  </div>
+</div><!-- end row -->
 
 <div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Type of Form</div>
-<div class="col-md-10 bg-ff">
-  {{ $afm->name }}
-</div>
-</div>
+  <div class="col-md-2 bg-cc">Type of Request</div>
+  <div class="col-md-10 bg-ff">
+    {{ $myapplist[0]->type_request }}
+  </div>
+</div><!-- end row -->
 
 <div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Department</div>
-<div class="col-md-10 bg-ff">
-  {{ $myapplist[0]->department }}
-</div>
-</div>
+  <div class="col-md-2 bg-cc">Type of Form</div>
+  <div class="col-md-10 bg-ff">
+    {{ $afm->name }}
+  </div>
+</div><!-- end row -->
 
 <div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Urgency</div>
-<div class="col-md-10 bg-ff">
+  <div class="col-md-2 bg-cc">Department</div>
+  <div class="col-md-10 bg-ff">
+    {{ $myapplist[0]->department }}
+  </div>
+</div><!-- end row -->
+
+<div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Urgency</div>
+  <div class="col-md-10 bg-ff">
     @if($myapplist[0]->urgency == 1)
       Normal
     @else
       Urgent
     @endif
-</div>
-</div>
+  </div>
+</div><!-- end row -->
 
 <div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Approver(s)</div>
-<div class="col-md-10 bg-ff">
+  <div class="col-md-2 bg-cc">Approver(s)</div>
+  <div class="col-md-10 bg-ff">
     @if($myapplist[0]->type_form == 19)
-  <div class="approver-list-19">
-   @else
-   <div class="approver-list">
-   @endif
-@if($approverlist->count() != 0)
+    <div class="approver-list-19">
+    @else
+    <div class="approver-list">
+    @endif
 
-  <input type="hidden" value="{{ $approverlist->count()}} " id="approver_count" name="approver_count">
-  @foreach($approverlist as $approver)
+    @if($approverlist->count() != 0)
+
+    <input type="hidden" value="{{ $approverlist->count()}} " id="approver_count" name="approver_count">
+      @foreach($approverlist as $approver)
       <span class="each_approver">
           @if($approver->group_id > 0)
 
@@ -145,34 +152,34 @@
          {{ $approver->group_name }}
 
           @else
-        <a class="unap @if($approver->approver_status == 1) alert-success @endif @if($approver->approver_status == 2) alert-danger @endif" data-toggle="tooltip" data-placement="top" title="{{ $approver->approver_email }}">
+          <a class="unap @if($approver->approver_status == 1) alert-success @endif @if($approver->approver_status == 2) alert-danger @endif" data-toggle="tooltip" data-placement="top" title="{{ $approver->approver_email }}">
           {{ $approver->approver_name }}
           @endif
           <input name="approver_id_check[]" type="hidden" value="{{ $approver->approver_user_id }}" />
         </a>
       </span>
-  @endforeach
+      @endforeach
 
-@else
-  <span class="no-approver">N/A</span>
-@endif
+    @else
+      <span class="no-approver">N/A</span>
+    @endif
+    </div>
+    </div>
   </div>
-</div>
-</div>
 
 <div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">CC Person(s)</div>
-<div class="col-md-10 bg-ff">
-@if(isset($ccpersonlist) && $ccpersonlist)
-  @foreach($ccpersonlist as $ccperson)
-    <a data-toggle="tooltip" data-placement="top" title="{{ $ccperson['ccperson_email'] }}" class="unap @if($ccperson['ccperson_status'] == 1) alert-success @endif">{{ $ccperson['ccperson_name'] }} </a>
-    <input type="hidden" value="{{ $ccperson['ccperson_user_id'] }}" name="ccperson_each[]">
-  @endforeach
-@else
-N/A
-@endif
-</div>
-</div>
+  <div class="col-md-2 bg-cc">CC Person(s)</div>
+  <div class="col-md-10 bg-ff">
+  @if(isset($ccpersonlist) && $ccpersonlist)
+    @foreach($ccpersonlist as $ccperson)
+      <a data-toggle="tooltip" data-placement="top" title="{{ $ccperson['ccperson_email'] }}" class="unap @if($ccperson['ccperson_status'] == 1) alert-success @endif">{{ $ccperson['ccperson_name'] }} </a>
+      <input type="hidden" value="{{ $ccperson['ccperson_user_id'] }}" name="ccperson_each[]">
+    @endforeach
+  @else
+  N/A
+  @endif
+  </div>
+</div><!-- end row -->
 
 @if($myapplist[0]->type_form == 2)
   @include('viewforms.form_rcp')
@@ -213,35 +220,34 @@ N/A
 @elseif($myapplist[0]->type_form == 19)
   @include('viewforms.form_eoq')
 @else
-<div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Title</div>
-<div class="col-md-10 bg-ff">
-  @if($myapplist[0]->status == 0 && $mark == 'creator')
-                  {!! Form::input('text','title', $myapplist[0]->title , array( 'id' => 'title', 'class' => 'form-control')) !!}
-        @else
-        {{ $myapplist[0]->title }}
-                  @endif
 
-</div>
-</div>
 <div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Request Details</div>
-<div class="col-md-10 bg-ff">
-     @if($myapplist[0]->status == 0 && $mark == 'creator')
-        {!! Form::textarea('request_details', $myapplist[0]->request_details, ['class' => 'ckeditor form-control']) !!}
-         @else
-        {!! $myapplist[0]->request_details !!}
-                  @endif
-</div>
-</div>
+  <div class="col-md-2 bg-cc">Title</div>
+  <div class="col-md-10 bg-ff">
+    @if($myapplist[0]->status == 0 && $mark == 'creator')
+      {!! Form::input('text','title', $myapplist[0]->title , array( 'id' => 'title', 'class' => 'form-control')) !!}
+    @else
+      {{ $myapplist[0]->title }}
+    @endif
+  </div>
+</div><!-- end row -->
+
+<div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Request Details</div>
+  <div class="col-md-10 bg-ff">
+    @if($myapplist[0]->status == 0 && $mark == 'creator')
+      {!! Form::textarea('request_details', $myapplist[0]->request_details, ['class' => 'ckeditor form-control']) !!}
+    @else
+      {!! $myapplist[0]->request_details !!}
+    @endif
+  </div>
+</div><!-- end row -->
+
 @endif
 
-
-
-
 <div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Documents</div>
-<div class="col-md-10 bg-ff">
+  <div class="col-md-2 bg-cc">Documents</div>
+  <div class="col-md-10 bg-ff">
 
 
 
@@ -382,7 +388,7 @@ N/A
    @endif
 @endif
 
-@if($myapplist[0]->status != 2 && $myapplist[0]->status != 3 && $myapplist[0]->status != 4 && $mark == 'approver' && $one_approver->approver_read == 0)
+@if($myapplist[0]->status != 2 && $myapplist[0]->status != 3 && $myapplist[0]->status != 4 && $mark == 'approver' && $one_approver->approver_read == 0 && $approveby == 0)
 
 {!! Form::hidden('approver_id', $one_approver->approver_id )!!}
 

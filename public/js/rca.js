@@ -251,11 +251,6 @@ $(function () {
 			$('.ooo-value').find('input').val('0');
 		}
 
-		// if ( $(this).hasClass('active') ) {
-		// 	$(this).closest('.button').css( 'cursor', 'default' );
-		// 		return false;
-		// }
-
 		var oooval = $('.ooo-value').find('input').val();
 		var form = $('form.accountsettings');
 		var action = form.attr('action');
@@ -314,7 +309,7 @@ $(function () {
 
 				else
 				{
-					$('.ooo-header').fadeOut(1000);
+					$('.ooo-header').fadeOut(500);
 				}
 	    }
 
@@ -323,7 +318,7 @@ $(function () {
 
 	// $(".btn-toggle .active").attr('disabled', true);
 
-	$('body').on('input', '.temp_approver_id', function() {
+	$('body').on('click', '.temp_approver_id', function() {
     $("#temp_approver_btn").attr('disabled', false);
   });
 
@@ -729,7 +724,7 @@ function appendSelected(a,b,c,d){
 		$(a).append(
 			'<div><i class="glyphicon glyphicon-minus-sign minus-'+d+'"></i> '+
 			c.value + ' <small><b>'+c.data.email+'</b></small><input type="hidden" name="'+d+'[]" value="'+c.data.id+'" /><br>' +
-			'<span class="numbering_method"><strong>[Replacer]</strong></span> ' + c.temp_approver_data.temp_approver_name + ' <small><b>'+ c.temp_approver_data.temp_approver_email +'</b></small><input type="hidden" name="temp_approver[]" value="'+c.temp_approver_data.temp_approver_id+'" />' +
+			'<span class="temp_approver"><strong>[Replacer]</strong></span> ' + c.temp_approver_data.temp_approver_name + ' <small><b>'+ c.temp_approver_data.temp_approver_email +'</b></small><input type="hidden" name="temp_approver[]" value="'+c.temp_approver_data.temp_approver_id+'" />' +
 			'</div>');
 	}
 
@@ -738,7 +733,7 @@ function appendSelected(a,b,c,d){
 		$(a).append(
 			'<div><i class="glyphicon glyphicon-minus-sign minus-'+d+'"></i> '+
 			c.value+ ' <small><b>'+c.data.email+'</b></small><input type="hidden" name="'+d+'[]" value="'+c.data.id+'" />' +
-			'<span class="numbering_method"></span><input type="hidden" name="temp_approver[]" value="" />' +
+			'<span class="temp_approver"></span><input type="hidden" name="temp_approver[]" value="" />' +
 			'</div>');
 	}
 
@@ -746,7 +741,6 @@ function appendSelected(a,b,c,d){
 	loadRemovePerson('.minus-'+d);
 
 	append_numbering();
-
 }
 
 

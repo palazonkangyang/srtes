@@ -2,72 +2,77 @@
 <?php $__env->startSection('content'); ?>
 
 <div class="row">
-
-    <div class="col-md-12"><h4 class="page-head-line">Case  <small>#<?php echo e($myapplist[0]->case_number); ?></small> <?php /* $title_page */ ?></h4></div>
-</div>
+  <div class="col-md-12"><h4 class="page-head-line">Case  <small>#<?php echo e($myapplist[0]->case_number); ?></small> <?php /* $title_page */ ?></h4></div>
+</div><!-- end row -->
 
 <div class="wrap-content">
-<div class="visible-print print-status-position">
-  Status :
-  <?php if($myapplist[0]->status == 0): ?>
-    <span class="alert-warning">Pending</span>
-  <?php elseif($myapplist[0]->status == 1): ?>
-    <span class="alert-success">Approved</span>
-  <?php elseif($myapplist[0]->status == 2): ?>
-    <span class="alert-danger">Rejected</span>
-  <?php elseif($myapplist[0]->status == 3): ?>
-    <span class="alert-info">Cancelled</span>
-  <?php elseif($myapplist[0]->status == 4): ?>
-    <span class="alert-success">Forwarded</span>
+  <div class="visible-print print-status-position">
+    Status :
+    <?php if($myapplist[0]->status == 0): ?>
+      <span class="alert-warning">Pending</span>
+    <?php elseif($myapplist[0]->status == 1): ?>
+      <span class="alert-success">Approved</span>
+    <?php elseif($myapplist[0]->status == 2): ?>
+      <span class="alert-danger">Rejected</span>
+    <?php elseif($myapplist[0]->status == 3): ?>
+      <span class="alert-info">Cancelled</span>
+    <?php elseif($myapplist[0]->status == 4): ?>
+      <span class="alert-success">Forwarded</span>
+    <?php endif; ?>
+  </div><!-- end visible-print -->
+
+  <?php if($myapplist[0]->status == 1 || $myapplist[0]->status == 5): ?>
+  <div class="visible-print print-status-position">
+   PP Status :
+    <?php if($myapplist[0]->pp_status == 0): ?>
+      <span class="alert-warning">Pending</span>
+    <?php elseif($myapplist[0]->pp_status == 1): ?>
+      <span class="alert-info">Processing</span>
+    <?php elseif($myapplist[0]->pp_status == 2): ?>
+      <span class="alert-success">Exported</span>
+    <?php elseif($myapplist[0]->pp_status == 3): ?>
+      <span class="alert-info">Ready for Collection</span>
+    <?php elseif($myapplist[0]->pp_status == 4): ?>
+      <span class="alert-success">Collected</span>
+    <?php elseif($myapplist[0]->pp_status == 5): ?>
+      <span class="alert-danger">Rejected</span>
+    <?php endif; ?>
+  </div><!-- end visible-print -->
+  <?php endif; ?>
+
+  <?php if(count($errors) > 0): ?>
+  <div class="alert alert-danger alert-dismissible fade in fixed-error">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+    <ul>
+      <?php foreach($errors->all() as $error): ?>
+        <li><?php echo e($error); ?></li>
+      <?php endforeach; ?>
+    </ul>
+  </div><!-- end alert -->
+  <?php endif; ?>
+
+  <?php if(Session::has('success_message')): ?>
+
+  <div class="alert alert-success alert-dismissible fade in fixed-error">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+    <strong><?php echo e(Session::get('success_message')); ?></strong>
+  </div><!-- end alert -->
+
+  <?php elseif(Session::has('error_message')): ?>
+
+  <div class="alert alert-danger alert-dismissible fade in fixed-error">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+    <strong><?php echo e(Session::get('error_message')); ?></strong>
+  </div><!-- end alert -->
+
+  <?php elseif(Session::has('info_message')): ?>
+
+  <div class="alert alert-info alert-dismissible fade in fixed-error">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+    <strong><?php echo e(Session::get('info_message')); ?></strong>
+  </div><!-- end alert -->
 
   <?php endif; ?>
-</div>
-  <?php if($myapplist[0]->status == 1 || $myapplist[0]->status == 5): ?>
-<div class="visible-print print-status-position">
- PP Status :
-  <?php if($myapplist[0]->pp_status == 0): ?>
-    <span class="alert-warning">Pending</span>
-  <?php elseif($myapplist[0]->pp_status == 1): ?>
-    <span class="alert-info">Processing</span>
-  <?php elseif($myapplist[0]->pp_status == 2): ?>
-    <span class="alert-success">Exported</span>
-  <?php elseif($myapplist[0]->pp_status == 3): ?>
-    <span class="alert-info">Ready for Collection</span>
-  <?php elseif($myapplist[0]->pp_status == 4): ?>
-    <span class="alert-success">Collected</span>
-  <?php elseif($myapplist[0]->pp_status == 5): ?>
-    <span class="alert-danger">Rejected</span>
-
-     <?php endif; ?>
-</div>
-    <?php endif; ?>
-<?php if(count($errors) > 0): ?>
-    <div class="alert alert-danger alert-dismissible fade in fixed-error">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-        <ul>
-            <?php foreach($errors->all() as $error): ?>
-                <li><?php echo e($error); ?></li>
-            <?php endforeach; ?>
-        </ul>
-    </div>
-<?php endif; ?>
-
-<?php if(Session::has('success_message')): ?>
-    <div class="alert alert-success alert-dismissible fade in fixed-error">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-        <strong><?php echo e(Session::get('success_message')); ?></strong>
-    </div>
-<?php elseif(Session::has('error_message')): ?>
-  <div class="alert alert-danger alert-dismissible fade in fixed-error">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-        <strong><?php echo e(Session::get('error_message')); ?></strong>
-  </div>
-<?php elseif(Session::has('info_message')): ?>
-  <div class="alert alert-info alert-dismissible fade in fixed-error">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
-        <strong><?php echo e(Session::get('info_message')); ?></strong>
-  </div>
-<?php endif; ?>
 
 <?php echo Form::open(['url'=>'/controller/application/'.$action_url,'class'=>'form-horizontal fsize', 'files'=>true]); ?>
 
@@ -85,71 +90,72 @@
 
 <?php if($myapplist[0]->status != 2 && $myapplist[0]->status != 3 && $myapplist[0]->status != 4 && $mark == 'approver' && $one_approver->approver_read == 0): ?>
 
-
 <?php endif; ?>
-<div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Case Number</div>
-<div class="col-md-10 bg-ff">
-  <?php echo e($myapplist[0]->case_number); ?>
-
-</div>
-</div>
 
 <div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Creator</div>
-<div class="col-md-10 bg-ff">
-  <?php echo e($myapplist[0]->creator_name); ?>
+  <div class="col-md-2 bg-cc">Case Number</div>
+  <div class="col-md-10 bg-ff">
+    <?php echo e($myapplist[0]->case_number); ?>
 
-</div>
-</div>
-
-<div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Type of Request</div>
-<div class="col-md-10 bg-ff">
-  <?php echo e($myapplist[0]->type_request); ?>
-
-</div>
-</div>
+  </div>
+</div><!-- end row -->
 
 <div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Type of Form</div>
-<div class="col-md-10 bg-ff">
-  <?php echo e($afm->name); ?>
+  <div class="col-md-2 bg-cc">Creator</div>
+  <div class="col-md-10 bg-ff">
+    <?php echo e($myapplist[0]->creator_name); ?>
 
-</div>
-</div>
-
-<div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Department</div>
-<div class="col-md-10 bg-ff">
-  <?php echo e($myapplist[0]->department); ?>
-
-</div>
-</div>
+  </div>
+</div><!-- end row -->
 
 <div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Urgency</div>
-<div class="col-md-10 bg-ff">
+  <div class="col-md-2 bg-cc">Type of Request</div>
+  <div class="col-md-10 bg-ff">
+    <?php echo e($myapplist[0]->type_request); ?>
+
+  </div>
+</div><!-- end row -->
+
+<div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Type of Form</div>
+  <div class="col-md-10 bg-ff">
+    <?php echo e($afm->name); ?>
+
+  </div>
+</div><!-- end row -->
+
+<div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Department</div>
+  <div class="col-md-10 bg-ff">
+    <?php echo e($myapplist[0]->department); ?>
+
+  </div>
+</div><!-- end row -->
+
+<div class="row bg-cc-only">
+  <div class="col-md-2 bg-cc">Urgency</div>
+  <div class="col-md-10 bg-ff">
     <?php if($myapplist[0]->urgency == 1): ?>
       Normal
     <?php else: ?>
       Urgent
     <?php endif; ?>
-</div>
-</div>
+  </div>
+</div><!-- end row -->
 
 <div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Approver(s)</div>
-<div class="col-md-10 bg-ff">
+  <div class="col-md-2 bg-cc">Approver(s)</div>
+  <div class="col-md-10 bg-ff">
     <?php if($myapplist[0]->type_form == 19): ?>
-  <div class="approver-list-19">
-   <?php else: ?>
-   <div class="approver-list">
-   <?php endif; ?>
-<?php if($approverlist->count() != 0): ?>
+    <div class="approver-list-19">
+    <?php else: ?>
+    <div class="approver-list">
+    <?php endif; ?>
 
-  <input type="hidden" value="<?php echo e($approverlist->count()); ?> " id="approver_count" name="approver_count">
-  <?php foreach($approverlist as $approver): ?>
+    <?php if($approverlist->count() != 0): ?>
+
+    <input type="hidden" value="<?php echo e($approverlist->count()); ?> " id="approver_count" name="approver_count">
+      <?php foreach($approverlist as $approver): ?>
       <span class="each_approver">
           <?php if($approver->group_id > 0): ?>
 
@@ -158,36 +164,35 @@
 
 
           <?php else: ?>
-        <a class="unap <?php if($approver->approver_status == 1): ?> alert-success <?php endif; ?> <?php if($approver->approver_status == 2): ?> alert-danger <?php endif; ?>" data-toggle="tooltip" data-placement="top" title="<?php echo e($approver->approver_email); ?>">
+          <a class="unap <?php if($approver->approver_status == 1): ?> alert-success <?php endif; ?> <?php if($approver->approver_status == 2): ?> alert-danger <?php endif; ?>" data-toggle="tooltip" data-placement="top" title="<?php echo e($approver->approver_email); ?>">
           <?php echo e($approver->approver_name); ?>
 
           <?php endif; ?>
           <input name="approver_id_check[]" type="hidden" value="<?php echo e($approver->approver_user_id); ?>" />
         </a>
       </span>
-  <?php endforeach; ?>
+      <?php endforeach; ?>
 
-<?php else: ?>
-  <span class="no-approver">N/A</span>
-<?php endif; ?>
+    <?php else: ?>
+      <span class="no-approver">N/A</span>
+    <?php endif; ?>
+    </div>
+    </div>
   </div>
-</div>
-</div>
 
 <div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">CC Person(s)</div>
-<div class="col-md-10 bg-ff">
-<?php if(isset($ccpersonlist) && $ccpersonlist): ?>
-  <?php foreach($ccpersonlist as $ccperson): ?>
-    <a data-toggle="tooltip" data-placement="top" title="<?php echo e($ccperson['ccperson_email']); ?>" class="unap <?php if($ccperson['ccperson_status'] == 1): ?> alert-success <?php endif; ?>"><?php echo e($ccperson['ccperson_name']); ?> </a>
-    <input type="hidden" value="<?php echo e($ccperson['ccperson_user_id']); ?>" name="ccperson_each[]">
-  <?php endforeach; ?>
-<?php else: ?>
-N/A
-<?php endif; ?>
-</div>
-</div>
-
+  <div class="col-md-2 bg-cc">CC Person(s)</div>
+  <div class="col-md-10 bg-ff">
+  <?php if(isset($ccpersonlist) && $ccpersonlist): ?>
+    <?php foreach($ccpersonlist as $ccperson): ?>
+      <a data-toggle="tooltip" data-placement="top" title="<?php echo e($ccperson['ccperson_email']); ?>" class="unap <?php if($ccperson['ccperson_status'] == 1): ?> alert-success <?php endif; ?>"><?php echo e($ccperson['ccperson_name']); ?> </a>
+      <input type="hidden" value="<?php echo e($ccperson['ccperson_user_id']); ?>" name="ccperson_each[]">
+    <?php endforeach; ?>
+  <?php else: ?>
+  N/A
+  <?php endif; ?>
+  </div>
+</div><!-- end row -->
 
 <?php if($myapplist[0]->type_form == 2): ?>
   <?php echo $__env->make('viewforms.form_rcp', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
@@ -228,39 +233,38 @@ N/A
 <?php elseif($myapplist[0]->type_form == 19): ?>
   <?php echo $__env->make('viewforms.form_eoq', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php else: ?>
+
 <div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Title</div>
-<div class="col-md-10 bg-ff">
-  <?php if($myapplist[0]->status == 0 && $mark == 'creator'): ?>
-                  <?php echo Form::input('text','title', $myapplist[0]->title , array( 'id' => 'title', 'class' => 'form-control')); ?>
+  <div class="col-md-2 bg-cc">Title</div>
+  <div class="col-md-10 bg-ff">
+    <?php if($myapplist[0]->status == 0 && $mark == 'creator'): ?>
+      <?php echo Form::input('text','title', $myapplist[0]->title , array( 'id' => 'title', 'class' => 'form-control')); ?>
 
-        <?php else: ?>
-        <?php echo e($myapplist[0]->title); ?>
+    <?php else: ?>
+      <?php echo e($myapplist[0]->title); ?>
 
-                  <?php endif; ?>
+    <?php endif; ?>
+  </div>
+</div><!-- end row -->
 
-</div>
-</div>
 <div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Request Details</div>
-<div class="col-md-10 bg-ff">
-     <?php if($myapplist[0]->status == 0 && $mark == 'creator'): ?>
-        <?php echo Form::textarea('request_details', $myapplist[0]->request_details, ['class' => 'ckeditor form-control']); ?>
+  <div class="col-md-2 bg-cc">Request Details</div>
+  <div class="col-md-10 bg-ff">
+    <?php if($myapplist[0]->status == 0 && $mark == 'creator'): ?>
+      <?php echo Form::textarea('request_details', $myapplist[0]->request_details, ['class' => 'ckeditor form-control']); ?>
 
-         <?php else: ?>
-        <?php echo $myapplist[0]->request_details; ?>
+    <?php else: ?>
+      <?php echo $myapplist[0]->request_details; ?>
 
-                  <?php endif; ?>
-</div>
-</div>
+    <?php endif; ?>
+  </div>
+</div><!-- end row -->
+
 <?php endif; ?>
 
-
-
-
 <div class="row bg-cc-only">
-<div class="col-md-2 bg-cc">Documents</div>
-<div class="col-md-10 bg-ff">
+  <div class="col-md-2 bg-cc">Documents</div>
+  <div class="col-md-10 bg-ff">
 
 
 
@@ -402,7 +406,7 @@ N/A
    <?php endif; ?>
 <?php endif; ?>
 
-<?php if($myapplist[0]->status != 2 && $myapplist[0]->status != 3 && $myapplist[0]->status != 4 && $mark == 'approver' && $one_approver->approver_read == 0): ?>
+<?php if($myapplist[0]->status != 2 && $myapplist[0]->status != 3 && $myapplist[0]->status != 4 && $mark == 'approver' && $one_approver->approver_read == 0 && $approveby == 0): ?>
 
 <?php echo Form::hidden('approver_id', $one_approver->approver_id ); ?>
 
@@ -486,15 +490,18 @@ N/A
 
 <div class="history">
   <div class="headhistory">History</div>
-  <div class="printhistory"><a href="javascript:window.print()" id="print-page" class="btn btn-default">print</a></div>
+  <div class="printhistory">
+    <a href="javascript:window.print()" id="print-page" class="btn btn-default">print</a>
+    <a href="/application/view_details/<?php echo e($myapplist[0]->id); ?>?download=pdf" class="btn btn-default">print all</a>
+  </div>
 
   <table class="table" id="table-history">
     <tr>
       <td style="width:12%">Date</td>
-       <td style="width:12%">User</td>
-        <td style="width:12%">Action</td>
-        <td style="width:12%">Status</td>
-        <td style="width:52%">Remarks</td>
+      <td style="width:12%">User</td>
+      <td style="width:12%">Action</td>
+      <td style="width:12%">Status</td>
+      <td style="width:52%">Remarks</td>
     </tr>
     <tr>
       <td><?php echo e(date('d/m/Y', strtotime($myapplist[0]->created_at))); ?> <?php echo e(date('h:i A', strtotime($myapplist[0]->created_at))); ?></td>
@@ -518,7 +525,7 @@ N/A
           <?php echo e($history['name']); ?>
 
           <?php endif; ?>
-               </td>
+        </td>
         <td>
           <?php if($history['status'] == 0): ?>
             Pending
@@ -544,12 +551,11 @@ N/A
           <?php endif; ?>
         </td>
         <td>
-
-            <div>
-              <div><?php if(isset($history['recommend_user_id'])): ?><strong> Forwarded to <?php echo e($history['recommend_user_id']['name']); ?> </strong> <br /> <br /> Remarks:</div> <?php endif; ?>
+          <div>
+            <div><?php if(isset($history['recommend_user_id'])): ?><strong> Forwarded to <?php echo e($history['recommend_user_id']['name']); ?> </strong> <br /> <br /> Remarks:</div> <?php endif; ?>
               <?php echo $history['remarks']; ?>
 
-            </div>
+          </div>
         </td>
       </tr>
     <?php endforeach; ?>

@@ -1068,9 +1068,14 @@ class ApplicationController extends ControllerCore
      * @param  Request $request [description]
      * @return [type]           [description]
      */
-    public function approveapp(Request $request){
+    public function approveapp(Request $request)
+    {
 
         DB::beginTransaction();
+
+        $input = $request->except([]);
+
+        // dd($input);
 
         $app_id = $request->app_id;
         $creator_id = $request->creator_id;
@@ -1078,7 +1083,7 @@ class ApplicationController extends ControllerCore
         $case_title = $request->case_title;
         $case_number = $request->case_number;
         $forward_person_id = $request->selected_recommend;
-         $type_form = $request->type_form ;
+        $type_form = $request->type_form ;
         $app = ModelFactory::getInstance('Application')->find($app_id);
         $form_name = ModelFactory::getInstance('Forms')->where('id',$app->type_form)->first(['name']);
 
@@ -1087,16 +1092,22 @@ class ApplicationController extends ControllerCore
             'remarks' => 'required',
         ]);
 
-        if (!$validator->fails()) {
-
+        if (!$validator->fails())
+        {
             $approver = ModelFactory::getInstance('Approver')->find($request->approver_id);
-            if($request->status == '1' || $request->status == '2'){
+
+            // dd($approver);
+
+            if($request->status == '1' || $request->status == '2')
+            {
                 $approver->remarks = $request->remarks;
                 $approver->status = $request->status;
                 $approver->case_status = ($request->status == 2 ? $request->status : $case_status);
                 $approver->read = 1;
             }
-            else if($request->status == 4) {
+
+            else if($request->status == 4)
+            {
                 $valid_to_forward = true;
                 $getAllrecommendUser = ModelFactory::getInstance('Recommend')
                                         ->where('app_id', $app_id)
@@ -1106,6 +1117,7 @@ class ApplicationController extends ControllerCore
 
                     }
                 }
+
                 //Condition: True valid to forward  and False not valid.
                 $forward_person = $this->selectUserBy($forward_person_id, ['loginname','emailadd']);
                 $forward_sender = $this->selectUserBy(\Auth::User()->idsrc_login, array('loginname','emailadd'));
@@ -1195,6 +1207,8 @@ class ApplicationController extends ControllerCore
                             ->where('id', $request->approver_id)
                             ->first();
 
+                            // dd($current_approver->toArray());
+
 
                         if($current_approver){
 
@@ -1209,7 +1223,16 @@ class ApplicationController extends ControllerCore
                             if($next_approver){
 
                                 //notify next approver
-                                $next_approver_save = ModelFactory::getInstance('Approver')->firstOrNew(array('app_id' => $app_id, 'user_id' => $next_approver->user_id, 'position' => $current_position, 'read' => '0'));
+                                if($next_approver->temp_approver_id != 0)
+                                {
+                                  $next_approver_save = ModelFactory::getInstance('Approver')->firstOrNew(array('app_id' => $app_id, 'temp_approver_id' => $next_approver->temp_approver_id, 'position' => $current_position, 'read' => '0'));
+                                }
+
+                                else
+                                {
+                                  $next_approver_save = ModelFactory::getInstance('Approver')->firstOrNew(array('app_id' => $app_id, 'user_id' => $next_approver->user_id, 'position' => $current_position, 'read' => '0'));
+                                }
+
                                 $next_approver_save->forward = 1;
                                 $next_approver_save->save();
                                   if($current_approver->group_id > 0)

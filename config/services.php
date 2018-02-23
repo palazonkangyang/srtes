@@ -16,7 +16,7 @@ return [
 'google' => [
     'client_id' => '795001262914-nkq9vjsd7427n52i2htpkeip1ocsj59h.apps.googleusercontent.com',
        'client_secret' => 'wtmDqlGdF1JxQjrxlhVu8pqT',
-    'redirect' => Config('app.url').'/callback',
+    'redirect' => 'http://srtes.palazon.com/callback',
 ],
     'mailgun' => [
         'domain' => '',

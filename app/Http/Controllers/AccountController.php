@@ -172,33 +172,38 @@ class AccountController extends ControllerCore
     {
       $id = Auth::User()->idsrc_login;
       $ooo = $request->ooo;
-      // $ooo = 1;
 
       $user = ModelFactory::getInstance('User')->find($id);
       $user->inoffice = $ooo;
 
+      if($ooo == 0)
+      {
+        $user->temp_approver_id = NULL;
+        $temp_approval_user = 0;
+
+        $temp_approver = ModelFactory::getInstance('TempApproverUser')
+                          ->where('user_id', $id)
+                          ->whereNULL('end_datetime')
+                          ->first();
+
+        $temp_approver->end_datetime = Carbon::now();
+        $temp_approver->save();
+      }
+
+      else
+      {
+        $temp_approval_user = ModelFactory::getInstance('User')
+                              ->where('deptid', $user->deptid)
+                              ->whereNotIn('idsrc_login', [$id])
+                              ->select('idsrc_login', 'loginname')
+                              ->get();
+      }
+
       $getname = $this->selectUserBy(Auth::User()->idsrc_login, array('loginname'));
       $mail_data = array();
 
-      $temp_approval_user = ModelFactory::getInstance('User')
-                            ->where('deptid', $user->deptid)
-                            ->whereNotIn('idsrc_login', [$id])
-                            ->select('idsrc_login', 'loginname')
-                            ->get();
-
       if($user->save())
       {
-        if($ooo == 0)
-        {
-          $temp_approver = ModelFactory::getInstance('TempApproverUser')
-                            ->where('user_id', $id)
-                            ->whereNULL('end_datetime')
-                            ->first();
-
-          $temp_approver->end_datetime = Carbon::now();
-          $temp_approver->save();
-        }
-
         $getapprover = ModelFactory::getInstance('Approver')
                         ->join('ams_applications', 'ams_applications.id', '=', 'ams_approver_person.app_id')
                         ->join('srcusers.users', 'srcusers.users.idsrc_login', '=', 'ams_applications.created_id')
@@ -236,13 +241,12 @@ class AccountController extends ControllerCore
             'app_link' => $link,
             'check' => $check );
 
-          $this->send_email('mail.mail', $mail_data, $creator , $subject);
+          $this->send_email('mail.mail', $mail_data, $creator, $subject);
         }
 
         return Response::json(array('flag' => $ooo, 'temp_approval_user' => $temp_approval_user), 200);
       }
     }
-
 
     public function updateProfile(Request $request)
     {

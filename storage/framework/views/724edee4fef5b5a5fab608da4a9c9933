@@ -47,17 +47,17 @@
 		<div id="no-more-tables">
 			<table class="col-md-12 table-bordered table-striped table-condensed cf">
 				<thead class="cf">
-					<th><?php echo $course_list->sortColumn('id','ID'); ?></th>
-					<th><?php echo $course_list->sortColumn('name','Name'); ?></th>
-					<th><?php echo $course_list->sortColumn('description','Description'); ?></th>
-					<th><?php echo $course_list->sortColumn('course_type_id','Type'); ?></th>
-					<th><?php echo $course_list->sortColumn('code','Code'); ?></th>
-					<th><?php echo $course_list->sortColumn('duration','Duration'); ?></th>
-					<th><?php echo $course_list->sortColumn('minimum_attendee','Minimum Attendee'); ?></th>
-					<th><?php echo $course_list->sortColumn('maximum_attendee','Maximum Attendee'); ?></th>
-					<th>Register</th>
-					<th>Complete</th>
-					<th>Action</th>
+					<th class="col-md-1"><?php echo $course_list->sortColumn('id','ID'); ?></th>
+					<th class="col-md-2"><?php echo $course_list->sortColumn('name','Name'); ?></th>
+					<th class="col-md-2"><?php echo $course_list->sortColumn('description','Description'); ?></th>
+					<th class="col-md-1"><?php echo $course_list->sortColumn('course_type_id','Type'); ?></th>
+					<th class="col-md-1"><?php echo $course_list->sortColumn('code','Code'); ?></th>
+					<th class="col-md-1"><?php echo $course_list->sortColumn('duration','Duration'); ?></th>
+					<th class="col-md-1"><?php echo $course_list->sortColumn('minimum_attendee','Minimum Attendee'); ?></th>
+					<th class="col-md-1"><?php echo $course_list->sortColumn('maximum_attendee','Maximum Attendee'); ?></th>
+					<th class="col-md-1">Register</th>
+					<th class="col-md-1">Complete</th>
+					<th class="col-md-1">Action</th>
 				</thead>
 
 				<tbody>
@@ -72,13 +72,13 @@
 						<td data-title="duration"><?php echo e($course->duration); ?></td>
 						<td data-title="minimum_attendee"><?php echo e($course->minimum_attendee); ?></td>
 						<td data-title="maximum_attendee"><?php echo e($course->maximum_attendee); ?></td>
-						<td><?php echo e($course->register); ?></td>
-						<td><?php echo e($course->complete); ?></td>
+						<td data-title="register"><?php echo e($course->register); ?></td>
+						<td data-title="complete"><?php echo e($course->complete); ?></td>
 						<td class="special-td">
-							<a title='Edit' href="/tes/course/course-list/edit-questionnaire/<?php echo e($course->questionnaire_id); ?>" class='btn btn-default btn-xs'><i class="glyphicon glyphicon-edit"></i></a>
+							<a title='Edit Questionnaire' href="/tes/course/course-list/edit-questionnaire/<?php echo e($course->id); ?>" class='btn btn-default btn-xs'><i class="glyphicon glyphicon-edit"></i></a>
 
 							<?php if(isset($course->hasreport)): ?>
-								<a title='Report' href="/tes/course/course-list/questionnaire_report/<?php echo e($course->questionnaire_id); ?>" class='btn btn-default btn-xs'><i class="glyphicon glyphicon-list"></i></a>
+								<a title='Report' href="/tes/course/course-list/questionnaire_report/<?php echo e($course->id); ?>" class='btn btn-default btn-xs'><i class="glyphicon glyphicon-list"></i></a>
 							<?php endif; ?>
           	</td>
 					</tr>
