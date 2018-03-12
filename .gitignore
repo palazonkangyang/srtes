@@ -10,6 +10,14 @@ app/storage/
 public/storage
 public/hot
 storage/*.key
+storage/
+test/
+tests/
+database/
+srcams.sql
+srcusers.sql
+config/app.php
+config/services.php
 .env.*.php
 .env.php
 .env
