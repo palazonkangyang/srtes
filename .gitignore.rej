@@ -1,0 +1,10 @@
+diff a/.gitignore b/.gitignore	(rejected hunks)
+@@ -9,7 +9,7 @@
+ # Laravel 5 & Lumen specific
+ public/storage
+ public/hot
+-storage/*.key
++/storage/*.key
+ .env.*.php
+ .env.php
+ .env
