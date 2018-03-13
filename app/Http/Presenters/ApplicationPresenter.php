@@ -23,6 +23,7 @@ class ApplicationPresenter extends PresenterCore
 	 */
 	public function ApplicationProcess(Request $request)
 	{
+		// dd($request->all());
 		$this->view->title = 'New Application';
 
 		if($request->get('type_of_request') && $request->get('forms'))
@@ -384,9 +385,11 @@ class ApplicationPresenter extends PresenterCore
 		/**
 		 * Start NEW FORM REQUEST (HR Matters - Application For Training / Seminar / Workshop)
 		*/
-
 		if($form['0']->id == 16) {
+			/* course list array */
 			 $this->view->course_list_array = \App\Http\Models\Course::courseListArray();
+
+			 /* course type list array */
 			 $this->view->course_type_list_array = \App\Http\Models\CourseType::courseTypeListArray();
 
 			 for($i = 0; $i < count($this->view->approverlist); $i++)

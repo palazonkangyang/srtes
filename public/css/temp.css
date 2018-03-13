@@ -18,6 +18,12 @@ body {
     text-align: center;
 }
 
+.column{
+  width: 45%;
+  margin-right: 3%;
+  float: left;
+}
+
 .form-signin {
   max-width: 420px;
   padding: 30px 40px 80px;
@@ -261,16 +267,13 @@ a.editable-click:hover {
   margin-left: 20px;
   height: auto;
   padding: 20px 10px;
-
 }
 
-
 .google-list {
-    padding: 4px;
+  padding: 4px;
 }
 .google-list {
-
-    font-size: 12px;
+  font-size: 12px;
 }
 
 #google-box {
@@ -1172,6 +1175,14 @@ border-radius: 3px 3px 3px 3px;
     border-bottom: 1px solid #ccc;
     width: 20%;
 }
+
+/* new course */
+
+.new-course, .new-date-time-programme{
+  display: none;
+}
+
+
 /* start of mobile functioality*/
 @media screen and (max-width: 990px) {
    .history {

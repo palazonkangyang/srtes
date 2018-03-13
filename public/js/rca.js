@@ -751,11 +751,9 @@ function appendSelectedproject_claims(a,b,c,d){
 
 function appendSelectedcashadvance_acquittal(a,b,c,d){
 
-
 	$(a).append('<div><i class="glyphicon glyphicon-minus-sign minus-'+d+'"></i><span class="numbering_method"> <strong>[ 2rd Verify ] </strong> </span> '+c.value+ ' <small><b>'+c.data.email+'</b></small><input type="hidden" name="'+d+'[]" value="'+c.data.id+'" /></div>');
 	$(b).hide();
 	loadRemovePerson('.minus-'+d);
-
 }
 
 

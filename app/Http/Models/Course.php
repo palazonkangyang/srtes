@@ -34,6 +34,7 @@ class Course extends Model
     foreach ($course as $c ) {
       $course_list_array[$c->id] = $c->name;
     }
+
     return $course_list_array;
   }
 
@@ -118,5 +119,4 @@ class Course extends Model
   {
     return '';
   }
-
 }

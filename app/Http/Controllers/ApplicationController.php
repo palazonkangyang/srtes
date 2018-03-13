@@ -22,7 +22,7 @@ class ApplicationController extends ControllerCore
     * @return Response
   */
 
-  public function store(NewApplicationRequest $request)
+  public function store(Request $request)
   {
     if($request->ajax())
     {
@@ -380,6 +380,29 @@ class ApplicationController extends ControllerCore
 
         else if($request->type_form == '16')
         {
+          if(!empty($request->new_course_name))
+      		{
+            $course = ModelFactory::getInstance('Course');
+            $course->name = $request->new_course_name;
+            $course->course_type_id = $request->course_type_id;
+            $course->save();
+
+            $course_id = $course->id;
+
+            $timetable = ModelFactory::getInstance('Timetable');
+            $timetable->course_id = $request->course_type_id;
+            $timetable->start_date = $request->start_date;
+            $timetable->end_date = $request->end_date;
+            $timetable->save();
+            $batch_id = $timetable->id;
+      		}
+
+      		else
+      		{
+      			$course_id = $request->course_id;
+            $batch_id = $request->item_id[0];
+      		}
+
           $form = ModelFactory::getInstance('FormTsw');
           $form->app_id = $this->id;
           $form->designation = $request->designation;
@@ -392,17 +415,44 @@ class ApplicationController extends ControllerCore
           $form->fee = $request->fee;
           $form->funds = $request->funds;
           $form->description = $request->description;
-          $form->course_id = $request->course_id ;
-          $form->batch_id = $request->item_id[0];
+          $form->course_id = $course_id;
+          $form->batch_id = $batch_id;
           $form->save();
 
+          // $form = ModelFactory::getInstance('FormTsw');
+          // $form->app_id = $this->id;
+          // $form->designation = $request->designation;
+          // $form->service_status = $request->service_status;
+          // $form->type_training = $request->type_training;
+          // $form->title = $request->title;
+          // $form->provider = $request->provider;
+          // $form->isfunds = $request->isfunds;
+          // $form->budget_availability = $request->budget_availability;
+          // $form->fee = $request->fee;
+          // $form->funds = $request->funds;
+          // $form->description = $request->description;
+          // $form->course_id = $request->course_id;
+          // $form->batch_id = $request->item_id[0];
+          // $form->save();
+
           //**start of line item insert
-          for ($idx = 0; $idx < count($request->item_id); $idx++)
+          if(!empty($request->start_date))
           {
             $lineitem = ModelFactory::getInstance('LineItemTsw');
             $lineitem->app_id = $this->id;
-            $lineitem->item_date = date('Y-m-d H:i:s', strtotime($request['item_date'][$idx]));
+            $lineitem->item_date = date('Y-m-d H:i:s', strtotime($request->start_date));
             $lineitem->save();
+          }
+
+          else
+          {
+            for ($idx = 0; $idx < count($request->item_id); $idx++)
+            {
+              $lineitem = ModelFactory::getInstance('LineItemTsw');
+              $lineitem->app_id = $this->id;
+              $lineitem->item_date = date('Y-m-d H:i:s', strtotime($request['item_date'][$idx]));
+              $lineitem->save();
+            }
           }
         }
 

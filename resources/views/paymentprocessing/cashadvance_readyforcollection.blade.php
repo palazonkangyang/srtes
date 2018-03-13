@@ -81,7 +81,7 @@
             <th>Payee's Name</th>
             <th>Project Name</th>
             <th>Department</th>
-            <td>Print Date</td>
+            <th>Print Date</th>
             <th>{!! $reports->sortColumn('status','Status') !!}</th>
             <th>{!! $reports->sortColumn('ppstatus','PP Status') !!}</th>
             <th>{!! $reports->sortColumn('total','total') !!}</th>
