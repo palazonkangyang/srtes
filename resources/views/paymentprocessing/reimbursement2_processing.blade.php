@@ -41,7 +41,6 @@
   </div><!-- end print-table -->
 </div><!-- end row -->
 
-
 <div class="wrap-content">
 
   <div class="hide">{{ $grant_total = 0 }} </div><!-- end hide -->
@@ -104,7 +103,7 @@
             <td data-title="Department">{{ $report->department }}</td>
             <td data-title="print_date">
               @if(isset($report->print_date))
-                {{ \Carbon\Carbon::parse($report->print_date)->format("d/m/Y") }}
+                {{ \Carbon\Carbon::parse($report->print_date)->format("d M Y") }}
               @endif
             </td>
             <td data-title="Status">

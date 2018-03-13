@@ -2712,7 +2712,7 @@ class ApplicationPresenter extends PresenterCore
 
 				if(!empty($this->view->myapplist[0]['print_date']))
 				{
-					$this->view->myapplist[0]['print_date'] = Carbon::parse($this->view->myapplist[0]['print_date'])->format("d/m/Y");
+					$this->view->myapplist[0]['print_date'] = Carbon::parse($this->view->myapplist[0]['print_date'])->format("d M Y");
 				}
 
         return $this->view('application.view_reports');
