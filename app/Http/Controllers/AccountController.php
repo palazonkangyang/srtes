@@ -215,34 +215,34 @@ class AccountController extends ControllerCore
 
         $prefix = ($ooo == 1 ? 1 : 0);
 
-        foreach ($getapprover as $key => $value)
-        {
-          $creator = $this->selectUserBy($value['created_id'],array('loginname','emailadd'))->toArray();
-          $ooo = $this->selectUserBy($id,array('loginname','emailadd'))->toArray();
-          $app_id = $value['app_id'];
-
-          /*notify mail*/
-          $name_submitted = $ooo['loginname'];
-          $name_submitted_email = $ooo['emailadd'];
-          $to_name = $creator['loginname'];
-          $to_mail = $creator['emailadd'];
-          $to_date = date('d/m/Y h:i A');
-
-          $link = url('/application/view_details/'.$app_id, '', $secure = null);
-          $check = 'inoffice_'.$prefix;
-          $subject = '[SRC-AMS] Out Of Office Notification';
-
-          $mail_data = array(
-            'to_name' => $to_name,
-            'to_email' => $to_mail,
-            'name_submitted' => $name_submitted,
-            'name_submitted_email' => $name_submitted_email,
-            'date' => $to_date,
-            'app_link' => $link,
-            'check' => $check );
-
-          $this->send_email('mail.mail', $mail_data, $creator, $subject);
-        }
+        // foreach ($getapprover as $key => $value)
+        // {
+        //   $creator = $this->selectUserBy($value['created_id'],array('loginname','emailadd'))->toArray();
+        //   $ooo = $this->selectUserBy($id,array('loginname','emailadd'))->toArray();
+        //   $app_id = $value['app_id'];
+        //
+        //   /*notify mail*/
+        //   $name_submitted = $ooo['loginname'];
+        //   $name_submitted_email = $ooo['emailadd'];
+        //   $to_name = $creator['loginname'];
+        //   $to_mail = $creator['emailadd'];
+        //   $to_date = date('d/m/Y h:i A');
+        //
+        //   $link = url('/application/view_details/'.$app_id, '', $secure = null);
+        //   $check = 'inoffice_'.$prefix;
+        //   $subject = '[SRC-AMS] Out Of Office Notification';
+        //
+        //   $mail_data = array(
+        //     'to_name' => $to_name,
+        //     'to_email' => $to_mail,
+        //     'name_submitted' => $name_submitted,
+        //     'name_submitted_email' => $name_submitted_email,
+        //     'date' => $to_date,
+        //     'app_link' => $link,
+        //     'check' => $check );
+        //
+        //   $this->send_email('mail.mail', $mail_data, $creator, $subject);
+        // }
 
         return Response::json(array('flag' => $ooo, 'temp_approval_user' => $temp_approval_user), 200);
       }
