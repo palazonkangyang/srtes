@@ -1993,8 +1993,6 @@ class ApplicationPresenter extends PresenterCore
 				if($request->has('download'))
 				{
 
-					// dd($this->view->one_approver);
-
 					if($app[0]->type_form == 12 || $app[0]->type_form == 14 || $app[0]->type_form == 16 || $app[0]->type_form == 19 || $app[0]->type_form == 20)
 					{
 						$data = [
@@ -2017,6 +2015,21 @@ class ApplicationPresenter extends PresenterCore
 
 					else
 					{
+						if(empty($this->view->one_approver))
+						{
+							$this->view->one_approver = '';
+						}
+
+						if(empty($this->view->finalapprover))
+						{
+							$this->view->finalapprover = '';
+						}
+
+						if(empty($this->view->currentapprover))
+						{
+							$this->view->currentapprover = '';
+						}
+
 						$data = [
 					    'title' =>  $this->view->title,
 					    'title_page' => $this->view->title_page,
@@ -2040,24 +2053,17 @@ class ApplicationPresenter extends PresenterCore
 					$pdf_name = str_replace('/', '_', $this->view->myapplist[0]->case_number);
 				  $pdf_name = $pdf_name . '.pdf';
 
-					// return $this->view('print.view', $data);
-
 				  PDF::loadView('print.view', $data)->save('samplepdfs/' . $pdf_name)->stream();
-					//
-					// $fileId = '1YLo6kmxfFfRfvXd-hwa4qRe29dVb6v7M';
-					// $response = $driveService->files->get($fileId, array(
-					//     				'alt' => 'media'));
-					//
-					// dd($response);
-					// $content = $response->getBody()->getContents();
-
 
 					// Merge PDF
-				  $pdf = PdfMerger::addPDF('samplepdfs/' . $pdf_name);
-				  $pdf = PdfMerger::addPDF('samplepdfs/one.pdf');
-				  $pdf = PdfMerger::addPDF('samplepdfs/two.pdf');
+					$pdf = PdfMerger::addPDF('samplepdfs/' . $pdf_name);
 
-				  PdfMerger::merge('browser', 'samplepdfs/TEST2.pdf');
+					foreach($this->view->filelist as $file)
+					{
+						$pdf = PdfMerger::addPDF('uploads\final/' . $file->files_fileurl);
+					}
+
+				  PdfMerger::merge('browser', 'samplepdfs/sample.pdf');
 				}
 
         return $this->view('application.view');
