@@ -469,8 +469,7 @@
 <div class="history">
   <div class="headhistory">History</div>
   <div class="printhistory">
-    <a href="javascript:window.print()" id="print-page" class="btn btn-default">print</a>
-    <a href="/application/view_details/{{$myapplist[0]->id}}?download=pdf" class="btn btn-default">print all</a>
+    <a href="/application/view_details/{{$myapplist[0]->id}}?download=pdf" id="print-page" class="btn btn-default">print</a>
   </div>
 
   <table class="table" id="table-history">

@@ -14,8 +14,7 @@ storage/
 test/
 tests/
 database/
-srcams.sql
-srcusers.sql
+public/
 config/app.php
 config/services.php
 .env.*.php
