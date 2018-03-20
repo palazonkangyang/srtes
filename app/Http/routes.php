@@ -31,7 +31,6 @@ Route::group(['prefix' => 'dashboard'],function(){
 	Route::get('/', ['uses' => 'AccountPresenter@index']);
 });
 
-
 Route::group(['prefix' => 'account'],function(){
 	Route::get('/myprofile', ['uses' => 'AccountPresenter@myProfile']);
 	Route::get('/account-settings', ['uses' => 'AccountPresenter@accountSettings']);
@@ -54,7 +53,6 @@ Route::group(['prefix' => 'tes'],function(){
 
     // Training Evaluation System -> Course
     // tes/course/course-type/*
-
     Route::group(['prefix' => 'course-type'],function(){
 
       Route::get('/', ['uses' => 'CourseTypePresenter@getCourseTypeList']);
@@ -64,12 +62,9 @@ Route::group(['prefix' => 'tes'],function(){
       Route::get('/edit-questionnaire/{id}', ['uses' => 'CourseTypePresenter@editQuestionnaire']);
     });
 
-
     // Training Evaluation System -> Course -> Course List
     // tes/course/course-list/*
-
     Route::group(['prefix' => 'course-list'],function(){
-
       Route::get('/', ['uses' => 'CoursePresenter@courseList']);
       Route::post('/', ['uses' => 'CoursePresenter@courseList']);
       Route::get('/questionnaire_report/{id}', ['uses' => 'CoursePresenter@questionnaire_reportList']);
@@ -82,9 +77,7 @@ Route::group(['prefix' => 'tes'],function(){
 
     // Training Evaluation System -> Course -> Designation
     // tes/course/designation/*
-
     Route::group(['prefix' => 'designation'],function(){
-
       Route::get('/', ['uses' => 'DesignationPresenter@getDesignation']);
       Route::get('/add-designation', ['uses' => 'DesignationPresenter@addDesignation']);
       Route::get('/edit-designation/{id}', ['uses' => 'DesignationPresenter@editDesignation']);
@@ -108,6 +101,7 @@ Route::group(['prefix' => 'tes'],function(){
       Route::get('/add-questionnaire', ['uses' => 'FormManagementPresenter@create']);
     });
   });
+
   // Training Evaluation System -> Report
   // tes/application/*
   Route::group(['prefix' => 'reports'],function(){
@@ -120,7 +114,6 @@ Route::group(['prefix' => 'tes'],function(){
   Route::group(['prefix' => 'settings'],function(){
     Route::get('/', ['uses' => 'SettingsPresenter@tes_index']);
   });
-
 });
 
 Route::group(['prefix' => 'settings'], function() {
@@ -155,41 +148,38 @@ Route::group(['prefix' => 'paymentprocessing'], function() {
 
   //reimbursement
   Route::get('/reimbursement', ['as' => 'reimbursement','uses' => 'PaymentProcessingPresenter@reimbursement']);
-  Route::get('/reimbursement_pending', ['uses' => 'PaymentProcessingPresenter@reimbursement_pending']);
+  Route::get('/reimbursement_pending', ['as'=> 'reimbursement_pending', 'uses' => 'PaymentProcessingPresenter@reimbursement_pending']);
   Route::post('/reimbursement_pending', ['uses' => 'PaymentProcessingPresenter@reimbursement_pending']);
   Route::post( '/reimbursement_pending_store', [ 'as' => 'reimbursement_pending_store', 'uses' => 'PaymentProcessingPresenter@reimbursement_pending_store' ] );
-  Route::get('/reimbursement_processing', ['uses' => 'PaymentProcessingPresenter@reimbursement_processing']);
+  Route::get('/reimbursement_processing', ['as'=> 'reimbursement_processing', 'uses' => 'PaymentProcessingPresenter@reimbursement_processing']);
   Route::post('/reimbursement_processing', ['uses' => 'PaymentProcessingPresenter@reimbursement_processing']);
   Route::post( '/reimbursement_processing_store', [  'as' => 'reimbursement_processing_store', 'uses' => 'PaymentProcessingPresenter@reimbursement_processing_store' ] );
-  Route::get('/reimbursement2_processing', ['uses' => 'PaymentProcessingPresenter@reimbursement2_processing']);
+  Route::get('/reimbursement2_processing', ['as'=> 'reimbursement2_processing', 'uses' => 'PaymentProcessingPresenter@reimbursement2_processing']);
   Route::post('/reimbursement2_processing', ['uses' => 'PaymentProcessingPresenter@reimbursement2_processing']);
   Route::post( '/reimbursement2_processing_store', [  'as' => 'reimbursement2_processing_store', 'uses' => 'PaymentProcessingPresenter@reimbursement2_processing_store' ] );
 
-  Route::get('/reimbursement_exported', ['uses' => 'PaymentProcessingPresenter@reimbursement_exported']);
+  Route::get('/reimbursement_exported', ['as'=> 'reimbursement_exported', 'uses' => 'PaymentProcessingPresenter@reimbursement_exported']);
   Route::post('/reimbursement_exported', ['uses' => 'PaymentProcessingPresenter@reimbursement_exported']);
 
   //cash advance
   Route::get('/cashadvance', ['as' => 'cashadvance','uses' => 'PaymentProcessingPresenter@cashadvance']);
-  Route::get('/cashadvance_pending', ['uses' => 'PaymentProcessingPresenter@cashadvance_pending']);
+  Route::get('/cashadvance_pending', ['as' => 'cashadvance_pending', 'uses' => 'PaymentProcessingPresenter@cashadvance_pending']);
   Route::post('/cashadvance_pending', ['uses' => 'PaymentProcessingPresenter@cashadvance_pending']);
   Route::post( '/cashadvance_pending_store', [ 'as' => 'cashadvance_pending_store', 'uses' => 'PaymentProcessingPresenter@cashadvance_pending_store' ] );
-  Route::get('/cashadvance_processing', ['uses' => 'PaymentProcessingPresenter@cashadvance_processing']);
+  Route::get('/cashadvance_processing', ['as' => 'cashadvance_processing', 'uses' => 'PaymentProcessingPresenter@cashadvance_processing']);
   Route::post('/cashadvance_processing', ['uses' => 'PaymentProcessingPresenter@cashadvance_processing']);
   Route::post( '/cashadvance_processing_store', [ 'as' => 'cashadvance_processing_store', 'uses' => 'PaymentProcessingPresenter@cashadvance_processing_store' ] );
-  Route::get('/cashadvance_readyforcollection', ['uses' => 'PaymentProcessingPresenter@cashadvance_readyforcollection']);
+  Route::get('/cashadvance_readyforcollection', ['as' => 'cashadvance_readyforcollection', 'uses' => 'PaymentProcessingPresenter@cashadvance_readyforcollection']);
   Route::post('/cashadvance_readyforcollection', ['uses' => 'PaymentProcessingPresenter@cashadvance_readyforcollection']);
   Route::post( '/cashadvance_readyforcollection_store', [ 'as' => 'cashadvance_readyforcollection_store', 'uses' => 'PaymentProcessingPresenter@cashadvance_readyforcollection_store' ] );
-  Route::get('/cashadvance_collected', ['uses' => 'PaymentProcessingPresenter@cashadvance_collected']);
+  Route::get('/cashadvance_collected', ['as' => 'cashadvance_collected', 'uses' => 'PaymentProcessingPresenter@cashadvance_collected']);
   Route::post('/cashadvance_collected', ['uses' => 'PaymentProcessingPresenter@cashadvance_collected']);
 });
-
-
 
 Route::group(['prefix' => 'application'],function(){
 	/**
 	 * Phase 3.0
 	 */
-
 	Route::get('/new/process', ['uses' => 'ApplicationPresenter@ApplicationProcess']);
 	Route::post('/new/process', ['uses' => 'ApplicationPresenter@ApplicationProcess']);
 
@@ -230,8 +220,9 @@ Route::group(['prefix' => 'application'],function(){
   Route::post('/reportsFin', ['uses' => 'ApplicationPresenter@reportsFin']);
 
 	Route::get('/view_reports/{id}', ["as" => 'view', 'uses' => 'ApplicationPresenter@viewReports']);
-});
 
+  Route::post('/saveprintdate', ['uses' => 'ApplicationController@saveprintdate']);
+});
 
 Route::group(['prefix' => 'management'],function(){
 	//access right super admin
@@ -258,7 +249,6 @@ Route::group(['prefix' => 'accountcode'],function(){
 
 	Route::get('/createaccountcode', ['middleware' => 'access','uses' => 'AccountCodePresenter@create']);
 	Route::get('/editaccountcode/{id}', ['middleware' => 'access','uses' => 'AccountCodePresenter@edit']);
-
 });
 
 Route::group(['prefix' => 'globalsetting'],function(){
@@ -296,7 +286,6 @@ Route::group(['prefix' => 'auditlog'],function(){
 	Route::get('/editoptionalcode/{id}', ['middleware' => 'access','uses' => 'OptionalCodePresenter@edit']);
 });
 
-
 Route::group(['prefix' => 'history'],function(){
 	//access right super admin
 	Route::get('/', ['uses' => 'HistoryPresenter@index']);
@@ -312,6 +301,7 @@ Route::group(['prefix' => 'history'],function(){
 
 	Route::get('/edit/savedrafts/{id}', ['uses' => 'HistoryPresenter@editSaveDrafts']);
 });
+
 /*
  * Add routes to Controller below. The URL should contain /controller
  * at the first. This serves as an identifier for the controller. The controller
@@ -359,7 +349,6 @@ Route::group(['prefix' => 'controller'],function(){
 
   /*globalsetting*/
 	Route::post('/updateglobalsetting', ['uses' => 'GlobalSettingController@update']);
-
 
   /*flexigroup*/
 	Route::post('/createflexigroup', ['uses' => 'FlexiGroupController@store']);
@@ -438,13 +427,12 @@ Route::group(['prefix' => 'cron'],function(){
 	Route::get('/execute/now', ['uses' => 'CronController@execute']);
 });
 
-
 /*
 * Create custom filter below.
 */
 
 Route::filter('no-cache',function($route, $request, $response){
-    $response->headers->set('Cache-Control','nocache, no-store, max-age=0, must-revalidate');
-    $response->headers->set('Pragma','no-cache');
-    $response->headers->set('Expires','Fri, 01 Jan 1990 00:00:00 GMT');
+  $response->headers->set('Cache-Control','nocache, no-store, max-age=0, must-revalidate');
+  $response->headers->set('Pragma','no-cache');
+  $response->headers->set('Expires','Fri, 01 Jan 1990 00:00:00 GMT');
 });

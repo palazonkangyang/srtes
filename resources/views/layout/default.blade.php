@@ -6,7 +6,7 @@
         <meta http-equiv="cache-control" content="private, max-age=0, no-cache">
         <meta http-equiv="pragma" content="no-cache">
         <meta http-equiv="expires" content="0">
-        
+
         @include('layout.assets.head')
         @include('layout.assets.css')
 
@@ -19,7 +19,7 @@
         </div>
     <![endif]-->
     
-        <div class="main-container">            
+        <div class="main-container">
             <div id="content">
                 <section class="view-container animate-fade-up">
                     @yield('content')

@@ -17,15 +17,11 @@ $(function () {
 	});
 
 	$(".from_date").on("dp.change", function (e) {
-
 		$('.to_date').data("DateTimePicker").minDate(e.date);
-
 	});
 
 	$(".to_date").on("dp.change", function (e) {
-
 		$('.from_date').data("DateTimePicker").maxDate(e.date);
-
 	});
 
 	 /**
@@ -233,8 +229,7 @@ $(function () {
 	  });
 	}, 5000);
 
-	$('.btn-toggle .btn').click(function(e)
-	{
+	$('.btn-toggle .btn').click(function(e) {
 		e.preventDefault();
 
 		$('.success-settings').find('.alert-success').remove();
@@ -255,23 +250,26 @@ $(function () {
 		var form = $('form.accountsettings');
 		var action = form.attr('action');
 		var method = form.attr('method');
-		var formdata = new FormData(form[0]);
+		// var formdata = new FormData(form[0]);
 
-		$.ajaxSetup({
-      headers: {
-	    	'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-	    }
-		});
+		var formData = {
+			_token: $('meta[name="csrf-token"]').attr('content'),
+			ooo: oooval
+		};
 
-		console.log();
+		// $.ajaxSetup({
+    //   headers: {
+	  //   	'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	  //   }
+		// });
 
 		$.ajax({
-	  	url     : action,
-	    type    : method,
-	    data    : formdata,
+	  	url     : '/controller/accountsettings',
+	    type    : 'POST',
+	    data    : formData,
 	    dataType: "json",
-	    processData: false,
-	    contentType: false,
+	    // processData: false,
+	    // contentType: false,
 
 			beforeSend:function()
 			{
@@ -282,10 +280,6 @@ $(function () {
 	    {
 	      $('.panel-heading').find('h4').find('.processing-time').remove();
 	    	$('.success-settings').append(' <span class="alert-success save-stat-set">SAVE!</span> ');
-
-		    setTimeout(function() {
-		    	$('.save-stat-set').fadeOut();
-		    }, 2000);
 
 	      if(oooval == 1)
 				{
@@ -305,6 +299,10 @@ $(function () {
 					}
 
 					$('#temp-approver-list').modal('toggle');
+
+					setTimeout(function() {
+			    	$('.save-stat-set').fadeOut();
+			    }, 2000);
 				}
 
 				else
@@ -319,7 +317,7 @@ $(function () {
 	// $(".btn-toggle .active").attr('disabled', true);
 
 	$('body').on('click', '.temp_approver_id', function() {
-    $("#temp_approver_btn").attr('disabled', false);
+    $(".temp-approver button").removeAttr('disabled');
   });
 
 	$("#temp_approver_btn").click(function() {

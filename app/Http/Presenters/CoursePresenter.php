@@ -391,6 +391,16 @@ class CoursePresenter extends PresenterCore
     $result = \App\Http\Models\Course::selectedCourseList($request->course_id);
     $result['timetable'] = \App\Http\Models\Timetable::selectedTimetableList($request->course_id);
 
+    if(count($result) == 0)
+    {
+      $result['newcourse'] = "No";
+    }
+
+    else
+    {
+        $result['newcourse'] = "Yes";
+    }
+
     return Response::json($result);
   }
 

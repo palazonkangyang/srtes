@@ -315,7 +315,12 @@
   <div class="history">
     <div class="headhistory">History</div><!-- end headhistory -->
     <div class="printhistory">
-      <a href="javascript:window.print()" id="print-page" class="btn btn-default">print</a>
+      @if(empty($myapplist[0]->print_date))
+      <a href="#" id="print-page" class="btn btn-default download">print</a>
+      @else
+      <a href="#" id="print-page" data-print-date="{{ $myapplist[0]->print_date }}" class="btn btn-danger download">print</a>
+      @endif
+
       <a href="/application/view_reports/{{$myapplist[0]->id}}?download=pdf" class="btn btn-default">print all</a>
     </div><!-- end printhistory -->
 
@@ -418,6 +423,29 @@
     </div><!-- end modal-dialog -->
   </div><!-- end modal -->
 
+  <!-- Modal -->
+  <div class="modal fade print_remark" tabindex="-1" role="dialog" aria-labelledby="printModalLabel">
+    <div class="modal-dialog modal-md" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="printModalLabel">Print Notification</h4>
+        </div>
+        <div class="modal-body">
+           <div class="remarks-body">
+             <p>
+               This document has been printed at <span class="print-date"></span>
+             </p>
+           </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div><!-- end modal-dialog -->
+  </div><!-- end modal -->
+
+<script type="text/javascript" src="{{ URL::asset('js/print.js') }}"></script>
 <script type="text/javascript">
   $(function () {
 

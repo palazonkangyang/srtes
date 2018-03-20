@@ -1,5 +1,7 @@
 vendor/
 node_modules/
+tests/
+test/
 npm-debug.log
 
 # Laravel 4 specific

@@ -18,11 +18,11 @@
 <div class="panel-heading"><h4>NEW FORM REQUEST ({{$request[0]->name}} - {{ $form[0]->name }})</h4></div>
 <div class="panel-body">
 
-{!!Form::open(['class'=>'submit_now', 'files'=>true])!!}
+{!! Form::open(['class'=>'submit_now', 'files'=>true]) !!}
 
-{!! Form::hidden('type_request', $request[0]->name )!!}
-{!! Form::hidden('type_form', $form[0]->id )!!}
-{!! Form::hidden('department', $department[0]->department )!!}
+{!! Form::hidden('type_request', $request[0]->name ) !!}
+{!! Form::hidden('type_form', $form[0]->id ) !!}
+{!! Form::hidden('department', $department[0]->department ) !!}
 <div class="alert alert-info alert-dismissible fade in fixed-error">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
         <strong> Message to Requestors : {{ $form[0]->message }}</strong>
@@ -402,8 +402,6 @@
 </div>
 <div class="clear-left"><div class="file-list"></div></div>
 
-
-
 <hr />
 @if($form[0]->id == 13)
 <button type="submit" class="btn btn-default" id="submit" onclick="return ACAjevent();" >Submit</button>
@@ -539,92 +537,96 @@ var cc_limit = 20;
            }
       });
 
-$('.google-list').on('click','.remove-doc',function(e){
+  $('.google-list').on('click','.remove-doc',function(e){
     e.preventDefault();
     $(this).parent().remove();
-});
+  });
 
-$('form').submit(function(event) {
-  var sendAction = $(this).find("button[type=submit]:focus" ).attr('id');
+  $('form').submit(function(event) {
+    var sendAction = $(this).find("button[type=submit]:focus" ).attr('id');
 
-  if(sendAction == 'submit'){
-    event.preventDefault();
+    if(sendAction == 'submit'){
+      event.preventDefault();
 
-    for ( instance in CKEDITOR.instances ) {
+      for ( instance in CKEDITOR.instances ) {
         CKEDITOR.instances[instance].updateElement();
-    }
-    var form = $(this);
-    var formdata = new FormData($("form")[0]);
-    var progressTrigger;
+      }
 
-    $.ajaxSetup({
+      var form = $(this);
+      var formdata = new FormData($("form")[0]);
+      var progressTrigger;
+
+      $.ajaxSetup({
         headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
-    });
-    $.ajax({
+      });
+
+      $.ajax({
         url     : '/controller/application/store',
         type    : form.attr("method"),
         data    : formdata,
         dataType: "json",
         processData: false,
         contentType: false,
+
         beforeSend:function(){
-            $('.error-list').remove();
-            $('.error-beside-submit').remove();
-            $('.dz-hidden-input, form input, form textarea, form select, form radio, form button').prop('disabled', true);
+          $('.error-list').remove();
+          $('.error-beside-submit').remove();
+          $('.dz-hidden-input, form input, form textarea, form select, form radio, form button').prop('disabled', true);
 
-            form.find('#submit').after('<span class="processing-time"><i class="fa fa-spinner fa-spin"></i> Submitting request. Please wait for awhile.</span>');
-            form.find('#submit').css('display','none');
+          form.find('#submit').after('<span class="processing-time"><i class="fa fa-spinner fa-spin"></i> Submitting request. Please wait for awhile.</span>');
+          form.find('#submit').css('display','none');
 
-            progressTrigger = setTimeout(function(){
-              $('.processing-time').remove();
-              form.find('#submit').after('<span class="processing-time"><i class="fa fa-spinner fa-spin"></i> Sending notifications to selected Approver(s) and CC person(s)</span>');
-            }, 4000);
+          progressTrigger = setTimeout(function(){
+            $('.processing-time').remove();
+
+            form.find('#submit').after('<span class="processing-time"><i class="fa fa-spinner fa-spin"></i> Sending notifications to selected Approver(s) and CC person(s)</span>');
+          }, 4000);
 
         },
 
         error: function(xhr, textStatus, errorThrown) {
 
-               for (var key in xhr.responseJSON.errors) {
-                    if (key === 'length' || !xhr.responseJSON.errors.hasOwnProperty(key)) continue;
-                    var value = xhr.responseJSON.errors[key];
-                    $('#'+key).after('<div class="alert alert-danger error-list">'+value+'</div>')
-                }
+          for (var key in xhr.responseJSON.errors) {
+            if (key === 'length' || !xhr.responseJSON.errors.hasOwnProperty(key)) continue;
+              var value = xhr.responseJSON.errors[key];
+              $('#'+key).after('<div class="alert alert-danger error-list">'+value+'</div>')
+          }
 
-                form.find('.processing-time').remove();
-                form.find('#submit').css({'display':'block'});
-                form.find('#submit').after('<div class="alert-danger error-beside-submit">Error: Please check your form for an error.</div>')
-                $('.dz-hidden-input, form input, form textarea, form select, form radio, form button').prop('disabled', false);
-
+          form.find('.processing-time').remove();
+          form.find('#submit').css({'display':'block'});
+          form.find('#submit').after('<div class="alert-danger error-beside-submit">Error: Please check your form for an error.</div>')
+          $('.dz-hidden-input, form input, form textarea, form select, form radio, form button').prop('disabled', false);
         },
-
 
         success : function ( data )
         {
-            console.log(data);
+          console.log(data);
 
-            $('form').fadeOut().remove();
-            $('.panel-body').append('<div class="form-group alert alert-success"> <b>Form</b> has successfully submitted!. To view the details of your submitted form. Please <a href="/application/view_details/'+data.form_id+'"><b>click here</b></a> </div>');
-
+          $('form').fadeOut().remove();
+          $('.panel-body').append('<div class="form-group alert alert-success"> <b>Form</b> has successfully submitted!. To view the details of your submitted form. Please <a href="/application/view_details/'+data.form_id+'"><b>click here</b></a> </div>');
         },
 
         complete : function (){
-            clearTimeout(progressTrigger);
+          clearTimeout(progressTrigger);
         }
-    })
-  } else {
+      })
+    }
 
-    $('form').attr('action', "/controller/history/save_drafts");
-
-  }
+    else
+    {
+      $('form').attr('action', "/controller/history/save_drafts");
+    }
   });
  });
+
 </script>
 
 <script src="{{ URL::asset('components/ckeditor/ckeditor.js') }}"></script>
 <script src="{{ URL::asset('js/filepicker.js') }}"></script>
 <script src="{{ URL::asset('js/general.config.js') }}"></script>
+<script src="{{ URL::asset('js/new-course.js') }}"></script>
 <script src="https://www.google.com/jsapi?key=AIzaSyCxQ1OXoUZBqgFtFsuTO2a4G1mlcGRCP1g"></script>
 <script src="https://apis.google.com/js/client.js?onload=initPicker"></script>
 

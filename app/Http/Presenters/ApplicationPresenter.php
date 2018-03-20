@@ -442,7 +442,6 @@ class ApplicationPresenter extends PresenterCore
 
     foreach ($typerequest as $data)
 		{
-    	//$this->newtypedata[$data->id] = $data->name;
     	foreach ($data->forms as $key => $form)
 			{
     		$this->newtypedata[] = ['id'=>$form->form_id,'name'=>$form->name];
@@ -642,8 +641,6 @@ class ApplicationPresenter extends PresenterCore
 
     $select = ['idsrc_login','loginname','emailadd', 'inoffice', 'temp_approver_id'];
     $filter = $this->request->get('query');
-
-		// $filter = "Tan";
 
     if($this->request->get('with'))
 		{
@@ -1952,8 +1949,6 @@ class ApplicationPresenter extends PresenterCore
         $this->view->approverlist = $approver;
         $this->view->ccpersonlist = $ccperson;
 
-				// dd($this->view->one_approver);
-
         $merge_history = array();
         $merge_history = array_merge($merge_history, $approverhistoryapprover);
         $merge_history = array_merge($merge_history, $approverhistorycommenter);
@@ -1993,8 +1988,6 @@ class ApplicationPresenter extends PresenterCore
 				if($request->has('download'))
 				{
 
-					// dd($this->view->one_approver);
-
 					if($app[0]->type_form == 12 || $app[0]->type_form == 14 || $app[0]->type_form == 16 || $app[0]->type_form == 19 || $app[0]->type_form == 20)
 					{
 						$data = [
@@ -2017,6 +2010,21 @@ class ApplicationPresenter extends PresenterCore
 
 					else
 					{
+						if(empty($this->view->one_approver))
+						{
+							$this->view->one_approver = '';
+						}
+
+						if(empty($this->view->finalapprover))
+						{
+							$this->view->finalapprover = '';
+						}
+
+						if(empty($this->view->currentapprover))
+						{
+							$this->view->currentapprover = '';
+						}
+
 						$data = [
 					    'title' =>  $this->view->title,
 					    'title_page' => $this->view->title_page,
@@ -2040,24 +2048,17 @@ class ApplicationPresenter extends PresenterCore
 					$pdf_name = str_replace('/', '_', $this->view->myapplist[0]->case_number);
 				  $pdf_name = $pdf_name . '.pdf';
 
-					// return $this->view('print.view', $data);
-
 				  PDF::loadView('print.view', $data)->save('samplepdfs/' . $pdf_name)->stream();
-					//
-					// $fileId = '1YLo6kmxfFfRfvXd-hwa4qRe29dVb6v7M';
-					// $response = $driveService->files->get($fileId, array(
-					//     				'alt' => 'media'));
-					//
-					// dd($response);
-					// $content = $response->getBody()->getContents();
-
 
 					// Merge PDF
-				  $pdf = PdfMerger::addPDF('samplepdfs/' . $pdf_name);
-				  $pdf = PdfMerger::addPDF('samplepdfs/one.pdf');
-				  $pdf = PdfMerger::addPDF('samplepdfs/two.pdf');
+					$pdf = PdfMerger::addPDF('samplepdfs/' . $pdf_name);
 
-				  PdfMerger::merge('browser', 'samplepdfs/TEST2.pdf');
+					foreach($this->view->filelist as $file)
+					{
+						$pdf = PdfMerger::addPDF('/uploads/final/' . $file->files_fileurl);
+					}
+
+				  PdfMerger::merge('browser', 'samplepdfs/sample.pdf');
 				}
 
         return $this->view('application.view');
@@ -2083,6 +2084,7 @@ class ApplicationPresenter extends PresenterCore
         'ams_applications.updated_at',
         'ams_applications.status',
         'ams_applications.pp_status',
+				'ams_applications.print_date',
         'ams_applications.user_status as user_status'
       ];
 
@@ -2678,35 +2680,82 @@ class ApplicationPresenter extends PresenterCore
 
 				if($request->has('download'))
 				{
-					$data = [
-						'title' =>  $this->view->title,
-						'title_page' => $this->view->title_page,
-						'myapplist' => $this->view->myapplist,
-						'action_url' => $this->view->action_url,
-						'afm' => $this->view->afm,
-						'afmesage' => $this->view->afmesage,
-						'approverlist' => $this->view->approverlist,
-						'forminfo' => $this->view->forminfo,
-						// 'formlineitem' => $this->view->formlineitem,
-						'mark' => $this->view->mark,
-						'filelist' => $this->view->filelist,
-						'doclist' => $this->view->doclist,
-						'historylist' => $this->view->historylist
-					];
+					if($app[0]->type_form == 12 || $app[0]->type_form == 14 || $app[0]->type_form == 16 || $app[0]->type_form == 19 || $app[0]->type_form == 20)
+					{
+					  $data = [
+					    'title' =>  $this->view->title,
+					    'title_page' => $this->view->title_page,
+					    'myapplist' => $this->view->myapplist,
+					    'action_url' => $this->view->action_url,
+					    'afm' => $this->view->afm,
+					    'afmesage' => $this->view->afmesage,
+					    'approverlist' => $this->view->approverlist,
+					    'forminfo' => $this->view->forminfo,
+					    'formlineitem' => $this->view->formlineitem,
+					    'mark' => $this->view->mark,
+					    'filelist' => $this->view->filelist,
+					    'doclist' => $this->view->doclist,
+					    'historylist' => $this->view->historylist,
+					    'today' => Carbon::parse()->format('d/m/Y g:i A')
+					  ];
+					}
+
+					else
+					{
+					  if(empty($this->view->one_approver))
+					  {
+					    $this->view->one_approver = '';
+					  }
+
+					  if(empty($this->view->finalapprover))
+					  {
+					    $this->view->finalapprover = '';
+					  }
+
+					  if(empty($this->view->currentapprover))
+					  {
+					    $this->view->currentapprover = '';
+					  }
+
+					  $data = [
+					    'title' =>  $this->view->title,
+					    'title_page' => $this->view->title_page,
+					    'myapplist' => $this->view->myapplist,
+					    'action_url' => $this->view->action_url,
+					    'afm' => $this->view->afm,
+					    'afmesage' => $this->view->afmesage,
+					    'approverlist' => $this->view->approverlist,
+					    'forminfo' => $this->view->forminfo,
+					    'mark' => $this->view->mark,
+					    'filelist' => $this->view->filelist,
+					    'doclist' => $this->view->doclist,
+					    'one_approver' => $this->view->one_approver,
+					    'finalapprover' => $this->view->finalapprover,
+					    'currentapprover' => $this->view->currentapprover,
+					    'historylist' => $this->view->historylist,
+					    'today' => Carbon::parse()->format('d/m/Y g:i A')
+					  ];
+					}
 
 					$pdf_name = str_replace('/', '_', $this->view->myapplist[0]->case_number);
 					$pdf_name = $pdf_name . '.pdf';
 
-					PDF::loadView( 'print.hr_print', $data)->save('samplepdfs/' . $pdf_name)->stream();
-
-					// dd($doc[0]->document_link);
+					PDF::loadView('print.view', $data)->save('samplepdfs/' . $pdf_name)->stream();
 
 					// Merge PDF
 					$pdf = PdfMerger::addPDF('samplepdfs/' . $pdf_name);
-					$pdf = PdfMerger::addPDF($doc[0]->document_link);
-			    $pdf = PdfMerger::addPDF('samplepdfs/two.pdf');
 
-			    PdfMerger::merge('browser', 'samplepdfs/TEST2.pdf');
+					foreach($this->view->filelist as $file)
+					{
+					  $pdf = PdfMerger::addPDF('uploads/final/' . $file->files_fileurl);
+					}
+
+					PdfMerger::merge('browser', 'samplepdfs/sample.pdf');
+				}
+
+				if(!empty($this->view->myapplist[0]['print_date']))
+				{
+					$this->view->myapplist[0]['print_date'] = Carbon::parse($this->view->myapplist[0]['print_date'])->format("d M Y");
 				}
 
         return $this->view('application.view_reports');
