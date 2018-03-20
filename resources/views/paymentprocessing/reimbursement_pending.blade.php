@@ -79,16 +79,27 @@
        <table class="col-md-12 table-bordered table-striped table-condensed cf" id="xls-table">
          <thead class="cf">
            <th></th>
+<<<<<<< HEAD
            <th>{!! $reports->sortColumn('created_at','Date') !!}</th>
            <th>{!! $reports->sortColumn('case_number','S/N') !!}</th>
+=======
+           <th>{!!$reports->sortColumn('created_at','Date')!!}</th>
+           <th>{!!$reports->sortColumn('case_number','S/N')!!}</th>
+>>>>>>> master
            <th>Type of Form</th>
            <th>Payee's Name</th>
            <th>Project Name</th>
            <th>Department</th>
            <th>Print Date</th>
+<<<<<<< HEAD
            <th>{!! $reports->sortColumn('status','Status') !!}</th>
            <th>{!! $reports->sortColumn('ppstatus','PP Status') !!}</th>
            <th>{!! $reports->sortColumn('total','total') !!}</th>
+=======
+           <th>{!!$reports->sortColumn('status','Status')!!}</th>
+           <th>{!!$reports->sortColumn('ppstatus','PP Status')!!}</th>
+           <th>{!!$reports->sortColumn('total','total')!!}</th>
+>>>>>>> master
          </thead>
 
          <tbody>
@@ -102,11 +113,19 @@
             <td data-title="S/N" ><a target="_blank" href="/application/view_reports/{{$report->id}}">{{ $report->case_number }}</a></td>
             <td data-title="FormType">{{ $report->form_name }}</td>
             <td data-title="cheque_payable_to">{{ $report->pcmcf_cheque_payable_to }}</td>
+<<<<<<< HEAD
             <td data-title="project_name">{{ $report->pcmcf_project_name }}{{ $report->pcmcf2_project_name }}</td>
             <td data-title="Department">{{ $report->department }}</td>
             <td data-title="print_date">
               @if(isset($report->print_date))
                 {{ \Carbon\Carbon::parse($report->print_date)->format("d/m/Y") }}
+=======
+            <td data-title="project_name">{{ $report-> pcmcf_project_name }}{{ $report->pcmcf2_project_name }}</td>
+            <td data-title="Department">{{ $report->department }}</td>
+            <td data-title="print_date">
+              @if(isset($report->print_date))
+                {{ \Carbon\Carbon::parse($report->print_date)->format("d M Y") }}
+>>>>>>> master
               @endif
             </td>
             <td data-title="Status">
@@ -138,7 +157,11 @@
             @endif
             </td>
             <td data-title="Total">{{ $report->total }}</td>
+<<<<<<< HEAD
             <div class='hide'>{{ $grant_total = $grant_total + $report->total }}</div>
+=======
+            <div class='hide'>{{$grant_total =$grant_total + $report->total }}</div>
+>>>>>>> master
           </tr>
           @endforeach
 
@@ -161,7 +184,11 @@
   </div><!-- end row -->
 
   <span style="display:none">
+<<<<<<< HEAD
     {!! $reports->sortColumn('','') !!}
+=======
+    {!!$reports->sortColumn('','')!!}
+>>>>>>> master
   </span>
 
   {!!$reports->paginate()!!}
@@ -178,8 +205,13 @@
   <div style=' display: inline-block;'>
     <input type="submit" name="processing" value="Processing" class="btn btn-default btn-cs">
     <input type="submit" name="reject" value="Reject" class="btn btn-default btn-cs">
+<<<<<<< HEAD
     <a href="{{ URL::route('reimbursement') }}" class="btn btn-default">Back</a>
     <a href="{{ URL::route('reimbursement_processing') }}" class="btn btn-default">Next</a>
+=======
+    <a href="{{ URL::route('reimbursement') }}"  class="btn btn-default">Back</a>
+    <a href="{{ URL::route('reimbursement_processing') }}"  class="btn btn-default">Next</a>
+>>>>>>> master
     {!! Form::close() !!}
   </div>
 </div>

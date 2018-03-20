@@ -81,7 +81,11 @@
             <th>Payee's Name</th>
             <th>Project Name</th>
             <th>Department</th>
+<<<<<<< HEAD
             <th>Print Date</th>
+=======
+            <td>Print Date</td>
+>>>>>>> master
             <th>{!! $reports->sortColumn('status','Status') !!}</th>
             <th>{!! $reports->sortColumn('ppstatus','PP Status') !!}</th>
             <th>{!! $reports->sortColumn('total','total') !!}</th>
@@ -102,7 +106,11 @@
               <td data-title="Department">{{ $report->department }}</td>
               <td data-title="print_date">
                 @if(isset($report->print_date))
+<<<<<<< HEAD
                   {{ \Carbon\Carbon::parse($report->print_date)->format("d/m/Y") }}
+=======
+                  {{ \Carbon\Carbon::parse($report->print_date)->format("d M Y") }}
+>>>>>>> master
                 @endif
               </td>
               <td data-title="Status">

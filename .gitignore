@@ -1,5 +1,7 @@
 vendor/
 node_modules/
+tests/
+test/
 npm-debug.log
 
 # Laravel 4 specific
@@ -7,6 +9,7 @@ bootstrap/compiled.php
 app/storage/
 
 # Laravel 5 & Lumen specific
+<<<<<<< HEAD
 public/storage
 public/hot
 storage/*.key
@@ -17,6 +20,14 @@ database/
 public/
 config/app.php
 config/services.php
+=======
+/public/storage
+/public/hot
+/public/uploads/
+/public/samplepdfs
+
+/storage/*.key
+>>>>>>> master
 .env.*.php
 .env.php
 .env

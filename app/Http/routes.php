@@ -301,6 +301,10 @@ Route::group(['prefix' => 'history'],function(){
 
 	Route::get('/edit/savedrafts/{id}', ['uses' => 'HistoryPresenter@editSaveDrafts']);
 });
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 /*
  * Add routes to Controller below. The URL should contain /controller
  * at the first. This serves as an identifier for the controller. The controller

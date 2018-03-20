@@ -316,10 +316,19 @@
     <div class="headhistory">History</div><!-- end headhistory -->
     <div class="printhistory">
       @if(empty($myapplist[0]->print_date))
+<<<<<<< HEAD
       <a href="/application/view_reports/{{$myapplist[0]->id}}?download=pdf" id="print-page" class="btn btn-default download">print</a>
       @else
       <a href="/application/view_reports/{{$myapplist[0]->id}}?download=pdf" id="print-page" data-print-date="{{ $myapplist[0]->print_date }}" class="btn btn-danger download">print</a>
       @endif
+=======
+      <a href="#" id="print-page" class="btn btn-default download">print</a>
+      @else
+      <a href="#" id="print-page" data-print-date="{{ $myapplist[0]->print_date }}" class="btn btn-danger download">print</a>
+      @endif
+
+      <a href="/application/view_reports/{{$myapplist[0]->id}}?download=pdf" class="btn btn-default">print all</a>
+>>>>>>> master
     </div><!-- end printhistory -->
 
       <table class="table" id="table-history">

@@ -146,8 +146,11 @@ $( "#select-programme" ).change(function() {
 
   request.done(function(data) {
 
+<<<<<<< HEAD
     alert(data.newcourse);
 
+=======
+>>>>>>> master
     // your success code here
     $( "#select-timetable" ).attr('disabled', false);
     var listitems ='<option value=-1>-- Select Date and Time of Programme --</option>';

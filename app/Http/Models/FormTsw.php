@@ -5,7 +5,11 @@ namespace App\Http\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class FormTsw extends Model
+<<<<<<< HEAD
 {
+=======
+{	
+>>>>>>> master
 	protected $table = 'ams_form_tsw';
 
 	public $timestamps = true;

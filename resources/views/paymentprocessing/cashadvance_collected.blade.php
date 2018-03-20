@@ -99,7 +99,11 @@
               <td data-title="Department">{{ $report->department }}</td>
               <td data-title="print_date">
                 @if(isset($report->print_date))
+<<<<<<< HEAD
                   {{ \Carbon\Carbon::parse($report->print_date)->format("d/m/Y") }}
+=======
+                  {{ \Carbon\Carbon::parse($report->print_date)->format("d M Y") }}
+>>>>>>> master
                 @endif
               </td>
               <td data-title="Status">

@@ -54,8 +54,15 @@
               <div class="modal-body approver">
               </div><!-- end modal-body -->
 
+<<<<<<< HEAD
               <div class="modal-footer">
                 <button type="button" class="btn btn-primary" id="temp_approver_btn" disabled>Save changes</button>
+=======
+              <div class="modal-footer temp-approver">
+                <button type="button" class="btn btn-primary" id="temp_approver_btn" disabled="disabled">
+                  Save changes
+                </button>
+>>>>>>> master
               </div><!-- end modal-footer -->
 
             </div><!-- end modal-content -->

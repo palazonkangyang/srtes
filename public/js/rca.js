@@ -229,8 +229,12 @@ $(function () {
 	  });
 	}, 5000);
 
+<<<<<<< HEAD
 	$('.btn-toggle .btn').click(function(e)
 	{
+=======
+	$('.btn-toggle .btn').click(function(e) {
+>>>>>>> master
 		e.preventDefault();
 
 		$('.success-settings').find('.alert-success').remove();
@@ -251,6 +255,7 @@ $(function () {
 		var form = $('form.accountsettings');
 		var action = form.attr('action');
 		var method = form.attr('method');
+<<<<<<< HEAD
 		var formdata = new FormData(form[0]);
 
 		$.ajaxSetup({
@@ -268,6 +273,28 @@ $(function () {
 	    dataType: "json",
 	    processData: false,
 	    contentType: false,
+=======
+		// var formdata = new FormData(form[0]);
+
+		var formData = {
+			_token: $('meta[name="csrf-token"]').attr('content'),
+			ooo: oooval
+		};
+
+		// $.ajaxSetup({
+    //   headers: {
+	  //   	'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	  //   }
+		// });
+
+		$.ajax({
+	  	url     : '/controller/accountsettings',
+	    type    : 'POST',
+	    data    : formData,
+	    dataType: "json",
+	    // processData: false,
+	    // contentType: false,
+>>>>>>> master
 
 			beforeSend:function()
 			{
@@ -279,10 +306,13 @@ $(function () {
 	      $('.panel-heading').find('h4').find('.processing-time').remove();
 	    	$('.success-settings').append(' <span class="alert-success save-stat-set">SAVE!</span> ');
 
+<<<<<<< HEAD
 		    setTimeout(function() {
 		    	$('.save-stat-set').fadeOut();
 		    }, 2000);
 
+=======
+>>>>>>> master
 	      if(oooval == 1)
 				{
 					$('.ooo-header').fadeIn(500);
@@ -301,6 +331,13 @@ $(function () {
 					}
 
 					$('#temp-approver-list').modal('toggle');
+<<<<<<< HEAD
+=======
+
+					setTimeout(function() {
+			    	$('.save-stat-set').fadeOut();
+			    }, 2000);
+>>>>>>> master
 				}
 
 				else
@@ -315,7 +352,11 @@ $(function () {
 	// $(".btn-toggle .active").attr('disabled', true);
 
 	$('body').on('click', '.temp_approver_id', function() {
+<<<<<<< HEAD
     $("#temp_approver_btn").attr('disabled', false);
+=======
+    $(".temp-approver button").removeAttr('disabled');
+>>>>>>> master
   });
 
 	$("#temp_approver_btn").click(function() {
@@ -751,9 +792,17 @@ function appendSelectedproject_claims(a,b,c,d){
 
 function appendSelectedcashadvance_acquittal(a,b,c,d){
 
+<<<<<<< HEAD
 	$(a).append('<div><i class="glyphicon glyphicon-minus-sign minus-'+d+'"></i><span class="numbering_method"> <strong>[ 2rd Verify ] </strong> </span> '+c.value+ ' <small><b>'+c.data.email+'</b></small><input type="hidden" name="'+d+'[]" value="'+c.data.id+'" /></div>');
 	$(b).hide();
 	loadRemovePerson('.minus-'+d);
+=======
+
+	$(a).append('<div><i class="glyphicon glyphicon-minus-sign minus-'+d+'"></i><span class="numbering_method"> <strong>[ 2rd Verify ] </strong> </span> '+c.value+ ' <small><b>'+c.data.email+'</b></small><input type="hidden" name="'+d+'[]" value="'+c.data.id+'" /></div>');
+	$(b).hide();
+	loadRemovePerson('.minus-'+d);
+
+>>>>>>> master
 }
 
 

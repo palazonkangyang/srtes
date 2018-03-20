@@ -23,7 +23,10 @@ class ApplicationPresenter extends PresenterCore
 	 */
 	public function ApplicationProcess(Request $request)
 	{
+<<<<<<< HEAD
 		// dd($request->all());
+=======
+>>>>>>> master
 		$this->view->title = 'New Application';
 
 		if($request->get('type_of_request') && $request->get('forms'))
@@ -385,11 +388,17 @@ class ApplicationPresenter extends PresenterCore
 		/**
 		 * Start NEW FORM REQUEST (HR Matters - Application For Training / Seminar / Workshop)
 		*/
+<<<<<<< HEAD
 		if($form['0']->id == 16) {
 			/* course list array */
 			 $this->view->course_list_array = \App\Http\Models\Course::courseListArray();
 
 			 /* course type list array */
+=======
+
+		if($form['0']->id == 16) {
+			 $this->view->course_list_array = \App\Http\Models\Course::courseListArray();
+>>>>>>> master
 			 $this->view->course_type_list_array = \App\Http\Models\CourseType::courseTypeListArray();
 
 			 for($i = 0; $i < count($this->view->approverlist); $i++)
@@ -445,7 +454,10 @@ class ApplicationPresenter extends PresenterCore
 
     foreach ($typerequest as $data)
 		{
+<<<<<<< HEAD
     	//$this->newtypedata[$data->id] = $data->name;
+=======
+>>>>>>> master
     	foreach ($data->forms as $key => $form)
 			{
     		$this->newtypedata[] = ['id'=>$form->form_id,'name'=>$form->name];
@@ -646,8 +658,11 @@ class ApplicationPresenter extends PresenterCore
     $select = ['idsrc_login','loginname','emailadd', 'inoffice', 'temp_approver_id'];
     $filter = $this->request->get('query');
 
+<<<<<<< HEAD
 		// $filter = "Tan";
 
+=======
+>>>>>>> master
     if($this->request->get('with'))
 		{
       $users = ModelFactory::getInstance('User')
@@ -1955,8 +1970,11 @@ class ApplicationPresenter extends PresenterCore
         $this->view->approverlist = $approver;
         $this->view->ccpersonlist = $ccperson;
 
+<<<<<<< HEAD
 				// dd($this->view->one_approver);
 
+=======
+>>>>>>> master
         $merge_history = array();
         $merge_history = array_merge($merge_history, $approverhistoryapprover);
         $merge_history = array_merge($merge_history, $approverhistorycommenter);
@@ -1996,8 +2014,11 @@ class ApplicationPresenter extends PresenterCore
 				if($request->has('download'))
 				{
 
+<<<<<<< HEAD
 					// dd($this->view->one_approver);
 
+=======
+>>>>>>> master
 					if($app[0]->type_form == 12 || $app[0]->type_form == 14 || $app[0]->type_form == 16 || $app[0]->type_form == 19 || $app[0]->type_form == 20)
 					{
 						$data = [
@@ -2020,6 +2041,24 @@ class ApplicationPresenter extends PresenterCore
 
 					else
 					{
+<<<<<<< HEAD
+=======
+						if(empty($this->view->one_approver))
+						{
+							$this->view->one_approver = '';
+						}
+
+						if(empty($this->view->finalapprover))
+						{
+							$this->view->finalapprover = '';
+						}
+
+						if(empty($this->view->currentapprover))
+						{
+							$this->view->currentapprover = '';
+						}
+
+>>>>>>> master
 						$data = [
 					    'title' =>  $this->view->title,
 					    'title_page' => $this->view->title_page,
@@ -2043,6 +2082,7 @@ class ApplicationPresenter extends PresenterCore
 					$pdf_name = str_replace('/', '_', $this->view->myapplist[0]->case_number);
 				  $pdf_name = $pdf_name . '.pdf';
 
+<<<<<<< HEAD
 					// return $this->view('print.view', $data);
 
 				  PDF::loadView('print.view', $data)->save('samplepdfs/' . $pdf_name)->stream();
@@ -2061,6 +2101,19 @@ class ApplicationPresenter extends PresenterCore
 				  $pdf = PdfMerger::addPDF('samplepdfs/two.pdf');
 
 				  PdfMerger::merge('browser', 'samplepdfs/TEST2.pdf');
+=======
+				  PDF::loadView('print.view', $data)->save('samplepdfs/' . $pdf_name)->stream();
+
+					// Merge PDF
+					$pdf = PdfMerger::addPDF('samplepdfs/' . $pdf_name);
+
+					foreach($this->view->filelist as $file)
+					{
+						$pdf = PdfMerger::addPDF('/uploads/final/' . $file->files_fileurl);
+					}
+
+				  PdfMerger::merge('browser', 'samplepdfs/sample.pdf');
+>>>>>>> master
 				}
 
         return $this->view('application.view');
@@ -2682,6 +2735,7 @@ class ApplicationPresenter extends PresenterCore
 
 				if($request->has('download'))
 				{
+<<<<<<< HEAD
 					$data = [
 						'title' =>  $this->view->title,
 						'title_page' => $this->view->title_page,
@@ -2697,10 +2751,69 @@ class ApplicationPresenter extends PresenterCore
 						'doclist' => $this->view->doclist,
 						'historylist' => $this->view->historylist
 					];
+=======
+					if($app[0]->type_form == 12 || $app[0]->type_form == 14 || $app[0]->type_form == 16 || $app[0]->type_form == 19 || $app[0]->type_form == 20)
+					{
+					  $data = [
+					    'title' =>  $this->view->title,
+					    'title_page' => $this->view->title_page,
+					    'myapplist' => $this->view->myapplist,
+					    'action_url' => $this->view->action_url,
+					    'afm' => $this->view->afm,
+					    'afmesage' => $this->view->afmesage,
+					    'approverlist' => $this->view->approverlist,
+					    'forminfo' => $this->view->forminfo,
+					    'formlineitem' => $this->view->formlineitem,
+					    'mark' => $this->view->mark,
+					    'filelist' => $this->view->filelist,
+					    'doclist' => $this->view->doclist,
+					    'historylist' => $this->view->historylist,
+					    'today' => Carbon::parse()->format('d/m/Y g:i A')
+					  ];
+					}
+
+					else
+					{
+					  if(empty($this->view->one_approver))
+					  {
+					    $this->view->one_approver = '';
+					  }
+
+					  if(empty($this->view->finalapprover))
+					  {
+					    $this->view->finalapprover = '';
+					  }
+
+					  if(empty($this->view->currentapprover))
+					  {
+					    $this->view->currentapprover = '';
+					  }
+
+					  $data = [
+					    'title' =>  $this->view->title,
+					    'title_page' => $this->view->title_page,
+					    'myapplist' => $this->view->myapplist,
+					    'action_url' => $this->view->action_url,
+					    'afm' => $this->view->afm,
+					    'afmesage' => $this->view->afmesage,
+					    'approverlist' => $this->view->approverlist,
+					    'forminfo' => $this->view->forminfo,
+					    'mark' => $this->view->mark,
+					    'filelist' => $this->view->filelist,
+					    'doclist' => $this->view->doclist,
+					    'one_approver' => $this->view->one_approver,
+					    'finalapprover' => $this->view->finalapprover,
+					    'currentapprover' => $this->view->currentapprover,
+					    'historylist' => $this->view->historylist,
+					    'today' => Carbon::parse()->format('d/m/Y g:i A')
+					  ];
+					}
+>>>>>>> master
 
 					$pdf_name = str_replace('/', '_', $this->view->myapplist[0]->case_number);
 					$pdf_name = $pdf_name . '.pdf';
 
+<<<<<<< HEAD
 					PDF::loadView( 'print.hr_print', $data)->save('samplepdfs/' . $pdf_name)->stream();
 
 					// dd($doc[0]->document_link);
@@ -2711,11 +2824,28 @@ class ApplicationPresenter extends PresenterCore
 			    $pdf = PdfMerger::addPDF('samplepdfs/two.pdf');
 
 			    PdfMerger::merge('browser', 'samplepdfs/TEST2.pdf');
+=======
+					PDF::loadView('print.view', $data)->save('samplepdfs/' . $pdf_name)->stream();
+
+					// Merge PDF
+					$pdf = PdfMerger::addPDF('samplepdfs/' . $pdf_name);
+
+					foreach($this->view->filelist as $file)
+					{
+					  $pdf = PdfMerger::addPDF('uploads/final/' . $file->files_fileurl);
+					}
+
+					PdfMerger::merge('browser', 'samplepdfs/sample.pdf');
+>>>>>>> master
 				}
 
 				if(!empty($this->view->myapplist[0]['print_date']))
 				{
+<<<<<<< HEAD
 					$this->view->myapplist[0]['print_date'] = Carbon::parse($this->view->myapplist[0]['print_date'])->format("d/m/Y");
+=======
+					$this->view->myapplist[0]['print_date'] = Carbon::parse($this->view->myapplist[0]['print_date'])->format("d M Y");
+>>>>>>> master
 				}
 
         return $this->view('application.view_reports');

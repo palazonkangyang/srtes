@@ -398,7 +398,11 @@ class CoursePresenter extends PresenterCore
 
     else
     {
+<<<<<<< HEAD
       $result['newcourse'] = "Yes";
+=======
+        $result['newcourse'] = "Yes";
+>>>>>>> master
     }
 
     return Response::json($result);

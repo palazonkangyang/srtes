@@ -123,6 +123,7 @@ class AccountController extends ControllerCore
      */
     public function changePassword(ChangePasswordRequest $request)
     {
+<<<<<<< HEAD
        if (Auth::attempt(['emailadd' => Auth::user()->emailadd, 'password' => $request->get('old_password')])) {
             $user = ModelFactory::getInstance('User')
                             ->findOrNew(Auth::User()->idsrc_login);
@@ -141,6 +142,33 @@ class AccountController extends ControllerCore
                    ->withErrors(['error' => 'Old password does not match with your current password',
             ]);
         }
+=======
+      if (Auth::attempt(['emailadd' => Auth::user()->emailadd, 'password' => $request->get('old_password')]))
+      {
+        $user = ModelFactory::getInstance('User')->findOrNew(Auth::User()->idsrc_login);
+        $user->passwd = bcrypt($request->get('new_password'));
+
+        if($user->save())
+        {
+          return redirect('/changepassword')
+                    ->withInput()->with('success', 'Successfully changed password.');
+        }
+
+        else
+        {
+          return redirect('/changepassword')
+                    ->withErrors(['error' => 'Something wrong! failed to change new password',
+          ]);
+        }
+      }
+
+      else
+      {
+        return redirect('/changepassword')
+                  ->withErrors(['error' => 'Old password does not match with your current password',
+        ]);
+      }
+>>>>>>> master
     }
 
     public function tempapproveruser(Request $request)
@@ -183,7 +211,11 @@ class AccountController extends ControllerCore
 
         $temp_approver = ModelFactory::getInstance('TempApproverUser')
                           ->where('user_id', $id)
+<<<<<<< HEAD
                           ->whereNULL('end_datetime')
+=======
+                          ->latest()
+>>>>>>> master
                           ->first();
 
         $temp_approver->end_datetime = Carbon::now();
@@ -211,13 +243,22 @@ class AccountController extends ControllerCore
                         ->where('ams_approver_person.read', '=', 0)
                         ->Where('ams_applications.status', '=', 0)
                         ->distinct()
+<<<<<<< HEAD
                         ->get()->toArray();
+=======
+                        ->get()
+                        ->toArray();
+>>>>>>> master
 
         $prefix = ($ooo == 1 ? 1 : 0);
 
         foreach ($getapprover as $key => $value)
         {
+<<<<<<< HEAD
           $creator = $this->selectUserBy($value['created_id'],array('loginname','emailadd'))->toArray();
+=======
+          $creator = $this->selectUserBy($value['created_id'], array('loginname','emailadd'))->toArray();
+>>>>>>> master
           $ooo = $this->selectUserBy($id,array('loginname','emailadd'))->toArray();
           $app_id = $value['app_id'];
 
@@ -229,7 +270,11 @@ class AccountController extends ControllerCore
           $to_date = date('d/m/Y h:i A');
 
           $link = url('/application/view_details/'.$app_id, '', $secure = null);
+<<<<<<< HEAD
           $check = 'inoffice_'.$prefix;
+=======
+          $check = 'inoffice_'. $prefix;
+>>>>>>> master
           $subject = '[SRC-AMS] Out Of Office Notification';
 
           $mail_data = array(
@@ -267,16 +312,24 @@ class AccountController extends ControllerCore
 
       if ($validator->fails())
       {
+<<<<<<< HEAD
         return redirect('account/myprofile')
                 ->withErrors($validator)
                 ->withInput();
+=======
+        return redirect('account/myprofile')->withErrors($validator)->withInput();
+>>>>>>> master
       }
 
       else
       {
         // save user info
+<<<<<<< HEAD
         $userModel = ModelFactory::getInstance('User')
                       ->find($request->id);
+=======
+        $userModel = ModelFactory::getInstance('User')->find($request->id);
+>>>>>>> master
 
         $userModel->loginname = $request->fullname;
         $userModel->emailadd = $request->email;
@@ -288,15 +341,23 @@ class AccountController extends ControllerCore
 
         if($userModel->save())
         {
+<<<<<<< HEAD
           return redirect('account/myprofile')
                   ->with('success', 'Successfully updated user.');
+=======
+          return redirect('account/myprofile')->with('success', 'Successfully updated user.');
+>>>>>>> master
         }
       }
     }
 
     public function send_email($layout, $data, $criteria, $subject)
     {
+<<<<<<< HEAD
       Mail::send($layout,$data,function($message) use ($criteria, $subject) {
+=======
+      Mail::send($layout, $data, function($message) use ($criteria, $subject) {
+>>>>>>> master
         $message->from('do-not-reply@redcross.sg', 'SRC Approval Management System');
         $message->to($criteria['emailadd'])->subject($subject);
       });
@@ -312,8 +373,12 @@ class AccountController extends ControllerCore
 
     public function selectUserBy($id, $select)
     {
+<<<<<<< HEAD
       return ModelFactory::getInstance('User')
               ->where('idsrc_login', '=', $id)
               ->first($select);
+=======
+      return ModelFactory::getInstance('User')->where('idsrc_login', '=', $id)->first($select);
+>>>>>>> master
     }
 }
