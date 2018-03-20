@@ -317,7 +317,7 @@ $(function () {
 	// $(".btn-toggle .active").attr('disabled', true);
 
 	$('body').on('click', '.temp_approver_id', function() {
-    $("#temp_approver_btn").attr('disabled', false);
+    $(".temp-approver button").removeAttr('disabled');
   });
 
 	$("#temp_approver_btn").click(function() {
